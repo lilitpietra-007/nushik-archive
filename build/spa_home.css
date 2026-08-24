@@ -1,0 +1,58 @@
+  /* ---------- the archive's mark ---------- */
+  .mark{position:relative; display:grid; place-items:center; width:min(52vw,300px); margin:0 auto 1.6rem;}
+  .mark-ground{
+    position:absolute; width:96%; height:94%;
+    background:radial-gradient(ellipse 50% 50% at 50% 50%,
+      rgba(250,247,239,.86) 0%, rgba(250,247,239,.72) 40%,
+      rgba(250,247,239,.40) 64%, rgba(250,247,239,.12) 85%, rgba(250,247,239,0) 100%);
+  }
+  .mark img{position:relative; width:100%; height:auto; display:block;
+    filter:drop-shadow(0 16px 30px rgba(42,34,20,.30));}
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+  .bob{animation:bob 9s ease-in-out infinite;}
+  @media (prefers-reduced-motion:reduce){.bob{animation:none;}}
+
+  /* ---------- collection cards ---------- */
+  .cards{
+    display:grid; grid-template-columns:1fr; gap:clamp(1.5rem,3vw,2.25rem);
+    max-width:76rem; margin:0 auto;
+  }
+  @media (min-width:700px){ .cards{grid-template-columns:repeat(2,1fr);} }
+  @media (min-width:1040px){ .cards{grid-template-columns:repeat(4,1fr);} }
+  .card{
+    display:flex; flex-direction:column; align-items:center; text-align:center;
+    text-decoration:none; color:inherit; min-width:0;
+    padding:clamp(1.6rem,3vw,2.2rem) clamp(1.2rem,2.5vw,1.8rem) clamp(1.4rem,2.5vw,1.9rem);
+    background:rgba(233,225,207,.90);
+    border:1px solid rgba(42,36,24,.20);
+    border-radius:.3rem;
+    box-shadow:0 12px 30px rgba(42,34,20,.16);
+    transition:transform .5s cubic-bezier(.19,1,.22,1), box-shadow .5s ease, background .5s ease;
+  }
+  .card:hover, .card:focus-visible{
+    transform:translateY(-6px);
+    background:rgba(240,233,217,.96);
+    box-shadow:0 22px 46px rgba(42,34,20,.26);
+  }
+  .card:focus-visible{outline:2px solid var(--hedge); outline-offset:5px;}
+  .card-art{display:block; width:min(70%,190px); margin-bottom:1.1rem;}
+  .card-art img{width:100%; height:auto; display:block;
+    filter:drop-shadow(0 10px 20px rgba(42,34,20,.28));}
+  .card:hover .card-art img{filter:drop-shadow(0 14px 26px rgba(42,34,20,.34));}
+  .card-text{display:block;}
+  .card-count{
+    display:block; font-size:.62rem; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--gold); margin-bottom:.5rem;
+  }
+  .card-title{
+    display:block; font-family:var(--font-display); font-weight:600;
+    font-size:clamp(1.1rem,2vw,1.3rem); color:var(--ink); margin-bottom:.5rem;
+  }
+  .card-title[lang="hy"]{font-family:var(--font-am);}
+  .card-desc{display:block; font-size:.92rem; color:var(--ink-soft); line-height:1.55;}
+  .card-go{
+    display:block; margin-top:1rem;
+    font-size:.66rem; letter-spacing:.2em; text-transform:uppercase; color:var(--hedge);
+  }
+  .card:hover .card-go{color:var(--ink);}
+

@@ -1,0 +1,81 @@
+
+  /* ---------- zoomable plate ---------- */
+  .plate-open{
+    display:block; width:100%;
+    padding:0; border:0; background:transparent;
+    cursor:zoom-in; position:relative;
+    border-radius:.4rem;
+  }
+  .plate-open:focus-visible{outline:2px solid var(--hedge); outline-offset:8px;}
+
+  /* ---------- lightbox ---------- */
+  .lb{
+    position:fixed; inset:0; z-index:60;
+    display:none;
+    background:rgba(20,17,11,.975);
+    -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
+    flex-direction:column;
+  }
+  .lb[open]{display:flex;}
+  .lb-stage{
+    flex:1; min-height:0;
+    display:grid; place-items:center;
+    overflow:hidden;
+    touch-action:none;
+    cursor:grab;
+  }
+  .lb-stage.is-zoomed{cursor:grab;}
+  .lb-stage.is-panning{cursor:grabbing;}
+  .lb-img{
+    max-width:94%; max-height:94%;
+    transform-origin:center center;
+    will-change:transform;
+    user-select:none; -webkit-user-drag:none;
+    box-shadow:0 20px 60px rgba(0,0,0,.6);
+  }
+  .lb-bar{
+    display:flex; align-items:center; justify-content:center;
+    gap:.4rem; flex-wrap:wrap;
+    padding:.7rem 1rem 1.1rem;
+    color:#f3ecdb;
+  }
+  .lb-cap{
+    flex:1 1 100%;
+    text-align:center;
+    font-family:var(--font-display);
+    font-size:1.02rem;
+    margin:0 0 .3rem;
+  }
+  .lb-cap span{
+    display:block;
+    font-family:var(--font-body); font-style:italic;
+    font-size:.78rem; color:#bfb49a; letter-spacing:.06em;
+  }
+  .lb-cap[lang="hy"]{font-family:var(--font-am);}
+  .lb-btn{
+    font-family:var(--font-body); font-size:.9rem;
+    min-width:2.3rem; height:2.3rem;
+    display:grid; place-items:center;
+    color:#f3ecdb;
+    background:rgba(247,242,230,.10);
+    border:1px solid rgba(247,242,230,.28);
+    border-radius:999px; cursor:pointer; padding:0 .6rem;
+    transition:background .25s ease;
+  }
+  .lb-btn:hover{background:rgba(247,242,230,.22);}
+  .lb-btn:focus-visible{outline:2px solid #d8c9a4; outline-offset:2px;}
+  .lb-btn[disabled]{opacity:.35; cursor:default;}
+  .lb-btn svg{width:1.05rem; height:1.05rem;}
+  .lb-close{
+    position:absolute; top:.9rem; right:.9rem;
+    z-index:2;
+  }
+  .lb-pct{
+    font-variant-numeric:tabular-nums;
+    min-width:3.4rem; text-align:center;
+    font-size:.78rem; color:#bfb49a;
+  }
+  @media (max-width:640px){
+    .lb-cap{font-size:.92rem;}
+    .lb-btn{min-width:2.1rem; height:2.1rem;}
+  }

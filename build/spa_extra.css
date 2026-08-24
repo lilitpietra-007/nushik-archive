@@ -1,0 +1,58 @@
+
+  /* ---------- views (client-side pages) ---------- */
+  .view{display:none;}
+  .home-link[hidden]{display:none;}
+  .view.is-active{display:block;}
+  .view > .backdrop{position:fixed; inset:0; z-index:0; background-size:cover;}
+  #view-home    > .backdrop{background-position:50% 45%;}
+  #view-doilies > .backdrop{background-position:50% 42%;}
+  #view-alphabet> .backdrop{background-position:50% 55%;}
+  #view-wear    > .backdrop{background-position:50% 58%;}
+  #view-small   > .backdrop{background-position:50% 40%;}
+  #view-home    > .backdrop::after{background:linear-gradient(180deg, rgba(246,241,228,.56) 0%, rgba(246,241,228,.48) 40%, rgba(246,241,228,.62) 100%);}
+  #view-doilies > .backdrop::after{background:linear-gradient(180deg, rgba(246,241,228,.52) 0%, rgba(246,241,228,.42) 38%, rgba(246,241,228,.58) 100%);}
+  #view-alphabet> .backdrop::after{background:linear-gradient(180deg, rgba(244,239,225,.50) 0%, rgba(244,239,225,.40) 40%, rgba(244,239,225,.58) 100%);}
+  #view-wear    > .backdrop::after{background:linear-gradient(180deg, rgba(244,239,225,.46) 0%, rgba(244,239,225,.34) 40%, rgba(244,239,225,.52) 100%);}
+  #view-alphabet .tape, #view-wear .tape, #view-home .tape, #view-small .tape{top:3.6rem; transform:rotate(-13deg);}
+
+  /* ---------- paired works (alphabet + wearables) ---------- */
+  .works{display:grid; grid-template-columns:1fr; gap:clamp(4.5rem,9vw,7rem); max-width:72rem; margin:0 auto;}
+  @media (min-width:900px){
+    .works{grid-template-columns:1fr 1fr; align-items:start;}
+    .work:nth-child(odd){transform:translateY(-1.75rem);}
+    .work:last-child:nth-child(odd){grid-column:1 / -1; justify-self:center; max-width:30rem; transform:none;}
+  }
+  .work{text-align:center; min-width:0;}
+  .work-open{display:block; width:100%; padding:0; border:0; background:transparent; cursor:zoom-in; border-radius:.4rem;}
+  .work-open:focus-visible{outline:2px solid var(--hedge); outline-offset:8px;}
+  .work-frame{filter:drop-shadow(0 20px 36px rgba(42,34,20,.38)); transition:transform .6s cubic-bezier(.19,1,.22,1);}
+  .work-open:hover .work-frame, .work-open:focus-visible .work-frame{transform:translateY(-6px) scale(1.02);}
+  .work-frame img{display:block; width:100%; height:auto;}
+  .work figcaption{margin-top:1.25rem; overflow-wrap:anywhere;}
+  .work .num{margin:0; font-family:var(--font-display); font-style:italic; font-size:.8rem;
+    color:var(--gold); letter-spacing:.12em; text-shadow:0 1px 9px rgba(246,241,228,.85);}
+  .work h3{margin:.25rem 0 0; font-family:var(--font-display); font-weight:600;
+    font-size:clamp(1.15rem,2.2vw,1.45rem); color:var(--ink); text-shadow:0 1px 12px rgba(246,241,228,.9);}
+  .work h3[lang="hy"]{font-family:var(--font-am);}
+  .work p{margin:.55rem auto 0; max-width:34ch; font-size:1rem;}
+  .work .meta{display:block; margin-top:.6rem; font-family:var(--font-display);
+    font-style:italic; font-size:.82rem; color:var(--roof);}
+  .prose{max-width:38rem; margin:0 auto;}
+  .prose p{margin:0 0 1.25em;}
+  .prose p:last-child{margin-bottom:0;}
+  .prose .fact{font-family:var(--font-display); font-style:italic; color:var(--roof);}
+  .year{font-family:var(--font-display); font-weight:600; color:#2c4a86;
+    letter-spacing:.03em; font-variant-numeric:tabular-nums;}
+  .eyebrow{font-size:.62rem; letter-spacing:.24em; text-transform:uppercase;
+    color:var(--ink-soft); margin:0 0 1.1rem; text-shadow:0 1px 8px rgba(246,241,228,.9);}
+  .hero .latin{margin:.5rem 0 0; font-family:var(--font-display); font-style:italic; font-weight:500;
+    font-size:clamp(1rem,2.4vw,1.4rem); color:var(--ink-soft); text-shadow:0 1px 12px rgba(246,241,228,.9);}
+  #view-alphabet .hero h1, #view-wear .hero h1, #view-home .hero h1, #view-small .hero h1{
+    font-size:clamp(2rem,6vw,3.6rem); line-height:1.1;
+    text-shadow:0 1px 14px rgba(246,241,228,.95), 0 0 30px rgba(246,241,228,.8);}
+  #view-alphabet .hero .rule, #view-wear .hero .rule, #view-home .hero .rule, #view-small .hero .rule{
+    display:block; width:5rem; height:1px; margin:1.4rem auto;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+  #view-alphabet .hero-sub, #view-wear .hero-sub, #view-home .hero-sub, #view-small .hero-sub{
+    max-width:34rem; margin:0 auto; font-size:1rem;}
+  .head h2[lang="hy"]{font-family:var(--font-am);}

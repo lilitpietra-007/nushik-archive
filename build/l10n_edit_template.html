@@ -1,0 +1,465 @@
+<title>Archive Text for Proofing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Manrope:wght@400;500;600&family=Noto+Sans+Armenian:wght@400;500;600&display=swap">
+<style id="appcss">
+  :root{
+    --bg:#fbf8f2; --panel:#ffffff; --line:#e2dbcb; --ink:#231d14; --soft:#6d6353;
+    --accent:#8a6a2f; --ph-bg:#f6edd8; --ph-line:#d9c48c;
+    --edit-bg:#eef5ec; --edit-line:#a9c4a2; --field:#fffdf8;
+    --display:'Fraunces',Georgia,serif; --body:'Manrope',system-ui,sans-serif;
+    --arm:'Noto Sans Armenian',system-ui,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#16130e; --panel:#1f1a13; --line:#332b1f; --ink:#f2ece0; --soft:#a4998a;
+      --accent:#d9bd7a; --ph-bg:#2a2214; --ph-line:#5a4a26;
+      --edit-bg:#18241a; --edit-line:#3d5c3a; --field:#15120d;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#16130e; --panel:#1f1a13; --line:#332b1f; --ink:#f2ece0; --soft:#a4998a;
+    --accent:#d9bd7a; --ph-bg:#2a2214; --ph-line:#5a4a26;
+    --edit-bg:#18241a; --edit-line:#3d5c3a; --field:#15120d;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:var(--ink);
+       font-family:var(--body); line-height:1.6;}
+  .wrap{max-width:64rem; margin:0 auto; padding:2.5rem 1.25rem 6rem;}
+
+  header h1{font-family:var(--display); font-weight:600;
+            font-size:clamp(1.7rem,4vw,2.5rem); margin:0 0 .4rem; text-wrap:balance;}
+  .lede{color:var(--soft); max-width:44rem; margin:0 0 1.5rem;}
+  .how{background:var(--panel); border:1px solid var(--line); border-radius:.5rem;
+       padding:1rem 1.25rem; margin:0 0 1.5rem;}
+  .how h2{font-family:var(--display); font-size:1.02rem; margin:0 0 .5rem;}
+  .how p{margin:.45rem 0; max-width:46rem;}
+  .how b{font-weight:600;}
+
+  /* toolbar rides along so Save is never more than a glance away */
+  .bar{position:sticky; top:0; z-index:20; margin:0 -1.25rem 1.5rem;
+       padding:.7rem 1.25rem; background:var(--bg);
+       border-bottom:1px solid var(--line);
+       display:flex; flex-wrap:wrap; gap:.6rem; align-items:center;}
+  .bar input[type=search]{flex:1 1 12rem; min-width:0; font:inherit; font-size:.85rem;
+       padding:.4rem .7rem; border:1px solid var(--line); border-radius:.35rem;
+       background:var(--field); color:var(--ink);}
+  .chips{display:flex; gap:.35rem; flex-wrap:wrap;}
+  .chip{font:inherit; font-size:.75rem; cursor:pointer; padding:.32rem .7rem;
+        border:1px solid var(--line); border-radius:2rem;
+        background:var(--panel); color:var(--ink);}
+  .chip[aria-pressed=true]{border-color:var(--accent); color:var(--accent); font-weight:600;}
+  .grow{flex:1 1 auto;}
+  .status{font-size:.78rem; color:var(--soft); white-space:nowrap;}
+  .status.dirty{color:var(--accent); font-weight:600;}
+  button.act{font:inherit; font-size:.8rem; font-weight:600; cursor:pointer;
+       padding:.42rem .95rem; border-radius:.35rem;
+       border:1px solid var(--accent); background:var(--accent); color:var(--bg);}
+  button.act[disabled]{opacity:.4; cursor:default;}
+  button.ghost{background:var(--panel); color:var(--ink); border-color:var(--line);}
+
+  nav.jump{display:flex; flex-wrap:wrap; gap:.45rem; margin:0 0 2rem;}
+  nav.jump a{font-size:.78rem; text-decoration:none; color:var(--ink);
+             border:1px solid var(--line); border-radius:2rem;
+             padding:.3rem .8rem; background:var(--panel);}
+  nav.jump a:hover{border-color:var(--accent); color:var(--accent);}
+
+  section{margin:0 0 2.5rem;}
+  section h2{font-family:var(--display); font-size:1.4rem; margin:0 0 .15rem;
+             padding-top:1rem; border-top:1px solid var(--line);}
+  .count{color:var(--soft); font-size:.8rem; margin:0 0 1.2rem;}
+  h3{font-size:.7rem; text-transform:uppercase; letter-spacing:.16em;
+     color:var(--accent); margin:1.6rem 0 .6rem; font-weight:600;}
+
+  .row{background:var(--panel); border:1px solid var(--line); border-radius:.45rem;
+       padding:.8rem 1rem .9rem; margin:0 0 .6rem;}
+  .row.is-ph{background:var(--ph-bg); border-color:var(--ph-line);}
+  .row.is-edited{border-color:var(--edit-line); background:var(--edit-bg);}
+  .row.hide{display:none;}
+  .meta{display:flex; align-items:center; gap:.55rem; flex-wrap:wrap;
+        margin:0 0 .5rem; font-size:.69rem; color:var(--soft);}
+  .meta code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+             font-size:.72rem; color:var(--accent); font-weight:600;}
+  .tag{border:1px solid var(--ph-line); border-radius:2rem; padding:.03rem .5rem;
+       font-size:.64rem; letter-spacing:.04em;}
+  .tag.done{border-color:var(--edit-line);}
+  .row .tag.done, .row .revert, .row .was{display:none;}
+  .row.is-edited .tag.done, .row.is-edited .revert{display:inline-block;}
+  .row.is-changed .was{display:block;}
+  .meta .revert{margin-left:auto; font:inherit; font-size:.68rem; cursor:pointer;
+       background:none; border:0; color:var(--accent); text-decoration:underline;
+       padding:0;}
+
+  .pair{display:grid; grid-template-columns:1fr; gap:.5rem;}
+  @media (min-width:800px){ .pair{grid-template-columns:1fr 1fr; gap:1.25rem;} }
+  .side{min-width:0;}
+  .side > label{display:block; font-size:.62rem; letter-spacing:.14em;
+       text-transform:uppercase; color:var(--soft); margin:0 0 .25rem;}
+  .given{margin:0; font-size:.92rem;}
+  .given.hy{font-family:var(--arm);}
+  .was{margin:.45rem 0 0; font-size:.78rem; color:var(--soft);
+       font-family:var(--arm);}
+  .was b{font-family:var(--body); font-weight:600; letter-spacing:.1em;
+         font-size:.6rem; text-transform:uppercase; display:block; color:var(--soft);}
+  textarea, input.note{width:100%; font:inherit; font-size:.92rem; color:var(--ink);
+       background:var(--field); border:1px solid var(--line); border-radius:.35rem;
+       padding:.5rem .65rem; resize:vertical;}
+  textarea{font-family:var(--arm); line-height:1.55; overflow:hidden; min-height:2.6rem;}
+  textarea:focus, input.note:focus{outline:2px solid var(--accent); outline-offset:1px;
+       border-color:var(--accent);}
+  input.note{margin-top:.45rem; font-size:.8rem;}
+
+  .empty{color:var(--soft); font-style:italic; padding:2rem 0;}
+  footer{margin-top:3rem; padding-top:1.5rem; border-top:1px solid var(--line);
+         color:var(--soft); font-size:.84rem;}
+  .toast{position:fixed; left:50%; bottom:1.5rem; transform:translateX(-50%);
+       background:var(--ink); color:var(--bg); padding:.55rem 1.1rem;
+       border-radius:2rem; font-size:.82rem; z-index:50; box-shadow:0 8px 24px rgba(0,0,0,.25);}
+  @media (prefers-reduced-motion:no-preference){
+    .toast{animation:rise .3s ease both;}
+    @keyframes rise{from{opacity:0; transform:translate(-50%,8px);} to{opacity:1;}}
+  }
+</style>
+
+<div id="app"></div>
+
+<script type="application/json" id="state">__STATE_JSON__</script>
+
+<script id="appjs">
+(function(){
+  'use strict';
+
+  var FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com">'
+    + '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
+    + '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?'
+    + 'family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Manrope:wght@400;500;600'
+    + '&family=Noto+Sans+Armenian:wght@400;500;600&display=swap">';
+  var DRAFT = 'nushik-l10n-draft-v1';
+  var PAGES = ['Home','Lace & Doilies','The Armenian Alphabet','Lace to Wear','Crosses & Small Pieces'];
+  var CODES = {'Home':'HOME','Lace & Doilies':'DOILY','The Armenian Alphabet':'ALPHA',
+               'Lace to Wear':'WEAR','Crosses & Small Pieces':'CROSS'};
+
+  var state = JSON.parse(document.getElementById('state').textContent);
+  var byId = {};
+  state.forEach(function(r){ byId[r.id] = r; });
+
+  /* Edits live here until Save. The published state is the last agreed text;
+     the draft is what this viewer has typed since. */
+  var draft = {};
+  try {
+    var raw = localStorage.getItem(DRAFT);
+    if (raw) draft = JSON.parse(raw) || {};
+  } catch (e) { draft = {}; }
+
+  function saveDraft(){
+    try { localStorage.setItem(DRAFT, JSON.stringify(draft)); } catch (e) {}
+  }
+
+  /* the Armenian this viewer is currently proposing */
+  function fixOf(r){
+    var d = draft[r.id];
+    if (d && typeof d.fix === 'string') return d.fix;
+    if (typeof r.fix === 'string') return r.fix;
+    return r.hy;
+  }
+  function noteOf(r){
+    var d = draft[r.id];
+    if (d && typeof d.note === 'string') return d.note;
+    return r.note || '';
+  }
+  function edited(r){ return fixOf(r) !== r.hy || noteOf(r) !== ''; }
+  function pending(){
+    return state.filter(function(r){
+      var d = draft[r.id];
+      if (!d) return false;
+      var f = typeof d.fix === 'string' ? d.fix : (r.fix || r.hy);
+      var n = typeof d.note === 'string' ? d.note : (r.note || '');
+      return f !== (r.fix || r.hy) || n !== (r.note || '');
+    }).length;
+  }
+
+  function esc(s){
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;');
+  }
+
+  function renderRow(r){
+    var fix = fixOf(r), note = noteOf(r), isEd = edited(r);
+    var tags = '';
+    if (r.placeholder) tags += '<span class="tag">needs a fact</span>';
+    tags += '<span class="tag done">edited</span>';
+    return '<div class="row' + (r.placeholder ? ' is-ph' : '') + (isEd ? ' is-edited' : '')
+      + (fix !== r.hy ? ' is-changed' : '')
+      + '" data-id="' + r.id + '" data-search="' + esc((r.en + ' ' + r.hy + ' ' + r.id).toLowerCase()) + '">'
+      + '<div class="meta"><code>' + r.id + '</code><span>' + esc(r.kind) + '</span>' + tags
+      + '<button type="button" class="revert" data-act="revert">undo my change</button>'
+      + '</div>'
+      + '<div class="pair">'
+        + '<div class="side"><label>English</label>'
+          + '<p class="given">' + (esc(r.en) || '<em>not used on this page</em>') + '</p></div>'
+        + '<div class="side"><label>Armenian &mdash; edit here</label>'
+          + '<textarea data-act="fix" rows="1" lang="hy" spellcheck="false"'
+          + ' aria-label="Armenian for ' + r.id + '">' + esc(fix) + '</textarea>'
+          + '<input class="note" data-act="note" type="text" value="' + esc(note) + '"'
+          + ' placeholder="a note for me, if anything needs saying"'
+          + ' aria-label="Note for ' + r.id + '">'
+          + '<p class="was"><b>my draft was</b>' + esc(r.hy) + '</p>'
+        + '</div>'
+      + '</div></div>';
+  }
+
+  function renderApp(){
+    var done = state.filter(edited).length;
+    var todo = state.filter(function(r){ return r.placeholder; });
+    var h = '<div class="wrap"><header>'
+      + '<h1>Archive Text for Proofing</h1>'
+      + '<p class="lede">Every word on the Nushik Malkhasyan archive. The Armenian is '
+      + 'in a box you can type straight into &mdash; correct it in place, then press Save.</p>'
+      + '</header>'
+      + '<div class="how"><h2>How this works</h2>'
+      + '<p>Each Armenian box already holds my draft. Change what is wrong, leave what is '
+      + 'right, and add a note only if something needs explaining. <b>Nothing is sent '
+      + 'until you press Save</b> &mdash; until then your typing is kept in this browser, '
+      + 'so you can close the tab and come back.</p>'
+      + '<p><b>Worth a hard look:</b> the case endings, which are the likeliest thing to be '
+      + 'wrong; whether the register reads like a museum label rather than a translation; '
+      + 'and the craft vocabulary &mdash; I picked Armenian words for <i>doily</i>, '
+      + '<i>filet lace</i>, <i>picot</i>, <i>hook</i> and <i>thread count</i> without '
+      + 'knowing which ones are actually used in Dilijan.</p>'
+      + '<p>The ' + todo.length + ' rows marked <b>needs a fact</b> are not translation '
+      + 'problems. They are square-bracket placeholders waiting on things only you know '
+      + '&mdash; her birth year, who taught her, the measurements. Type the fact into the '
+      + 'Armenian box and put the English in the note.</p></div>'
+
+      + '<div class="bar">'
+      + '<input type="search" id="q" placeholder="Search the text or an ID" aria-label="Search">'
+      + '<div class="chips">'
+        + '<button type="button" class="chip" data-filter="all" aria-pressed="true">All ' + state.length + '</button>'
+        + '<button type="button" class="chip" data-filter="edited" aria-pressed="false">Edited ' + done + '</button>'
+        + '<button type="button" class="chip" data-filter="ph" aria-pressed="false">Needs a fact ' + todo.length + '</button>'
+      + '</div><span class="grow"></span>'
+      + '<span class="status" id="status"></span>'
+      + '<button type="button" class="act ghost" id="dl">Download</button>'
+      + '<button type="button" class="act" id="save">Save</button>'
+      + '</div>'
+
+      + '<nav class="jump">';
+    PAGES.forEach(function(p){ h += '<a href="#' + CODES[p] + '">' + esc(p) + '</a>'; });
+    h += '</nav><div id="rows">';
+
+    PAGES.forEach(function(p){
+      var rows = state.filter(function(r){ return r.page === p; });
+      if (!rows.length) return;
+      h += '<section id="' + CODES[p] + '"><h2>' + esc(p) + '</h2>'
+         + '<p class="count">' + rows.length + ' strings</p>';
+      var sec = null;
+      rows.forEach(function(r){
+        if (r.section !== sec){ sec = r.section; h += '<h3>' + esc(sec) + '</h3>'; }
+        h += renderRow(r);
+      });
+      h += '</section>';
+    });
+
+    h += '</div><p class="empty" id="none" style="display:none">Nothing matches.</p>'
+      + '<footer><p>The Armenian here is a first draft written for this archive and has '
+      + 'not yet been read by a native speaker. Nothing is final.</p></footer></div>';
+    return h;
+  }
+
+  /* what the state becomes once this viewer's draft is folded in */
+  function merged(){
+    return state.map(function(r){
+      var d = draft[r.id] || {};
+      var c = {};
+      for (var k in r) if (Object.prototype.hasOwnProperty.call(r, k)) c[k] = r[k];
+      if (typeof d.fix === 'string') c.fix = d.fix;
+      if (typeof d.note === 'string') c.note = d.note;
+      return c;
+    });
+  }
+
+  /* the replacement page, rendered from state the same way this one was authored */
+  function buildDoc(rows){
+    var css = document.getElementById('appcss').textContent;
+    var js = document.getElementById('appjs').textContent;
+    var json = JSON.stringify(rows || state).replace(/</g, '\\u003c');
+    return '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
+      + '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
+      + '<title>Archive Text for Proofing</title>\n' + FONTS + '\n'
+      + '<style id="appcss">' + css + '<\/style>\n</head>\n<body>\n'
+      + '<div id="app"></div>\n'
+      + '<script type="application/json" id="state">' + json + '<\/script>\n'
+      + '<script id="appjs">' + js + '<\/script>\n</body>\n</html>';
+  }
+
+  var app = document.getElementById('app');
+  function paint(){ app.innerHTML = renderApp(); wire(); sizeAll(); applyFilter(); tick(); }
+
+  function tick(){
+    var s = document.getElementById('status');
+    var n = pending();
+    if (!s) return;
+    if (readOnly){ s.textContent = 'View only'; s.className = 'status'; return; }
+    s.textContent = n ? (n + (n === 1 ? ' change not saved' : ' changes not saved')) : 'All saved';
+    s.className = 'status' + (n ? ' dirty' : '');
+    document.getElementById('save').disabled = !n;
+  }
+
+  function sizeOne(t){ t.style.height = 'auto'; t.style.height = (t.scrollHeight + 2) + 'px'; }
+  function sizeAll(){ Array.prototype.forEach.call(app.querySelectorAll('textarea'), sizeOne); }
+
+  var filter = 'all';
+  function applyFilter(){
+    var q = (document.getElementById('q').value || '').trim().toLowerCase();
+    var shown = 0;
+    Array.prototype.forEach.call(app.querySelectorAll('.row'), function(el){
+      var r = byId[el.dataset.id];
+      var ok = (filter === 'all') || (filter === 'edited' && edited(r))
+            || (filter === 'ph' && r.placeholder);
+      if (ok && q) ok = el.dataset.search.indexOf(q) !== -1;
+      el.classList.toggle('hide', !ok);
+      if (ok) shown++;
+    });
+    Array.prototype.forEach.call(app.querySelectorAll('section'), function(s){
+      s.style.display = s.querySelector('.row:not(.hide)') ? '' : 'none';
+    });
+    document.getElementById('none').style.display = shown ? 'none' : '';
+  }
+
+  function put(id, key, val){
+    var r = byId[id];
+    if (!draft[id]) draft[id] = {};
+    draft[id][key] = val;
+    // an edit that lands back on the agreed text is not a change
+    var f = typeof draft[id].fix === 'string' ? draft[id].fix : (r.fix || r.hy);
+    var n = typeof draft[id].note === 'string' ? draft[id].note : (r.note || '');
+    if (f === (r.fix || r.hy) && n === (r.note || '')) delete draft[id];
+    saveDraft();
+    tick();
+  }
+
+  function wire(){
+    app.addEventListener('input', function(e){
+      var t = e.target;
+      var row = t.closest && t.closest('.row');
+      if (!row) return;
+      if (t.dataset.act === 'fix'){ sizeOne(t); put(row.dataset.id, 'fix', t.value); }
+      else if (t.dataset.act === 'note'){ put(row.dataset.id, 'note', t.value); }
+      else return;
+      var r = byId[row.dataset.id];
+      row.classList.toggle('is-edited', edited(r));
+      row.classList.toggle('is-changed', fixOf(r) !== r.hy);
+    });
+    app.addEventListener('click', function(e){
+      var b = e.target.closest ? e.target.closest('button') : null;
+      if (!b) return;
+      if (b.dataset.act === 'revert'){
+        var row = b.closest('.row'), r = byId[row.dataset.id];
+        delete draft[r.id];
+        r.fix = r.hy; r.note = '';
+        saveDraft();
+        row.outerHTML = renderRow(r);
+        sizeAll(); tick(); applyFilter();
+      } else if (b.dataset.filter){
+        filter = b.dataset.filter;
+        Array.prototype.forEach.call(app.querySelectorAll('.chip'), function(c){
+          c.setAttribute('aria-pressed', String(c.dataset.filter === filter));
+        });
+        applyFilter();
+      } else if (b.id === 'save'){ save(); }
+      else if (b.id === 'dl'){ download(); }
+    });
+    document.getElementById('q').addEventListener('input', applyFilter);
+  }
+
+  function toast(msg){
+    var t = document.createElement('div');
+    t.className = 'toast'; t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function(){ t.remove(); }, 4000);
+  }
+
+  var readOnly = false;
+  function save(){
+    var api = window.__artifact;
+    if (!api){ toast('Saving is not available in this view - your work is kept in this browser.'); return; }
+    var btn = document.getElementById('save');
+    btn.disabled = true;
+    document.getElementById('status').textContent = 'Saving...';
+    // publish the merged copy; the page's own state only moves once the write
+    // lands, so a failed save still shows the work as unsaved
+    var next = merged();
+    try { sessionStorage.setItem('nushik-l10n-saved', '1'); } catch (e) {}
+    api.publish(buildDoc(next)).then(function(){
+      state = next;
+      byId = {}; state.forEach(function(r){ byId[r.id] = r; });
+      draft = {}; saveDraft();          // the published page is the new truth
+    })['catch'](function(err){
+      var code = (err && err.code) || 'upstream_error';
+      if (code === 'conflict') return;  // every view is reloading to the winner
+      if (code === 'not_writer' || code === 'not_granted' || code === 'not_declared'
+          || code === 'capability_disabled' || code === 'capability_removed'){
+        readOnly = true;
+        toast('This is a view-only copy - your typing is still kept in this browser.');
+      } else if (code === 'too_large'){
+        toast('Too much text to save at once. Send me what you have and I will fold it in.');
+      } else if (code === 'rate_limited'){
+        toast('Saving too often - wait a moment and press Save again.');
+      } else {
+        toast('Could not save just now. Your typing is safe in this browser; try again.');
+      }
+      try { sessionStorage.removeItem('nushik-l10n-saved'); } catch (e) {}
+      tick();
+    });
+  }
+
+  function download(){
+    var lines = ['# Corrections - Nushik Malkhasyan archive', ''];
+    var n = 0;
+    state.forEach(function(r){
+      var f = fixOf(r), note = noteOf(r);
+      if (f === r.hy && !note) return;
+      n++;
+      lines.push('## ' + r.id + '  (' + r.page + ' / ' + r.section + ')');
+      lines.push('EN:  ' + r.en);
+      lines.push('WAS: ' + r.hy);
+      lines.push('NEW: ' + f);
+      if (note) lines.push('NOTE: ' + note);
+      lines.push('');
+    });
+    if (!n){ toast('No changes to download yet.'); return; }
+    var api = window.__downloads;
+    var text = lines.join('\n');
+    if (!api){
+      navigator.clipboard && navigator.clipboard.writeText(text).then(function(){
+        toast(n + ' corrections copied to the clipboard.');
+      }, function(){ toast('Could not copy. Press Save instead.'); });
+      return;
+    }
+    api.save({filename: 'nushik-corrections.md', data: text}).then(function(){
+      toast(n + ' corrections downloaded.');
+    })['catch'](function(){ toast('Download declined.'); });
+  }
+
+  window.__buildDoc = buildDoc;   // the round-trip is worth being able to test
+
+  paint();
+
+  try {
+    if (sessionStorage.getItem('nushik-l10n-saved')){
+      sessionStorage.removeItem('nushik-l10n-saved');
+      toast('Saved.');
+    }
+  } catch (e) {}
+
+  if (window.claude && window.claude.use){
+    window.claude.use('artifact').then(function(a){
+      window.__artifact = a;
+      if (!a){ readOnly = true; }
+      tick();
+    });
+    window.claude.use('downloads').then(function(d){ window.__downloads = d; });
+  }
+})();
+</script>

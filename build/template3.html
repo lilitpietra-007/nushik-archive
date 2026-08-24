@@ -1,0 +1,529 @@
+<title>Nushik Malkhasyan</title>
+<style>
+  @font-face{font-family:'Fraunces';font-style:normal;font-weight:500 700;font-display:swap;
+    src:url(data:font/woff2;base64,__FONT_FRAUNCES__) format('woff2');}
+  @font-face{font-family:'Fraunces';font-style:italic;font-weight:500;font-display:swap;
+    src:url(data:font/woff2;base64,__FONT_FRAUNCES_ITALIC__) format('woff2');}
+  @font-face{font-family:'EB Garamond';font-style:normal;font-weight:400 500;font-display:swap;
+    src:url(data:font/woff2;base64,__FONT_EBGARAMOND__) format('woff2');}
+  @font-face{font-family:'Beau Rivage';font-style:normal;font-weight:400;font-display:swap;
+    src:url(data:font/woff2;base64,__FONT_BEAURIVAGE__) format('woff2');}
+  @font-face{font-family:'Noto Serif Armenian';font-style:normal;font-weight:400 700;font-display:swap;
+    src:url(data:font/woff2;base64,__FONT_NOTOARM__) format('woff2');
+    unicode-range:U+0530-058F,U+FB13-FB17;}
+
+  /* Palette drawn from the watercolour itself: lavender sky, limewashed wall,
+     terracotta roof, deep hedgerow green, meadow gold. Single committed world. */
+  :root{
+    --ink:#1f1809;
+    --ink-soft:#463d2a;
+    --vellum:#f6f1e4;
+    --vellum-warm:#efe7d4;
+    --thread:#fdfaf2;
+    --hedge:#3d4a2f;
+    --moss:#6f7a4a;
+    --roof:#8d4a29;
+    --gold:#7d5f28;
+    --bloom:#b8697d;
+
+    --font-display:'Fraunces',Georgia,serif;
+    --font-body:'EB Garamond',Georgia,serif;
+    --font-script:'Beau Rivage',cursive;
+    --font-am:'Noto Serif Armenian',Georgia,serif;
+
+    --edge:clamp(1.25rem,5vw,5rem);
+  }
+
+  *,*::before,*::after{box-sizing:border-box;}
+  html{scroll-behavior:smooth; overflow-x:hidden;}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
+
+  body{
+    margin:0;
+    background:var(--vellum);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:1.0625rem;
+    line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--hedge);color:var(--thread);}
+
+  [lang="hy"]{font-family:var(--font-am);}
+
+  /* ---------- the painting, held still beneath everything ---------- */
+  .backdrop{
+    position:fixed; inset:0; z-index:0;
+    background-image:url("data:image/jpeg;base64,__COTTAGE__");
+    background-size:cover;
+    background-position:50% 42%;
+  }
+  .backdrop::after{
+    content:""; position:absolute; inset:0;
+    background:
+      linear-gradient(180deg, rgba(246,241,228,.52) 0%, rgba(246,241,228,.42) 38%, rgba(246,241,228,.58) 100%);
+  }
+  .page{position:relative; z-index:1;}
+
+  /* Soft vellum haze: lets prose sit on the painting without a hard card edge.
+     Feathers to nothing, so the watercolour still reads as the page's ground. */
+  .wash{
+    background:radial-gradient(ellipse 50% 50% at 50% 50%,
+      rgba(250,247,239,.97) 0%,
+      rgba(250,247,239,.955) 45%,
+      rgba(250,247,239,.82) 63%,
+      rgba(250,247,239,.46) 79%,
+      rgba(250,247,239,.15) 92%,
+      rgba(250,247,239,0) 100%);
+    padding:clamp(2.4rem,5vw,3.8rem) clamp(2.75rem,6.5vw,5rem);
+  }
+
+  /* ---------- washi tape ---------- */
+  .tape{
+    position:absolute;
+    left:-14%; width:128%;
+    padding:.55rem 0;
+    background:rgba(244,238,224,.80);
+    box-shadow:0 6px 18px rgba(42,36,24,.16);
+    display:flex; gap:3.2rem;
+    justify-content:center; align-items:center;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:4;
+  }
+  .tape span{
+    font-size:.6rem; letter-spacing:.24em; text-transform:uppercase;
+    color:rgba(42,36,24,.62); white-space:nowrap;
+  }
+  .tape span[lang="hy"]{letter-spacing:.08em;}
+  .tape-a{top:3.4rem; transform:rotate(-15deg);}
+  .tape-b{top:7.6rem; transform:rotate(-6deg); background:rgba(240,233,217,.72);}
+
+  /* ---------- the lace medallion: vellum ground + her real lace on top ---------- */
+  .lace{position:relative; display:grid; place-items:center;}
+  .lace-ground{
+    position:absolute;
+    width:96%; height:94%;
+    background:radial-gradient(ellipse 50% 50% at 50% 50%,
+      rgba(250,247,239,.97) 0%,
+      rgba(250,247,239,.95) 24%,
+      rgba(250,247,239,.87) 40%,
+      rgba(250,247,239,.62) 56%,
+      rgba(250,247,239,.34) 71%,
+      rgba(250,247,239,.13) 85%,
+      rgba(250,247,239,0) 100%);
+  }
+  .lace-img{
+    position:relative;
+    width:100%; height:auto; display:block;
+    filter:drop-shadow(0 16px 30px rgba(42,34,20,.30));
+  }
+  .lace-inner{
+    position:absolute;
+    width:56%;
+    text-align:center;
+    display:flex; flex-direction:column; align-items:center;
+  }
+
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .bob{animation:bob 9s ease-in-out infinite;}
+  .spin{animation:spin 52s linear infinite;}
+  @media (prefers-reduced-motion:reduce){.bob,.spin{animation:none;}}
+
+  .reveal{opacity:0; transform:translateY(24px); transition:opacity 1s ease, transform 1s ease;}
+  .reveal.is-visible{opacity:1; transform:translateY(0);}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none;}}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    min-height:100svh;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    padding:7rem var(--edge) 3rem;
+    text-align:center;
+    overflow:hidden;            /* keeps the angled tape from widening the page */
+  }
+  .hero .lace{width:min(70vw,462px);}
+  .hero .lace-inner{width:52%;}
+
+  .estd{
+    display:flex; align-items:baseline; gap:.5rem;
+    font-size:.62rem; letter-spacing:.24em; text-transform:uppercase;
+    color:#6a4f1c; margin-bottom:.55rem;
+  }
+  .hero h1{
+    margin:0;
+    font-family:var(--font-am); font-weight:700;
+    font-size:clamp(1rem,3.1vw,1.65rem); line-height:1.18;
+    color:var(--ink); text-wrap:balance;
+  }
+  .hero .latin{
+    font-family:var(--font-display); font-style:italic; font-weight:500;
+    font-size:clamp(.7rem,1.75vw,.95rem);
+    color:var(--ink-soft); margin:.3rem 0 0;
+    letter-spacing:.04em;
+  }
+  .hero .rule{
+    width:38%; height:1px; margin:.6rem 0;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  }
+  .hero .craft{
+    font-family:var(--font-script);
+    font-size:clamp(.85rem,2.2vw,1.15rem);
+    color:var(--hedge); line-height:1;
+  }
+
+  .hero-caption{
+    max-width:38rem; margin:.25rem auto 0;
+    font-size:.98rem; color:var(--ink);
+    text-shadow:0 1px 10px rgba(246,241,228,.85), 0 0 22px rgba(246,241,228,.7);
+  }
+  .hero-caption .fact{font-family:var(--font-display); font-style:italic; color:var(--roof);}
+
+  .cue{
+    margin-top:1.5rem;
+    font-size:.6rem; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--ink-soft);
+    text-shadow:0 1px 8px rgba(246,241,228,.9);
+  }
+
+  /* ---------- generic section ---------- */
+  section{position:relative; padding:7rem var(--edge);}
+  .head{text-align:center; max-width:36rem; margin:0 auto 3.5rem;}
+  .kicker{
+    font-size:.62rem; letter-spacing:.24em; text-transform:uppercase;
+    color:var(--ink-soft);
+    display:flex; align-items:center; justify-content:center; gap:.8em;
+    text-shadow:0 1px 8px rgba(246,241,228,.9);
+  }
+  .kicker::before,.kicker::after{
+    content:""; height:1px; width:2rem;
+    background:rgba(42,36,24,.28);
+  }
+  .kicker [lang="hy"]{letter-spacing:.06em;}
+  .head h2{
+    margin:.9rem 0 0;
+    font-family:var(--font-display); font-weight:600;
+    font-size:clamp(1.7rem,3.6vw,2.4rem);
+    color:var(--ink); text-wrap:balance;
+    text-shadow:0 1px 12px rgba(246,241,228,.9), 0 0 26px rgba(246,241,228,.75);
+  }
+
+  /* ---------- story, set into the lace ---------- */
+  .story .lace{width:min(94vw,780px); margin:0 auto;}
+  .story .lace-ground{
+    width:100%; height:98%;
+    background:radial-gradient(ellipse 50% 50% at 50% 50%,
+      rgba(250,247,239,.97) 0%,
+      rgba(250,247,239,.96) 30%,
+      rgba(250,247,239,.90) 46%,
+      rgba(250,247,239,.66) 60%,
+      rgba(250,247,239,.36) 74%,
+      rgba(250,247,239,.13) 87%,
+      rgba(250,247,239,0) 100%);
+  }
+  .story .lace-inner{width:62%; max-width:46ch;}
+  .story p{margin:0 0 1.05em; font-size:clamp(.78rem,1.4vw,1.06rem); line-height:1.62;}
+  .story p:last-child{margin-bottom:0;}
+  .story .fact{font-family:var(--font-display); font-style:italic; color:var(--roof);}
+
+  .story-note{
+    max-width:40rem; margin:3.5rem auto 0; text-align:center;
+  }
+  .story-note p{
+    font-family:var(--font-display); font-style:italic; font-weight:500;
+    font-size:clamp(1.15rem,2.3vw,1.5rem); margin:0 0 .6rem;
+    color:var(--ink);
+    text-shadow:0 1px 12px rgba(246,241,228,.92), 0 0 26px rgba(246,241,228,.8);
+  }
+  .story-note span{
+    display:block; margin-top:.2rem;
+    font-family:var(--font-body); font-style:italic;
+    color:var(--ink-soft); font-size:.9rem;
+    text-shadow:0 1px 10px rgba(246,241,228,.9);
+  }
+
+  /* ---------- gallery: lace floats on the meadow, no frames ---------- */
+  .plates{
+    display:grid; grid-template-columns:1fr;
+    gap:clamp(5rem,10vw,9rem);
+    max-width:76rem; margin:0 auto;
+  }
+  @media (min-width:860px){
+    .plates{grid-template-columns:repeat(2,1fr); align-items:start;}
+    .plate:nth-child(odd){transform:translateY(-2.5rem);}
+    .plate:last-child:nth-child(odd){grid-column:1 / -1; justify-self:center; max-width:32rem; transform:none;}
+  }
+  .plate{text-align:center; min-width:0;}
+  .plate figcaption{overflow-wrap:anywhere;}
+  .plate .lace{width:100%;}
+  .plate .lace-img{transition:transform .8s cubic-bezier(.19,1,.22,1);}
+  .plate:hover .lace-img,.plate:focus-within .lace-img{transform:scale(1.05) rotate(-1deg);}
+
+  .plate figcaption{margin-top:1.1rem;}
+  .plate .num{
+    font-family:var(--font-display); font-style:italic;
+    font-size:.8rem; color:var(--gold); letter-spacing:.12em;
+    text-shadow:0 1px 8px rgba(246,241,228,.9);
+  }
+  .plate h3{
+    margin:.25rem 0 0;
+    font-family:var(--font-display); font-weight:600;
+    font-size:clamp(1.15rem,2.2vw,1.45rem); color:var(--ink);
+    text-shadow:0 1px 12px rgba(246,241,228,.92), 0 0 24px rgba(246,241,228,.8);
+  }
+  .plate p{
+    margin:.5rem auto 0; max-width:34ch;
+    font-size:1rem; color:var(--ink);
+    text-shadow:0 1px 10px rgba(250,247,239,.95);
+  }
+  .plate .meta{
+    display:block; margin-top:.55rem;
+    font-family:var(--font-display); font-style:italic;
+    font-size:.8rem; color:var(--roof);
+    text-shadow:0 1px 10px rgba(246,241,228,.92);
+  }
+
+  /* ---------- seal ---------- */
+  .seal{
+    position:relative; width:10rem; height:10rem; margin:0 auto;
+    background:radial-gradient(circle,
+      rgba(249,245,235,.92) 0%, rgba(249,245,235,.82) 52%, rgba(249,245,235,0) 73%);
+  }
+  .seal svg{width:100%; height:100%; display:block;}
+  .seal-ring{fill:none; stroke:rgba(42,36,24,.34); stroke-width:.8;}
+  text.seal-text{
+    font-family:'EB Garamond',Georgia,serif; font-size:6.4px; letter-spacing:2.3px;
+    fill:var(--ink); text-transform:uppercase;
+  }
+  .seal-core{
+    position:absolute; inset:0; display:grid; place-items:center;
+    color:var(--hedge);
+  }
+  .seal-core svg{width:2.6rem; height:2.6rem;}
+
+  /* ---------- footer ---------- */
+  footer{
+    position:relative; text-align:center;
+    padding:6rem var(--edge) 5rem;
+  }
+  .footer-text{max-width:38rem; margin:2.25rem auto 0;
+    padding-top:clamp(3.25rem,6.5vw,5rem); padding-bottom:clamp(3.25rem,6.5vw,5rem);}
+  footer .lede{
+    max-width:33rem; margin:0 auto;
+    color:var(--ink); font-size:1rem;
+    text-shadow:0 1px 12px rgba(246,241,228,.92), 0 0 24px rgba(246,241,228,.8);
+  }
+  footer .place{
+    margin-top:1.5rem; font-family:var(--font-am); font-weight:700;
+    font-size:1.05rem; color:var(--ink);
+    text-shadow:0 1px 12px rgba(246,241,228,.92);
+  }
+  footer .place small{
+    display:block; margin-top:.25rem;
+    font-family:var(--font-display); font-style:italic; font-weight:500;
+    font-size:.8rem; color:var(--ink-soft);
+  }
+  footer .sign{
+    font-family:var(--font-script); font-size:1.7rem;
+    color:var(--hedge); margin-top:1.5rem;
+    text-shadow:0 1px 12px rgba(246,241,228,.92);
+  }
+  footer .disclaimer{
+    max-width:31rem; margin:2.5rem auto 0;
+    font-size:.8rem; font-style:italic; line-height:1.6;
+    color:var(--ink-soft);
+    text-shadow:0 1px 10px rgba(246,241,228,.9);
+  }
+
+  @media (max-width:640px){
+    section{padding:5rem var(--edge);}
+    .hero{padding-top:7.5rem;}
+    .story .lace-inner{width:66%;}
+    .plate:nth-child(odd){transform:none;}
+  }
+</style>
+
+<div class="backdrop" aria-hidden="true"></div>
+
+<div class="page">
+
+  <section class="hero">
+    <div class="tape tape-a" aria-hidden="true">
+      <span lang="hy">Նուշիկ Մալխասյան</span><span>Dilijan</span>
+      <span lang="hy">Նուշիկ Մալխասյան</span><span>Dilijan</span>
+      <span lang="hy">Նուշիկ Մալխասյան</span><span>Dilijan</span>
+      <span lang="hy">Նուշիկ Մալխասյան</span><span>Dilijan</span>
+    </div>
+    <div class="tape tape-b" aria-hidden="true">
+      <span>Lace &amp; Needlework</span><span lang="hy">Ասեղնագործություն</span>
+      <span>Lace &amp; Needlework</span><span lang="hy">Ասեղնագործություն</span>
+      <span>Lace &amp; Needlework</span><span lang="hy">Ասեղնագործություն</span>
+      <span>Lace &amp; Needlework</span><span lang="hy">Ասեղնագործություն</span>
+    </div>
+
+    <div class="lace bob reveal">
+      <div class="lace-ground" aria-hidden="true"></div>
+      <img class="lace-img" src="data:image/png;base64,__LACE_MEDALLION__" alt="A round lace doily by Nushik Malkhasyan, its openwork showing the meadow behind it." />
+      <div class="lace-inner">
+        <p class="estd"><span lang="hy">Դիլիջան</span> &middot; <span>Armenia</span></p>
+        <h1 lang="hy">Նուշիկ Մալխասյան</h1>
+        <p class="latin">Nushik Malkhasyan</p>
+        <span class="rule" aria-hidden="true"></span>
+        <p class="craft">lace &amp; needlework</p>
+      </div>
+    </div>
+
+    <p class="hero-caption wash reveal">A keepsake archive of work made by hand in Dilijan &mdash; <span class="fact">[born [year], at the frame for [decades] since]</span>.</p>
+    <p class="cue reveal">Scroll <span lang="hy">&middot; Սկսել</span></p>
+  </section>
+
+  <section class="story">
+    <div class="head wash reveal">
+      <p class="kicker"><span lang="hy">Պատմությունը</span> &middot; The Story</p>
+      <h2>A Life at the Needle</h2>
+    </div>
+
+    <div class="lace reveal">
+      <div class="lace-ground" aria-hidden="true"></div>
+      <img class="lace-img" src="data:image/png;base64,__LACE_STAR__" alt="" />
+      <div class="lace-inner">
+        <p>In Dilijan, a town built into the forested hills of northern Armenia, Nushik Malkhasyan has spent <span class="fact">decades</span> with thread in hand, turning single knots into lace fine enough to look like frost on glass.</p>
+        <p><span class="fact">[Add how and from whom she learned the craft &mdash; a mother, a grandmother, a neighbour &mdash; and when she began.]</span></p>
+        <p>Her pieces travel hand to hand through <span class="fact">[Dilijan and beyond]</span>, each built outward from a single point, the pattern carried in memory rather than on paper.</p>
+      </div>
+    </div>
+
+    <div class="story-note wash reveal">
+      <p>&ldquo;Every piece begins from a single point, and grows outward by memory alone.&rdquo;</p>
+      <span lang="hy">Ամեն ասեղնագործություն սկսվում է մեկ կետից։</span>
+    </div>
+  </section>
+
+  <section class="gallery">
+    <div class="head wash reveal">
+      <p class="kicker"><span lang="hy">Աշխատանքները</span> &middot; The Works</p>
+      <h2>Five Plates from the Archive</h2>
+    </div>
+
+    <div class="plates">
+
+      <figure class="plate reveal">
+        <div class="lace">
+          <img class="lace-img" src="data:image/png;base64,__LACE_ROSETTE__" alt="Round doily worked as an eight-petal rosette with a wide shell border." loading="lazy" />
+        </div>
+        <figcaption class="wash">
+          <p class="num">Plate I</p>
+          <h3>Eight-Petal Rosette</h3>
+          <p>Worked outward from eight hearts to a wide shell border.</p>
+          <span class="meta">[Cotton thread &middot; approx. __ cm]</span>
+        </figcaption>
+      </figure>
+
+      <figure class="plate reveal">
+        <div class="lace">
+          <img class="lace-img" src="data:image/png;base64,__LACE_ROSETTE2__" alt="The same eight-petal rosette pattern worked a second time." loading="lazy" />
+        </div>
+        <figcaption class="wash">
+          <p class="num">Plate II</p>
+          <h3>Rosette, Companion Piece</h3>
+          <p>The same pattern worked again. <span class="fact">[A pair for a set, or a study repeated.]</span></p>
+          <span class="meta">[Cotton thread &middot; approx. __ cm]</span>
+        </figcaption>
+      </figure>
+
+      <figure class="plate reveal">
+        <div class="lace">
+          <img class="lace-img" src="data:image/png;base64,__LACE_MEDALLION__" alt="Round doily of eight oval medallions turning around a lettered centre." loading="lazy" />
+        </div>
+        <figcaption class="wash">
+          <p class="num">Plate III</p>
+          <h3>Medallion Wheel</h3>
+          <p>Eight oval medallions turn around a centre bearing a single worked initial &mdash; the piece lent to this archive&rsquo;s seal.</p>
+          <span class="meta">[Whose initial, if known &middot; approx. __ cm]</span>
+        </figcaption>
+      </figure>
+
+      <figure class="plate reveal">
+        <div class="lace">
+          <img class="lace-img" src="data:image/png;base64,__LACE_STAR__" alt="Round doily with a sharp scalloped border and concentric bands closing on a quatrefoil." loading="lazy" />
+        </div>
+        <figcaption class="wash">
+          <p class="num">Plate IV</p>
+          <h3>Starburst with Quatrefoil</h3>
+          <p>A sharp-toothed border rings concentric bands of mesh, closing on a small cross at the centre.</p>
+          <span class="meta">[approx. __ cm]</span>
+        </figcaption>
+      </figure>
+
+      <figure class="plate reveal">
+        <div class="lace">
+          <img class="lace-img" src="data:image/png;base64,__LACE_OVAL__" alt="Fine oval lace with lettering worked into the mesh ground." loading="lazy" />
+        </div>
+        <figcaption class="wash">
+          <p class="num">Plate V</p>
+          <h3>The Lettered Oval</h3>
+          <p>The finest piece in the set &mdash; a mesh ground fine enough to carry lettering worked straight into it.</p>
+          <span class="meta">[Transcribe the lettering here, if legible]</span>
+        </figcaption>
+      </figure>
+
+    </div>
+  </section>
+
+  <footer>
+    <div class="seal spin reveal" role="img" aria-label="Seal reading: Artisan of Dilijan, needle and thread">
+      <svg viewBox="0 0 100 100">
+        <defs>
+          <path id="sealArc" d="M 50,50 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"/>
+        </defs>
+        <circle class="seal-ring" cx="50" cy="50" r="46"/>
+        <circle class="seal-ring" cx="50" cy="50" r="29"/>
+        <text class="seal-text">
+          <textPath href="#sealArc" startOffset="0%">ARTISAN OF DILIJAN &#10022; NEEDLE AND THREAD &#10022; </textPath>
+        </text>
+      </svg>
+      <div class="seal-core" aria-hidden="true">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <ellipse cx="20" cy="11" rx="8.5" ry="3.2"/>
+          <ellipse cx="20" cy="29" rx="8.5" ry="3.2"/>
+          <line x1="11.5" y1="11" x2="11.5" y2="29"/>
+          <line x1="28.5" y1="11" x2="28.5" y2="29"/>
+          <path d="M14 15 Q20 20 26 15 M14 25 Q20 20 26 25"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="footer-text wash reveal">
+    <p class="lede">This is the first page of a growing archive. More plates will be added as further pieces are found, measured, and named.</p>
+    <p class="place" lang="hy">Դիլիջան &middot; Հայաստան<small>Dilijan, Armenia</small></p>
+    <p class="sign" aria-hidden="true">worked by hand, kept with care</p>
+    <p class="disclaimer">Armenian phrasing here is a first draft, kept short on purpose &mdash; worth a native speaker&rsquo;s pass before this page is shared widely.</p>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  (function(){
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var items = document.querySelectorAll('.reveal');
+    if (reduce || !('IntersectionObserver' in window)) {
+      items.forEach(function(el){ el.classList.add('is-visible'); });
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry, i){
+        if (entry.isIntersecting) {
+          var el = entry.target;
+          setTimeout(function(){ el.classList.add('is-visible'); }, (i % 3) * 100);
+          io.unobserve(el);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+    items.forEach(function(el){ io.observe(el); });
+  })();
+</script>

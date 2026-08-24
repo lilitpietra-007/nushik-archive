@@ -1,0 +1,657 @@
+<title>Ժանյակ՝ Կրելու Համար</title>
+<style>
+  @font-face{font-family:'Fraunces';font-style:normal;font-weight:500 700;font-display:swap;
+    src:url(data:font/woff2;base64,__FONT_FRAUNCES__) format('woff2');}
+  @font-face{font-family:'Fraunces';font-style:italic;font-weight:500;font-display:swap;
+    src:url(data:font/woff2;base64,__FONT_FRAUNCES_ITALIC__) format('woff2');}
+  @font-face{font-family:'EB Garamond';font-style:normal;font-weight:400 500;font-display:swap;
+    src:url(data:font/woff2;base64,__FONT_EBGARAMOND__) format('woff2');}
+  @font-face{font-family:'Beau Rivage';font-style:normal;font-weight:400;font-display:swap;
+    src:url(data:font/woff2;base64,__FONT_BEAURIVAGE__) format('woff2');}
+  @font-face{font-family:'Noto Serif Armenian';font-style:normal;font-weight:400 700;font-display:swap;
+    src:url(data:font/woff2;base64,__FONT_NOTOARM__) format('woff2');
+    unicode-range:U+0530-058F,U+FB13-FB17;}
+
+  /* Same world as the doily archive, pitched to the meadow watercolour:
+     paler ground, and the blue of the embroidery as the one cool accent. */
+  :root{
+    --ink:#1f1809;
+    --ink-soft:#463d2a;
+    --vellum:#eee7d6;
+    --thread:#fdfaf2;
+    --hedge:#3d4a2f;
+    --roof:#8d4a29;
+    --gold:#7d5f28;
+    --lapis:#2c4a86;
+    --charcoal:#241f1a;
+
+    --font-display:'Fraunces',Georgia,serif;
+    --font-body:'EB Garamond',Georgia,serif;
+    --font-script:'Beau Rivage',cursive;
+    --font-am:'Noto Serif Armenian',Georgia,serif;
+
+    --edge:clamp(1.25rem,5vw,5rem);
+  }
+
+  *,*::before,*::after{box-sizing:border-box;}
+  html{scroll-behavior:smooth; overflow-x:hidden;}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
+
+  body{
+    margin:0; background:var(--vellum); color:var(--ink);
+    font-family:var(--font-body); font-size:1.0625rem; line-height:1.62;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  ::selection{background:var(--hedge); color:var(--thread);}
+  [lang="hy"]:not(html){font-family:var(--font-am);}
+
+  .backdrop{
+    position:fixed; inset:0; z-index:0;
+    background-image:url("data:image/jpeg;base64,__PORTRAIT__");
+    background-size:cover; background-position:50% 58%;
+  }
+  .backdrop::after{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(244,239,225,.46) 0%, rgba(244,239,225,.34) 40%, rgba(244,239,225,.52) 100%);
+  }
+  .page{position:relative; z-index:1;}
+
+  .wash{
+    background:radial-gradient(ellipse 50% 50% at 50% 50%,
+      rgba(250,247,239,.96) 0%, rgba(250,247,239,.94) 45%,
+      rgba(250,247,239,.80) 63%, rgba(250,247,239,.44) 79%,
+      rgba(250,247,239,.14) 92%, rgba(250,247,239,0) 100%);
+    padding:clamp(2rem,4vw,3rem) clamp(2.25rem,5.5vw,4rem);
+  }
+
+  html[data-lang="en"] .i18n.hy{display:none;}
+  html[data-lang="hy"] .i18n.en{display:none;}
+
+  .lang{
+    position:fixed; top:1rem; right:1rem; z-index:20;
+    display:flex; align-items:center; gap:.15rem; padding:.3rem .4rem;
+    background:rgba(247,242,230,.94); border:1px solid rgba(42,36,24,.26);
+    border-radius:999px; box-shadow:0 8px 22px rgba(42,34,20,.26);
+  }
+  .lang-btn{
+    font-family:var(--font-body); font-size:.66rem; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--ink-soft);
+    background:transparent; border:0; border-radius:999px;
+    padding:.34rem .6rem; cursor:pointer; line-height:1;
+    transition:background .3s ease, color .3s ease;
+  }
+  .lang-btn[lang="hy"]{letter-spacing:.06em;}
+  .lang-btn:hover{color:var(--ink);}
+  .lang-btn[aria-pressed="true"]{background:var(--hedge); color:#f7f2e6;}
+  .lang-btn:focus-visible{outline:2px solid var(--hedge); outline-offset:2px;}
+  @media (max-width:640px){
+    .lang{top:.6rem; right:.6rem; padding:.25rem .3rem;}
+    .lang-btn{font-size:.6rem; padding:.3rem .5rem;}
+  }
+
+  .reveal{opacity:0; transform:translateY(24px); transition:opacity 1s ease, transform 1s ease;}
+  .reveal.is-visible{opacity:1; transform:translateY(0);}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none;}}
+
+  /* ---------- hero ---------- */
+  .hero{
+    min-height:100svh; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center;
+    padding:7rem var(--edge) 3rem; position:relative; overflow:hidden;
+  }
+  .tape{
+    position:absolute; left:-14%; width:128%; padding:.55rem 0;
+    background:rgba(244,238,224,.80); box-shadow:0 6px 18px rgba(42,36,24,.16);
+    display:flex; gap:3.2rem; justify-content:center; align-items:center;
+    overflow:hidden; pointer-events:none; z-index:4;
+    top:3.6rem; transform:rotate(-13deg);
+  }
+  .tape span{
+    font-size:.6rem; letter-spacing:.24em; text-transform:uppercase;
+    color:rgba(42,36,24,.62); white-space:nowrap;
+  }
+  .tape span[lang="hy"]{letter-spacing:.08em;}
+
+  .eyebrow{
+    font-size:.62rem; letter-spacing:.24em; text-transform:uppercase;
+    color:var(--ink-soft); margin:0 0 1.1rem;
+    text-shadow:0 1px 9px rgba(246,241,228,.85);
+  }
+  .hero h1{
+    margin:0; font-family:var(--font-am); font-weight:700;
+    font-size:clamp(2rem,6vw,3.6rem); line-height:1.1; color:var(--ink);
+    text-shadow:0 1px 12px rgba(246,241,228,.9);
+  }
+  .hero .latin{
+    margin:.5rem 0 0; font-family:var(--font-display); font-style:italic; font-weight:500;
+    font-size:clamp(1rem,2.4vw,1.4rem); color:var(--ink-soft);
+    text-shadow:0 1px 9px rgba(246,241,228,.85);
+  }
+  .hero .rule{
+    display:block; width:5rem; height:1px; margin:1.4rem auto;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  }
+  .hero-sub{max-width:34rem; margin:0 auto; font-size:1rem;}
+  .hero-sub .fact{font-family:var(--font-display); font-style:italic; color:var(--roof);}
+  .cue{
+    margin-top:2rem; font-size:.6rem; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--ink-soft); text-shadow:0 1px 9px rgba(246,241,228,.85);
+  }
+
+  /* ---------- sections ---------- */
+  section{position:relative; padding:6.5rem var(--edge);}
+  .head{text-align:center; max-width:36rem; margin:0 auto 3.25rem;}
+  .kicker{
+    font-size:.62rem; letter-spacing:.24em; text-transform:uppercase; color:var(--ink-soft);
+    display:flex; align-items:center; justify-content:center; gap:.8em; margin:0;
+    text-shadow:0 1px 9px rgba(246,241,228,.85);
+  }
+  .kicker::before,.kicker::after{content:""; height:1px; width:2rem; background:rgba(42,36,24,.28);}
+  .head h2{
+    margin:.9rem 0 0; font-family:var(--font-display); font-weight:600;
+    font-size:clamp(1.7rem,3.6vw,2.4rem); color:var(--ink); text-wrap:balance;
+    text-shadow:0 1px 12px rgba(246,241,228,.9);
+  }
+  .head h2[lang="hy"]{font-family:var(--font-am);}
+
+  .prose{max-width:38rem; margin:0 auto;}
+  .prose p{margin:0 0 1.25em;}
+  .prose p:last-child{margin-bottom:0;}
+  .prose .fact{font-family:var(--font-display); font-style:italic; color:var(--roof);}
+  .year{
+    font-family:var(--font-display); font-weight:600; color:var(--lapis);
+    letter-spacing:.03em; font-variant-numeric:tabular-nums;
+  }
+
+  /* ---------- the two works ---------- */
+  .works{
+    display:grid; grid-template-columns:1fr; gap:clamp(4.5rem,9vw,7rem);
+    max-width:70rem; margin:0 auto;
+  }
+  @media (min-width:900px){
+    .works{grid-template-columns:1fr 1fr; align-items:start;}
+    .work:nth-child(odd){transform:translateY(-1.75rem);}
+    .work:last-child:nth-child(odd){grid-column:1 / -1; justify-self:center; max-width:30rem; transform:none;}
+  }
+  .work{text-align:center; min-width:0;}
+  .work-open{
+    display:block; width:100%; padding:0; border:0; background:transparent;
+    cursor:zoom-in; border-radius:.4rem;
+  }
+  .work-open:focus-visible{outline:2px solid var(--hedge); outline-offset:8px;}
+  .work-frame{
+    filter:drop-shadow(0 20px 36px rgba(42,34,20,.38));
+    transition:transform .6s cubic-bezier(.19,1,.22,1);
+  }
+  .work-open:hover .work-frame,
+  .work-open:focus-visible .work-frame{transform:translateY(-6px) scale(1.02);}
+  .work-frame img{display:block; width:100%; height:auto;}
+
+  .work figcaption{margin-top:1.25rem; overflow-wrap:anywhere;}
+  .work .num{
+    margin:0; font-family:var(--font-display); font-style:italic;
+    font-size:.8rem; color:var(--gold); letter-spacing:.12em;
+    text-shadow:0 1px 9px rgba(246,241,228,.85);
+  }
+  .work h3{
+    margin:.25rem 0 0; font-family:var(--font-display); font-weight:600;
+    font-size:clamp(1.15rem,2.2vw,1.45rem); color:var(--ink);
+    text-shadow:0 1px 9px rgba(246,241,228,.85);
+  }
+  .work h3[lang="hy"]{font-family:var(--font-am);}
+  .work p{margin:.55rem auto 0; max-width:34ch; font-size:1rem;}
+  .work .meta{
+    display:block; margin-top:.6rem; font-family:var(--font-display);
+    font-style:italic; font-size:.82rem; color:var(--roof);
+  }
+
+  /* ---------- footer ---------- */
+  footer{position:relative; text-align:center; padding:5.5rem var(--edge) 4.5rem;}
+  footer .lede{max-width:33rem; margin:0 auto; color:var(--ink);}
+  footer .place{
+    margin-top:1.5rem; font-family:var(--font-am); font-weight:700;
+    font-size:1.05rem; color:var(--ink);
+  }
+  footer .place small{
+    display:block; margin-top:.25rem; font-family:var(--font-display);
+    font-style:italic; font-weight:500; font-size:.8rem; color:var(--ink-soft);
+  }
+  footer .sign{font-family:var(--font-script); font-size:1.7rem; color:var(--hedge); margin-top:1.25rem;}
+  footer .disclaimer{
+    max-width:32rem; margin:2rem auto 0; font-size:.8rem;
+    font-style:italic; line-height:1.6; color:var(--ink-soft);
+  }
+
+  /* ---------- zoom viewer ---------- */
+  .lb{
+    position:fixed; inset:0; z-index:60; display:none;
+    background:rgba(20,17,11,.975);
+    -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
+    flex-direction:column;
+  }
+  .lb[open]{display:flex;}
+  .lb-stage{
+    flex:1; min-height:0; display:grid; place-items:center;
+    overflow:hidden; touch-action:none; cursor:grab;
+  }
+  .lb-stage.is-panning{cursor:grabbing;}
+  .lb-img{
+    max-width:94%; max-height:94%; transform-origin:center center;
+    will-change:transform; user-select:none; -webkit-user-drag:none;
+    box-shadow:0 20px 60px rgba(0,0,0,.6);
+  }
+  .lb-bar{
+    display:flex; align-items:center; justify-content:center; gap:.4rem;
+    flex-wrap:wrap; padding:.7rem 1rem 1.1rem; color:#f3ecdb;
+  }
+  .lb-cap{
+    flex:1 1 100%; text-align:center; font-family:var(--font-display);
+    font-size:1.02rem; margin:0 0 .3rem;
+  }
+  .lb-cap[lang="hy"]{font-family:var(--font-am);}
+  .lb-cap span{
+    display:block; font-family:var(--font-body); font-style:italic;
+    font-size:.78rem; color:#bfb49a; letter-spacing:.06em;
+  }
+  .lb-btn{
+    font-family:var(--font-body); font-size:.9rem;
+    min-width:2.3rem; height:2.3rem; display:grid; place-items:center;
+    color:#f3ecdb; background:rgba(247,242,230,.10);
+    border:1px solid rgba(247,242,230,.28); border-radius:999px;
+    cursor:pointer; padding:0 .6rem; transition:background .25s ease;
+  }
+  .lb-btn:hover{background:rgba(247,242,230,.22);}
+  .lb-btn:focus-visible{outline:2px solid #d8c9a4; outline-offset:2px;}
+  .lb-btn svg{width:1.05rem; height:1.05rem;}
+  .lb-close{position:absolute; top:.9rem; right:.9rem; z-index:2;}
+  .lb-pct{font-variant-numeric:tabular-nums; min-width:3.4rem; text-align:center; font-size:.78rem; color:#bfb49a;}
+
+  /* ---------- site navigation ---------- */
+  .home-link{
+    position:fixed; top:1rem; left:1rem; z-index:20;
+    display:inline-flex; align-items:center; gap:.45rem;
+    padding:.42rem .85rem .42rem .68rem;
+    background:rgba(247,242,230,.94);
+    border:1px solid rgba(42,36,24,.26);
+    border-radius:999px;
+    box-shadow:0 8px 22px rgba(42,34,20,.26);
+    text-decoration:none; color:var(--ink-soft);
+    font-size:.64rem; letter-spacing:.18em; text-transform:uppercase;
+    transition:color .3s ease, background .3s ease;
+  }
+  .home-link:hover{color:var(--ink); background:rgba(252,249,242,.98);}
+  .home-link:focus-visible{outline:2px solid var(--hedge); outline-offset:2px;}
+  .home-link svg{width:.8rem; height:.8rem; flex:none;}
+  .home-link [lang="hy"]{letter-spacing:.06em;}
+  @media (max-width:640px){
+    .home-link{top:.6rem; left:.6rem; padding:.34rem .68rem .34rem .55rem; font-size:.57rem;}
+  }
+
+  .siblings{
+    max-width:44rem; margin:2.75rem auto 0;
+    display:grid; grid-template-columns:1fr; gap:.9rem;
+  }
+  @media (min-width:640px){ .siblings{grid-template-columns:1fr 1fr;} }
+  .sib{
+    display:block; text-decoration:none; color:inherit; text-align:left;
+    padding:1.05rem 1.25rem;
+    background:rgba(247,242,230,.88);
+    border:1px solid rgba(42,36,24,.18);
+    border-radius:.25rem;
+    transition:transform .4s ease, background .4s ease, box-shadow .4s ease;
+  }
+  .sib:hover{transform:translateY(-3px); background:rgba(252,249,242,.96); box-shadow:0 14px 30px rgba(42,34,20,.18);}
+  .sib:focus-visible{outline:2px solid var(--hedge); outline-offset:4px;}
+  .sib-kicker{
+    display:block; font-size:.57rem; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--gold); margin-bottom:.3rem;
+  }
+  .sib-title{
+    display:block; font-family:var(--font-display); font-weight:600;
+    font-size:1.02rem; color:var(--ink); line-height:1.3;
+  }
+  .sib-title[lang="hy"]{font-family:var(--font-am);}
+</style>
+
+<div class="backdrop" aria-hidden="true"></div>
+
+<a class="home-link" href="https://claude.ai/code/artifact/199465ee-19c1-4262-b5b8-03e0cf23ef81"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span class="i18n en">Archive</span><span class="i18n hy" lang="hy">Արխիվ</span></a>
+<div class="lang" role="group" aria-label="Language / Լեզու">
+  <button type="button" class="lang-btn" data-set="hy" lang="hy" aria-pressed="false">ՀԱՅ</button>
+  <button type="button" class="lang-btn" data-set="en" aria-pressed="true">ENG</button>
+</div>
+
+<div class="page">
+
+  <section class="hero">
+    <div class="tape" aria-hidden="true">
+      <span lang="hy">Օձիք &middot; Ձեռնոց</span><span>Collar &middot; Glove</span>
+      <span lang="hy">Օձիք &middot; Ձեռնոց</span><span>Collar &middot; Glove</span>
+      <span lang="hy">Օձիք &middot; Ձեռնոց</span><span>Collar &middot; Glove</span>
+      <span lang="hy">Օձիք &middot; Ձեռնոց</span><span>Collar &middot; Glove</span>
+    </div>
+
+    <p class="eyebrow reveal"><span class="i18n en">Nushik Malkhasyan &middot; Dilijan</span><span class="i18n hy" lang="hy">Նուշիկ Մալխասյան &middot; Դիլիջան</span></p>
+    <h1 lang="hy">Ժանյակ՝ Կրելու Համար</h1>
+    <p class="latin">Lace to Wear</p>
+    <span class="rule" aria-hidden="true"></span>
+    <p class="hero-sub i18n en reveal">Three collars and two gloves &mdash; the part of the work made not for a table, but for a person.</p>
+    <p class="hero-sub i18n hy reveal" lang="hy">Երեք օձիք և երկու ձեռնոց՝ գործի այն մասը, որ արվել է ոչ թե սեղանի, այլ մարդու համար։</p>
+    <p class="cue reveal"><span class="i18n en">Scroll</span><span class="i18n hy" lang="hy">Ոլորեք ներքև</span></p>
+  </section>
+
+  <section class="history">
+    <div class="head reveal">
+      <p class="kicker"><span class="i18n en">The Craft</span><span class="i18n hy" lang="hy">Արհեստը</span></p>
+      <h2 class="i18n en">Lace That Has to Fit</h2>
+      <h2 class="i18n hy" lang="hy">Ժանյակ, որը պետք է չափին լինի</h2>
+    </div>
+
+    <div class="prose reveal">
+      <div class="i18n en">
+        <p>A doily can be any size it likes. Nothing depends on it. Stop early or add another round and it is still finished.</p>
+        <p>A collar cannot do that. It has to lie flat across a shoulder, curve to a neck, and meet at the throat with both sides matching. A glove is harder still: worked in the round rather than flat, narrowed at the knuckles, and each finger built separately and decreased to its tip &mdash; five tapering tubes that have to end together and fit one particular hand.</p>
+        <p>Same hook, same cotton, a different problem entirely. These five are the pieces from the archive that were made to be worn. <span class="fact">[Add who wore them, and on what occasions.]</span></p>
+      </div>
+      <div class="i18n hy" lang="hy">
+        <p>Անձեռոցիկը կարող է լինել ցանկացած չափի։ Ոչինչ դրանից կախված չէ։ Կանգ առ շուտ կամ ավելացրու ևս մեկ շարք՝ այն դարձյալ ավարտուն է։</p>
+        <p>Օձիքը չի կարող այդպես։ Այն պետք է հարթ պառկի ուսին, կորանա վզի շուրջ և կոկորդի մոտ հանդիպի՝ երկու կողմերը միմյանց համապատասխան։ Ձեռնոցն ավելի դժվար է. հյուսվում է շրջանաձև, ոչ թե հարթ, նեղանում է հոդերի մոտ, և ամեն մատ կառուցվում է առանձին ու նեղանում մինչև ծայրը՝ հինգ սեղանաձև խողովակ, որոնք պետք է ավարտվեն միասին և հարմարվեն մեկ որոշակի ձեռքի։</p>
+        <p>Նույն կարթասեղը, նույն բամբակը, բոլորովին այլ խնդիր։ Այս հինգը արխիվի այն գործերն են, որ արվել են կրելու համար։ <span class="fact">[Ավելացրե՛ք, թե ով է դրանք կրել և ինչ առիթներով։]</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="gallery">
+    <div class="head reveal">
+      <p class="kicker"><span class="i18n en">The Works</span><span class="i18n hy" lang="hy">Գործերը</span></p>
+      <h2 class="i18n en">Three Collars, Two Gloves</h2>
+      <h2 class="i18n hy" lang="hy">Երեք օձիք, երկու ձեռնոց</h2>
+    </div>
+
+    <div class="works">
+
+      <figure class="work reveal">
+        <button class="work-open" type="button" data-zoom="data:image/jpeg;base64,__ZOOM_COLLAR_MESH__">
+          <div class="work-frame">
+            <img src="data:image/webp;base64,__WEAR_COLLAR_MESH__" alt="Wide lace collar on a fine diamond mesh ground, edged all round with picot scallops, cut to two points that meet at the throat." />
+          </div>
+        </button>
+        <figcaption>
+          <p class="num"><span class="i18n en">Piece I</span><span class="i18n hy" lang="hy">Գործ Ա</span></p>
+          <h3 class="i18n en">Deep Diamond Collar</h3>
+          <h3 class="i18n hy" lang="hy">Խոր շեղանկյուն օձիք</h3>
+          <p class="i18n en">The deeper of the two diamond-ground collars: a wide band falling well past the shoulder line, its net scattered with small filled squares, closing in two long points at the throat.</p>
+          <p class="i18n hy" lang="hy">Շեղանկյուն հիմքով երկու օձիքներից ավելի խորը՝ լայն շերտ, որ իջնում է ուսագծից բավական ներքև, ցանցում ցրված են փոքր լցված քառակուսիներ, կոկորդի մոտ փակվում է երկու երկար ծայրով։</p>
+          <span class="meta i18n en">[Cotton thread &middot; approx. __ cm]</span>
+          <span class="meta i18n hy" lang="hy">[Բամբակե թել &middot; մոտ. __ սմ]</span>
+        </figcaption>
+      </figure>
+
+      <figure class="work reveal">
+        <button class="work-open" type="button" data-zoom="data:image/jpeg;base64,__ZOOM_COLLAR_CROWN__">
+          <div class="work-frame">
+            <img src="data:image/webp;base64,__WEAR_COLLAR_CROWN__" alt="Narrower lace collar ringed with pointed crown-shaped edging, the ground worked in fine bands fanning out from the neck." />
+          </div>
+        </button>
+        <figcaption>
+          <p class="num"><span class="i18n en">Piece II</span><span class="i18n hy" lang="hy">Գործ Բ</span></p>
+          <h3 class="i18n en">Crown-Edged Collar</h3>
+          <h3 class="i18n hy" lang="hy">Պսակաեզր օձիք</h3>
+          <p class="i18n en">A closer collar standing in a ring of pointed crowns, its ground worked in fine bands that fan outward from the neck opening.</p>
+          <p class="i18n hy" lang="hy">Ավելի սեղմ օձիք՝ սուր պսակների օղակի մեջ, հիմքը հյուսված նուրբ շերտերով, որոնք հովհարաձև բացվում են վզի բացվածքից։</p>
+          <span class="meta i18n en">[Cotton thread &middot; approx. __ cm]</span>
+          <span class="meta i18n hy" lang="hy">[Բամբակե թել &middot; մոտ. __ սմ]</span>
+        </figcaption>
+      </figure>
+
+      <figure class="work reveal">
+        <button class="work-open" type="button" data-zoom="data:image/jpeg;base64,__ZOOM_COLLAR_NET__">
+          <div class="work-frame">
+            <img src="data:image/webp;base64,__WEAR_COLLAR_NET__" alt="Lace collar on a plain even net ground with a wide neck opening, finished with picot scalloped edging." />
+          </div>
+        </button>
+        <figcaption>
+          <p class="num"><span class="i18n en">Piece III</span><span class="i18n hy" lang="hy">Գործ Գ</span></p>
+          <h3 class="i18n en">Open-Net Collar</h3>
+          <h3 class="i18n hy" lang="hy">Բաց ցանցով օձիք</h3>
+          <p class="i18n en">A narrower band on a plain, even net, with a far wider neck opening and no filled motifs in the ground &mdash; a different pattern from Piece I, though finished with the same picot edging.</p>
+          <p class="i18n hy" lang="hy">Ավելի նեղ շերտ՝ պարզ, հավասար ցանցի վրա, շատ ավելի լայն վզի բացվածքով և առանց լցված նախշերի հիմքում. Ա գործից տարբեր օրինակ, թեև ավարտված է նույն ծայրազարդ եզրով։</p>
+          <span class="meta i18n en">[Cotton thread &middot; approx. __ cm]</span>
+          <span class="meta i18n hy" lang="hy">[Բամբակե թել &middot; մոտ. __ սմ]</span>
+        </figcaption>
+      </figure>
+
+      <figure class="work reveal">
+        <button class="work-open" type="button" data-zoom="data:image/jpeg;base64,__ZOOM_GLOVE_CREAM__">
+          <div class="work-frame">
+            <img src="data:image/webp;base64,__WEAR_GLOVE_CREAM__" alt="Cream crocheted glove, the back worked in a shell pattern, each finger worked separately and decreased to its tip." />
+          </div>
+        </button>
+        <figcaption>
+          <p class="num"><span class="i18n en">Piece IV</span><span class="i18n hy" lang="hy">Գործ Դ</span></p>
+          <h3 class="i18n en">Cream Glove</h3>
+          <h3 class="i18n hy" lang="hy">Կրեմագույն ձեռնոց</h3>
+          <p class="i18n en">Worked in the round from the cuff down, the back in a shell pattern, the fingers in plain net &mdash; each one decreased to its tip so the five end together.</p>
+          <p class="i18n hy" lang="hy">Հյուսված է շրջանաձև՝ բացվածքից ներքև, թիկունքը՝ խեցենախշով, մատները՝ պարզ ցանցով. յուրաքանչյուրը նեղացած մինչև ծայրը, որպեսզի հինգն ավարտվեն միասին։</p>
+          <span class="meta i18n en">[Cotton thread &middot; approx. __ cm]</span>
+          <span class="meta i18n hy" lang="hy">[Բամբակե թել &middot; մոտ. __ սմ]</span>
+        </figcaption>
+      </figure>
+
+      <figure class="work reveal">
+        <button class="work-open" type="button" data-zoom="data:image/jpeg;base64,__ZOOM_GLOVE_BLACK__">
+          <div class="work-frame">
+            <img src="data:image/webp;base64,__WEAR_GLOVE_BLACK__" alt="Black crocheted glove worked on an open net ground, the mesh openings showing through." />
+          </div>
+        </button>
+        <figcaption>
+          <p class="num"><span class="i18n en">Piece V</span><span class="i18n hy" lang="hy">Գործ Ե</span></p>
+          <h3 class="i18n en">Black Glove</h3>
+          <h3 class="i18n hy" lang="hy">Սև ձեռնոց</h3>
+          <p class="i18n en">The same construction carried out in black thread on a more open net &mdash; the only piece in the archive so far not worked in cream.</p>
+          <p class="i18n hy" lang="hy">Նույն կառուցվածքը՝ իրականացված սև թելով, ավելի բաց ցանցի վրա. առայժմ արխիվի միակ գործը, որ կրեմագույն չէ։</p>
+          <span class="meta i18n en">[Cotton thread &middot; approx. __ cm]</span>
+          <span class="meta i18n hy" lang="hy">[Բամբակե թել &middot; մոտ. __ սմ]</span>
+        </figcaption>
+      </figure>
+
+    </div>
+  </section>
+
+  <footer>
+    <div class="reveal">
+      <p class="lede i18n en">Part of a growing archive of Nushik Malkhasyan&rsquo;s needlework. These are the pieces made to be worn; the lace and doilies, and the alphabet works, are gathered separately.</p>
+      <p class="lede i18n hy" lang="hy">Նուշիկ Մալխասյանի ասեղնագործության աճող արխիվի մասը։ Սրանք կրելու համար արված գործերն են. ժանյակն ու անձեռոցիկները, ինչպես նաև այբուբենի գործերը, հավաքված են առանձին։</p>
+      <p class="place" lang="hy">Դիլիջան &middot; Հայաստան<small>Dilijan, Armenia</small></p>
+      <p class="sign i18n en" aria-hidden="true">worked by hand, kept with care</p>
+      <p class="sign i18n hy" lang="hy" aria-hidden="true">ձեռքով հյուսված, խնամքով պահված</p>
+      <p class="disclaimer i18n en">The Armenian written for this page is a first draft and is worth a native speaker&rsquo;s read.</p>
+      <p class="disclaimer i18n hy" lang="hy">Այս էջի համար գրված հայերենը սևագիր տարբերակ է և արժե, որ մայրենի լեզվով խոսողը ստուգի։</p>
+    </div>
+    <nav class="siblings reveal" aria-label="Other collections">
+  <a class="sib" href="__URL_DOILIES__"><span class="sib-kicker"><span class="i18n en">Also in the archive</span><span class="i18n hy" lang="hy">Նաև արխիվում</span></span><span class="sib-title i18n en">Lace &amp; Doilies</span><span class="sib-title i18n hy" lang="hy">Ժանյակ և անձեռոցիկ</span></a>
+  <a class="sib" href="__URL_ALPHABET__"><span class="sib-kicker"><span class="i18n en">Also in the archive</span><span class="i18n hy" lang="hy">Նաև արխիվում</span></span><span class="sib-title i18n en">The Armenian Alphabet</span><span class="sib-title i18n hy" lang="hy">Հայոց այբուբենը</span></a>
+  <a class="sib" href="__URL_SMALL__"><span class="sib-kicker"><span class="i18n en">Also in the archive</span><span class="i18n hy" lang="hy">Նաև արխիվում</span></span><span class="sib-title i18n en">Crosses &amp; Small Pieces</span><span class="sib-title i18n hy" lang="hy">Խաչեր և փոքր գործեր</span></a>
+</nav>
+  </footer>
+
+</div>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-hidden="true">
+  <button class="lb-btn lb-close" type="button" data-act="close" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+  </button>
+  <div class="lb-stage"><img class="lb-img" alt="" /></div>
+  <div class="lb-bar">
+    <p class="lb-cap"></p>
+    <button class="lb-btn" type="button" data-act="prev" aria-label="Previous">&#8249;</button>
+    <button class="lb-btn" type="button" data-act="out" aria-label="Zoom out">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.2" y1="15.2" x2="20.5" y2="20.5"/><line x1="7.7" y1="10.5" x2="13.3" y2="10.5"/></svg>
+    </button>
+    <span class="lb-pct">100%</span>
+    <button class="lb-btn" type="button" data-act="in" aria-label="Zoom in">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.2" y1="15.2" x2="20.5" y2="20.5"/><line x1="10.5" y1="7.7" x2="10.5" y2="13.3"/><line x1="7.7" y1="10.5" x2="13.3" y2="10.5"/></svg>
+    </button>
+    <button class="lb-btn" type="button" data-act="reset" aria-label="Reset zoom">100%</button>
+    <button class="lb-btn" type="button" data-act="next" aria-label="Next">&#8250;</button>
+  </div>
+</div>
+
+<script>
+  (function(){
+    var root = document.documentElement;
+    var btns = Array.prototype.slice.call(document.querySelectorAll('.lang-btn'));
+    function setLang(l){
+      root.setAttribute('data-lang', l);
+      root.setAttribute('lang', l);
+      btns.forEach(function(b){ b.setAttribute('aria-pressed', String(b.getAttribute('data-set')===l)); });
+      try{ localStorage.setItem('nm-lang', l); }catch(e){}
+      if (typeof window.nmRelabel === 'function') window.nmRelabel();
+    }
+    var stored=null; try{ stored=localStorage.getItem('nm-lang'); }catch(e){}
+    var nav=(navigator.language||'').toLowerCase();
+    setLang(stored || (nav.indexOf('hy')===0 ? 'hy' : 'en'));
+    btns.forEach(function(b){ b.addEventListener('click', function(){ setLang(b.getAttribute('data-set')); }); });
+
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var items = document.querySelectorAll('.reveal');
+    if (reduce || !('IntersectionObserver' in window)) {
+      items.forEach(function(el){ el.classList.add('is-visible'); });
+    } else {
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry,i){
+          if (entry.isIntersecting){
+            var el=entry.target;
+            setTimeout(function(){ el.classList.add('is-visible'); }, (i%3)*100);
+            io.unobserve(el);
+          }
+        });
+      }, { threshold:0.15, rootMargin:'0px 0px -50px 0px' });
+      items.forEach(function(el){ io.observe(el); });
+    }
+  })();
+
+  (function(){
+    var root=document.documentElement;
+    var lb=document.getElementById('lb'); if(!lb) return;
+    var stage=lb.querySelector('.lb-stage'), img=lb.querySelector('.lb-img');
+    var cap=lb.querySelector('.lb-cap'), pct=lb.querySelector('.lb-pct');
+    var figs=Array.prototype.slice.call(document.querySelectorAll('.work'));
+    var index=0, lastFocus=null, scale=1, tx=0, ty=0, base=null;
+    var MIN=1, MAX=6;
+    var L={en:{close:'Close',zin:'Zoom in',zout:'Zoom out',prev:'Previous work',next:'Next work',reset:'Reset zoom',open:'Open larger'},
+           hy:{close:'Փակել',zin:'Խոշորացնել',zout:'Փոքրացնել',prev:'Նախորդ գործը',next:'Հաջորդ գործը',reset:'Վերականգնել',open:'Բացել մեծացված'}};
+    function lang(){ return root.getAttribute('data-lang')==='hy' ? 'hy' : 'en'; }
+    function labels(){
+      var t=L[lang()];
+      lb.querySelector('.lb-close').setAttribute('aria-label',t.close);
+      lb.querySelector('[data-act="in"]').setAttribute('aria-label',t.zin);
+      lb.querySelector('[data-act="out"]').setAttribute('aria-label',t.zout);
+      lb.querySelector('[data-act="reset"]').setAttribute('aria-label',t.reset);
+      lb.querySelector('[data-act="prev"]').setAttribute('aria-label',t.prev);
+      lb.querySelector('[data-act="next"]').setAttribute('aria-label',t.next);
+      figs.forEach(function(f){
+        var b=f.querySelector('.work-open'), h=f.querySelector('h3.i18n.'+lang());
+        if(b&&h) b.setAttribute('aria-label', h.textContent.trim()+' — '+t.open);
+      });
+    }
+    window.nmRelabel=labels;
+    function apply(){ img.style.transform='translate('+tx+'px,'+ty+'px) scale('+scale+')'; }
+    function measure(){ img.style.transform='none'; var r=img.getBoundingClientRect(); base={w:r.width,h:r.height}; apply(); }
+    function clampPan(){
+      if(!base) return;
+      var mx=Math.max(0,(base.w*scale-stage.clientWidth)/2), my=Math.max(0,(base.h*scale-stage.clientHeight)/2);
+      tx=Math.min(mx,Math.max(-mx,tx)); ty=Math.min(my,Math.max(-my,ty));
+    }
+    function setScale(s,cx,cy){
+      var prev=scale; scale=Math.min(MAX,Math.max(MIN,s));
+      if(cx!=null&&scale!==prev){ var k=scale/prev; tx=cx-k*(cx-tx); ty=cy-k*(cy-ty); }
+      if(scale===MIN){ tx=0; ty=0; }
+      clampPan(); apply(); pct.textContent=Math.round(scale*100)+'%';
+    }
+    function stageXY(e){ var r=stage.getBoundingClientRect(); return {x:e.clientX-(r.left+r.width/2), y:e.clientY-(r.top+r.height/2)}; }
+    function show(i){
+      index=(i+figs.length)%figs.length;
+      var f=figs[index], b=f.querySelector('.work-open'), l=lang();
+      var num=f.querySelector('.num .i18n.'+l), ttl=f.querySelector('h3.i18n.'+l);
+      img.src=b.getAttribute('data-zoom');
+      img.alt=f.querySelector('.work-frame img').getAttribute('alt')||'';
+      cap.setAttribute('lang', l);
+      cap.innerHTML='';
+      cap.appendChild(document.createTextNode(ttl?ttl.textContent.trim():''));
+      if(num){ var s=document.createElement('span'); s.textContent=num.textContent.trim(); cap.appendChild(s); }
+      scale=1; tx=0; ty=0;
+      if(img.complete) measure(); else img.addEventListener('load',measure,{once:true});
+      setScale(1);
+    }
+    function open(i,trigger){
+      lastFocus=trigger||document.activeElement;
+      lb.setAttribute('open',''); lb.setAttribute('aria-hidden','false');
+      document.body.style.overflow='hidden'; labels(); show(i);
+      lb.querySelector('.lb-close').focus();
+    }
+    function close(){
+      lb.removeAttribute('open'); lb.setAttribute('aria-hidden','true');
+      document.body.style.overflow=''; img.removeAttribute('src');
+      if(lastFocus&&lastFocus.focus) lastFocus.focus();
+    }
+    figs.forEach(function(f,i){
+      var b=f.querySelector('.work-open');
+      if(b) b.addEventListener('click', function(){ open(i,b); });
+    });
+    lb.addEventListener('click', function(e){
+      var act=e.target.closest&&e.target.closest('[data-act]');
+      if(act){
+        var a=act.getAttribute('data-act');
+        if(a==='close') close();
+        else if(a==='in') setScale(scale*1.5);
+        else if(a==='out') setScale(scale/1.5);
+        else if(a==='reset') setScale(1);
+        else if(a==='prev') show(index-1);
+        else if(a==='next') show(index+1);
+        return;
+      }
+      if(e.target===stage) close();
+    });
+    document.addEventListener('keydown', function(e){
+      if(!lb.hasAttribute('open')) return;
+      if(e.key==='Escape') close();
+      else if(e.key==='ArrowRight') show(index+1);
+      else if(e.key==='ArrowLeft') show(index-1);
+      else if(e.key==='+'||e.key==='=') setScale(scale*1.5);
+      else if(e.key==='-') setScale(scale/1.5);
+      else if(e.key==='0') setScale(1);
+    });
+    stage.addEventListener('wheel', function(e){
+      if(!lb.hasAttribute('open')) return;
+      e.preventDefault(); var p=stageXY(e);
+      setScale(scale*(e.deltaY<0?1.16:1/1.16), p.x, p.y);
+    }, {passive:false});
+    stage.addEventListener('dblclick', function(e){ var p=stageXY(e); setScale(scale>1.05?1:2.5,p.x,p.y); });
+    var pts=new Map(), dragging=false, lx=0, ly=0, pinch=null;
+    stage.addEventListener('pointerdown', function(e){
+      if(e.target!==img) return;
+      pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+      if(pts.size===1&&scale>MIN){ dragging=true; lx=e.clientX; ly=e.clientY; stage.classList.add('is-panning'); stage.setPointerCapture(e.pointerId); }
+    });
+    stage.addEventListener('pointermove', function(e){
+      if(!pts.has(e.pointerId)) return;
+      pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+      if(pts.size===2){
+        dragging=false;
+        var a=Array.from(pts.values()), d=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);
+        if(!pinch) pinch={d:d,s:scale}; else if(pinch.d>0) setScale(pinch.s*(d/pinch.d));
+      } else if(dragging){
+        tx+=e.clientX-lx; ty+=e.clientY-ly; lx=e.clientX; ly=e.clientY; clampPan(); apply();
+      }
+    });
+    function endPointer(e){
+      pts.delete(e.pointerId);
+      if(pts.size<2) pinch=null;
+      if(pts.size===0){ dragging=false; stage.classList.remove('is-panning'); }
+    }
+    stage.addEventListener('pointerup', endPointer);
+    stage.addEventListener('pointercancel', endPointer);
+    window.addEventListener('resize', function(){ if(lb.hasAttribute('open')){ measure(); clampPan(); apply(); } });
+  })();
+</script>

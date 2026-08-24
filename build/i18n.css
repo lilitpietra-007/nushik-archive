@@ -1,0 +1,44 @@
+  /* ---------- language switching ---------- */
+  /* :not(html) matters: the root carries lang="hy" for assistive tech, but the
+     Armenian face must not become the inherited family for Latin passages. */
+  [lang="hy"]:not(html){font-family:var(--font-am);}
+  html[data-lang="en"] .i18n.hy{display:none;}
+  html[data-lang="hy"] .i18n.en{display:none;}
+
+  .lang{
+    position:fixed; top:1rem; right:1rem; z-index:20;
+    display:flex; align-items:center; gap:.15rem;
+    padding:.3rem .4rem .3rem .35rem;
+    background:rgba(247,242,230,.94);
+    border:1px solid rgba(42,36,24,.26);
+    border-radius:999px;
+    box-shadow:0 8px 22px rgba(42,34,20,.26);
+  }
+  .lang-btn{
+    font-family:var(--font-body);
+    font-size:.66rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ink-soft);
+    background:transparent; border:0; border-radius:999px;
+    padding:.34rem .6rem; cursor:pointer; line-height:1;
+    transition:background .3s ease, color .3s ease;
+  }
+  .lang-btn[lang="hy"]{letter-spacing:.06em;}
+  .lang-btn:hover{color:var(--ink);}
+  .lang-btn[aria-pressed="true"]{
+    background:var(--hedge); color:#f7f2e6;
+  }
+  .lang-btn:focus-visible{outline:2px solid var(--hedge); outline-offset:2px;}
+
+  @media (max-width:640px){
+    .lang{top:.6rem; right:.6rem; padding:.25rem .3rem;}
+    .lang-btn{font-size:.6rem; padding:.3rem .5rem;}
+  }
+
+  /* her initials, wherever they are quoted from the lace */
+  .mono{
+    font-family:var(--font-am);
+    letter-spacing:.1em;
+    color:var(--roof);
+  }
+  /* Armenian sets wider, so the circular seal text needs its own size */
+  text.seal-hy{font-size:5.1px; letter-spacing:1.35px;}

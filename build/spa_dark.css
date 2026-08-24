@@ -1,0 +1,165 @@
+
+  /* ================= dark ground, no panels =================
+     Every surface behind text is gone. The ground carries enough depth on its
+     own, so type sits straight on the image the way a poster does. */
+  @font-face{
+    font-family:'Manrope';
+    font-style:normal;font-weight:200 800;font-display:swap;
+    src:url(data:font/woff2;base64,__FONT_MANROPE__) format('woff2');
+  }
+  @font-face{
+    font-family:'Noto Sans Armenian';
+    font-style:normal;font-weight:100 900;font-display:swap;
+    src:url(data:font/woff2;base64,__FONT_NOTOSANSARM__) format('woff2');
+    unicode-range:U+0530-058F,U+FB13-FB17;
+  }
+
+  :root{
+    --ink:#ffffff;
+    --ink-soft:rgba(255,255,255,.74);
+    --gold:rgba(255,255,255,.62);
+    --roof:#f0c9a4;
+    --vellum:#0f0d09;
+    --font-body:'Manrope', ui-sans-serif, system-ui, sans-serif;
+    --font-am-sans:'Noto Sans Armenian', ui-sans-serif, system-ui, sans-serif;
+  }
+  body{
+    background:#0f0d09; color:#fff;
+    font-family:var(--font-body);
+    font-size:1.02rem; line-height:1.68;
+    font-weight:400; letter-spacing:.005em;
+  }
+  ::selection{background:rgba(255,255,255,.85); color:#0f0d09;}
+
+  /* Armenian: sans for reading, the serif kept for display lines only */
+  [lang="hy"]:not(html){font-family:var(--font-am-sans);}
+  h1[lang="hy"], h2[lang="hy"], h3[lang="hy"],
+  .card-title[lang="hy"], .sib-title[lang="hy"], .place[lang="hy"]{
+    font-family:'Noto Serif Armenian', Georgia, serif;
+  }
+
+  #view-home    > .backdrop::after,
+  #view-doilies > .backdrop::after,
+  #view-alphabet> .backdrop::after,
+  #view-wear    > .backdrop::after,
+  #view-small   > .backdrop::after{
+    /* the veil that lets cream lace and white text sit on the painting; the
+       middle band is thinnest because that is where the painting is darkest */
+    background:linear-gradient(180deg,
+      rgba(10,9,6,var(--veil-top,.60)) 0%,
+      rgba(10,9,6,var(--veil-mid,.53)) 40%,
+      rgba(10,9,6,var(--veil-bot,.66)) 100%);
+  }
+
+  /* no highlights, anywhere */
+  .wash, .lace-ground, .mark-ground, .seal{background:none;}
+  .hero h1, .hero .latin, .hero .craft, .eyebrow, .cue, .estd,
+  .kicker, .head h2, .plate .num, .plate h3, .plate p, .plate .meta,
+  .work .num, .work h3, .work p, .work .meta, .prose p,
+  .story-note p, .story-note span, .story-body p, .hero-sub,
+  .card-title, .card-desc, .card-count, .card-go, .sib-kicker, .sib-title,
+  footer .lede, footer .place, footer .sign, footer .disclaimer, .year, .mono,
+  h1, h2, h3, .hero-caption, .fact, .latin, .place small, .lace-inner,
+  .hero-titles h1, .hero-titles .latin, .hero-titles .craft{
+    text-shadow:none;
+  }
+  .hero-caption{color:rgba(255,255,255,.78);}
+  .hero-caption .fact{color:#f0c9a4;}
+
+  /* everything reads light */
+  .hero h1, .head h2, .plate h3, .work h3, .card-title, .sib-title,
+  .story-body p, .prose p, footer .lede, footer .place{color:#fff;}
+  .hero .latin, .eyebrow, .cue, .kicker, .plate p, .work p,
+  .card-desc, footer .disclaimer{color:rgba(255,255,255,.76);}
+  .plate .num, .work .num, .card-count, .sib-kicker, .estd{color:rgba(255,255,255,.58);}
+  .plate .meta, .work .meta, .fact, .mono{color:#f0c9a4;}
+  .year{color:#bcd6ff;}
+  .hero .craft, .card-go, footer .sign{color:rgba(255,255,255,.82);}
+  .kicker::before, .kicker::after{background:rgba(255,255,255,.34);}
+  .hero .rule, .lace-inner .rule{background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);}
+  .seal-ring{stroke:rgba(255,255,255,.34);}
+  .seal-core{color:rgba(255,255,255,.7);}
+  text.seal-text{fill:rgba(255,255,255,.8);}
+
+  /* body copy in the modern sans; display lines stay in the serif */
+  .plate p, .work p, .prose p, .story-body p, .hero-sub, .card-desc,
+  footer .lede, footer .disclaimer{font-family:var(--font-body); font-weight:400;}
+  .plate .num, .work .num, .card-count, .sib-kicker, .eyebrow, .cue, .kicker, .estd{
+    font-family:var(--font-body); font-weight:500; letter-spacing:.2em;
+  }
+  .plate .meta, .work .meta{font-family:var(--font-body); font-style:normal; font-weight:500; letter-spacing:.02em;}
+  .fact{font-family:var(--font-body); font-style:normal; font-weight:500;}
+  .year{font-family:var(--font-body); font-weight:600;}
+
+  /* hero: the name now sits below the lace rather than on it */
+  .hero-titles{text-align:center; margin-top:2rem;}
+  .hero-titles h1{
+    font-family:'Noto Serif Armenian', Georgia, serif; font-weight:700;
+    font-size:clamp(1.9rem,5.4vw,3.3rem); line-height:1.12; margin:0; color:#fff;
+  }
+  .hero-titles .latin{
+    margin:.55rem 0 0; font-family:var(--font-display); font-style:italic; font-weight:500;
+    font-size:clamp(1rem,2.2vw,1.35rem); color:rgba(255,255,255,.76);
+  }
+  .hero-titles .estd{justify-content:center; margin-bottom:.9rem; font-size:.64rem;}
+  .hero-titles .rule{display:block; width:5rem; height:1px; margin:1.2rem auto;}
+  .hero-titles .craft{font-family:var(--font-script); font-size:clamp(1rem,2.4vw,1.3rem);}
+
+  /* story: prose below the doily, in a clean column */
+  .story-lace{width:min(72vw,430px); margin:0 auto; opacity:.92;}
+  .story-body{max-width:38rem; margin:2.75rem auto 0; text-align:center;}
+  .story-body p{margin:0 0 1.3em; font-size:1.02rem; line-height:1.7;}
+  .story-body p:last-child{margin-bottom:0;}
+
+  /* home: outlined buttons, transparent, as in the reference */
+  .card{
+    background:none; border:1px solid rgba(255,255,255,.55);
+    border-radius:1.75rem; box-shadow:none;
+    padding:clamp(1.8rem,3vw,2.4rem) clamp(1.3rem,2.5vw,1.9rem) clamp(1.6rem,2.5vw,2rem);
+    transition:transform .45s cubic-bezier(.19,1,.22,1), border-color .45s ease, background .45s ease;
+  }
+  .card:hover, .card:focus-visible{
+    background:rgba(255,255,255,.07);
+    border-color:#fff; transform:translateY(-5px); box-shadow:none;
+  }
+  .card-title{font-family:var(--font-display); font-weight:600;}
+  .card-go{font-weight:600;}
+  .sib{
+    background:none; border:1px solid rgba(255,255,255,.45);
+    border-radius:1.25rem;
+  }
+  .sib:hover{background:rgba(255,255,255,.07); border-color:#fff; box-shadow:none;}
+  .sib-title{font-family:var(--font-display); font-weight:600;}
+
+  /* the two controls become outlined too, so nothing is a pale slab */
+  .lang, .home-link{
+    background:rgba(15,13,9,.55); border:1px solid rgba(255,255,255,.5);
+    box-shadow:none;
+    -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  }
+  .lang-btn, .home-link{color:rgba(255,255,255,.78); font-family:var(--font-body); font-weight:500;}
+  .lang-btn:hover, .home-link:hover{color:#fff;}
+  .lang-btn[aria-pressed="true"]{background:rgba(255,255,255,.92); color:#14110c;}
+  .home-link:focus-visible, .lang-btn:focus-visible,
+  .card:focus-visible, .sib:focus-visible,
+  .plate-open:focus-visible, .work-open:focus-visible{outline-color:#fff;}
+
+  /* the paper tape stays paper, but quieter against the dark */
+  .tape{background:rgba(246,241,228,.16); box-shadow:none;
+    -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px);}
+  .tape span{color:rgba(255,255,255,.62); font-family:var(--font-body); font-weight:500;}
+
+  /* id-scoped hero rules outrank the class-level reset, so clear them by name */
+  #view-alphabet .hero h1, #view-wear .hero h1, #view-home .hero h1, #view-small .hero h1,
+  #view-alphabet .hero-sub, #view-wear .hero-sub, #view-home .hero-sub, #view-small .hero-sub{
+    text-shadow:none;
+  }
+
+  /* inline emphasis keeps its italic, but in the sans */
+  .story-body .fact, .prose .fact, .plate .fact, .work .fact,
+  .hero-caption .fact, .hero-sub .fact, .card-desc .fact,
+  .plate .meta, .work .meta, .story-note span{
+    font-family:var(--font-body); font-style:italic; font-weight:500; color:#f0c9a4;
+  }
+  .plate .meta, .work .meta{font-style:normal; letter-spacing:.02em;}
+  .story-note p{font-family:var(--font-display); font-style:italic; color:#fff;}

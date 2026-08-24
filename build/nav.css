@@ -1,0 +1,49 @@
+
+  /* ---------- site navigation ---------- */
+  .home-link{
+    position:fixed; top:1rem; left:1rem; z-index:20;
+    display:inline-flex; align-items:center; gap:.45rem;
+    padding:.42rem .85rem .42rem .68rem;
+    background:rgba(247,242,230,.94);
+    border:1px solid rgba(42,36,24,.26);
+    border-radius:999px;
+    box-shadow:0 8px 22px rgba(42,34,20,.26);
+    text-decoration:none; color:var(--ink-soft);
+    font-size:.64rem; letter-spacing:.18em; text-transform:uppercase;
+    transition:color .3s ease, background .3s ease;
+  }
+  .home-link:hover{color:var(--ink); background:rgba(252,249,242,.98);}
+  .home-link:focus-visible{outline:2px solid var(--hedge); outline-offset:2px;}
+  .home-link svg{width:.8rem; height:.8rem; flex:none;}
+  .home-link [lang="hy"]{letter-spacing:.06em;}
+  @media (max-width:640px){
+    .home-link{top:.6rem; left:.6rem; padding:.34rem .68rem .34rem .55rem; font-size:.57rem;}
+  }
+
+  .siblings{
+    max-width:44rem; margin:2.75rem auto 0;
+    display:grid; grid-template-columns:1fr; gap:.9rem;
+  }
+  @media (min-width:640px){ .siblings{grid-template-columns:1fr 1fr;} }
+  /* each collection points at the other three, so they sit in one row once
+     there is width for it */
+  @media (min-width:860px){ .siblings{grid-template-columns:repeat(3,1fr); max-width:58rem;} }
+  .sib{
+    display:block; text-decoration:none; color:inherit; text-align:left;
+    padding:1.05rem 1.25rem;
+    background:rgba(247,242,230,.88);
+    border:1px solid rgba(42,36,24,.18);
+    border-radius:.25rem;
+    transition:transform .4s ease, background .4s ease, box-shadow .4s ease;
+  }
+  .sib:hover{transform:translateY(-3px); background:rgba(252,249,242,.96); box-shadow:0 14px 30px rgba(42,34,20,.18);}
+  .sib:focus-visible{outline:2px solid var(--hedge); outline-offset:4px;}
+  .sib-kicker{
+    display:block; font-size:.57rem; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--gold); margin-bottom:.3rem;
+  }
+  .sib-title{
+    display:block; font-family:var(--font-display); font-weight:600;
+    font-size:1.02rem; color:var(--ink); line-height:1.3;
+  }
+  .sib-title[lang="hy"]{font-family:var(--font-am);}

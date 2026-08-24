@@ -1,0 +1,82 @@
+
+  /* ---------- pieces on threads ----------
+     Lace is worked in the air off a hook, never flat, so these hang. Each
+     figure pivots at the point the thread meets the ceiling; the periods are
+     deliberately unequal so the group never swings in unison. */
+  .mobile{
+    position:relative;
+    display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:center;
+    gap:clamp(1.5rem,4vw,3.5rem) clamp(1rem,3vw,2.5rem);
+    --rail:clamp(.55rem,1.6vw,1.35rem);   /* half the column gap, so segments meet */
+    max-width:74rem; margin:0 auto;
+    padding-top:1px; margin-top:1.5rem;    /* the ceiling the threads hang from */
+  }
+  .mobile + .mobile{margin-top:clamp(3rem,7vw,6rem);}
+
+  /* Each piece carries its own segment of the rail, half a gap proud on either
+     side, so neighbouring segments meet and every wrapped row gets a beam --
+     however many pieces the width happens to fit. The segment is a child of the
+     swaying figure, so it runs the sway backwards about the same pivot to
+     cancel it out and stay level. */
+  .hang::before{
+    content:""; position:absolute; top:0; height:1px;
+    left:calc(-1 * var(--rail,1.3rem)); right:calc(-1 * var(--rail,1.3rem));
+    background:rgba(255,255,255,.2);
+    transform-origin:top center;
+    animation:unsway var(--dur,9s) ease-in-out infinite;
+    animation-delay:var(--delay,0s);
+  }
+  @keyframes unsway{
+    0%,100%{transform:rotate(calc(var(--tilt,2deg) * -1));}
+    50%    {transform:rotate(var(--tilt,2deg));}
+  }
+  .hang{
+    position:relative;
+    margin:0; width:var(--w); min-width:0;
+    display:flex; flex-direction:column; align-items:center;
+    transform-origin:top center;
+    animation:sway var(--dur,9s) ease-in-out infinite;
+    animation-delay:var(--delay,0s);
+  }
+  @keyframes sway{
+    0%,100%{transform:rotate(var(--tilt,2deg));}
+    50%    {transform:rotate(calc(var(--tilt,2deg) * -1));}
+  }
+  @media (prefers-reduced-motion:reduce){ .hang, .hang::before{animation:none;} }
+  /* a hanging thing steadies when you reach for it - and a moving target is
+     hard to tap, so the sway pauses on hover, focus and touch. The rail runs on
+     its own animation, so it has to be pinned in the same breath or it drifts
+     out of level while the piece stands still. */
+  .hang:hover, .hang:focus-within, .hang:active,
+  .hang:hover::before, .hang:focus-within::before, .hang:active::before{
+    animation-play-state:paused;
+  }
+
+  .thread{
+    display:block; width:1px; height:var(--drop,4rem);
+    background:linear-gradient(180deg, rgba(255,255,255,.5), rgba(255,255,255,.30));
+    flex:none;
+  }
+  .hang-open{
+    display:block; width:100%; padding:0; border:0; background:transparent;
+    cursor:zoom-in; border-radius:.4rem;
+    transition:transform .5s cubic-bezier(.19,1,.22,1);
+  }
+  .hang-open:hover{transform:scale(1.05);}
+  .hang-open:focus-visible{outline:2px solid #fff; outline-offset:6px;}
+  .hang-open img{
+    display:block; width:100%; height:auto;
+    filter:drop-shadow(0 14px 26px rgba(0,0,0,.5));
+  }
+  .hang figcaption{margin-top:.85rem; text-align:center;}
+  .hang-title{
+    display:block; font-family:var(--font-body); font-weight:500;
+    font-size:.78rem; letter-spacing:.03em; color:rgba(255,255,255,.8);
+  }
+  .hang-title[lang="hy"]{font-family:var(--font-am-sans);}
+
+  @media (max-width:640px){
+    .mobile{gap:1.25rem .75rem; --rail:.42rem;}
+    .hang{width:calc(50% - 1rem) !important;}
+    .thread{height:calc(var(--drop,4rem) * .5);}
+  }
