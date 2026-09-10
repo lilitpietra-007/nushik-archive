@@ -1,0 +1,45 @@
+
+  /* ---------- vertical rhythm and first-screen discovery ----------
+     The pages were built at 7rem of section padding top and bottom, which put
+     224px of empty ground at every boundary - on the home page a third of the
+     "About" section was padding. And the hero filled the viewport exactly, so
+     a visitor landed on a title with no sign that twenty-seven pieces of
+     needlework were below it. Both are fixed here rather than in the base
+     stylesheet so the change is legible as one pass. */
+
+  section{padding:4rem var(--edge);}
+  .head{margin:0 auto 2.25rem;}
+
+  /* the hero stops short of the fold, so the next section's first line shows
+     and the page reads as having more to it */
+  .hero{min-height:84svh; padding:6rem var(--edge) 5rem;}
+
+  /* the cue is now a real control: it names what is below and goes there.
+     Sitting it at the foot of the hero puts it on the edge people look at
+     when deciding whether to scroll, and takes the slack out of the middle.
+     Taking it out of the flow rather than pushing it with an auto margin
+     matters: an auto margin eats the free space above it too, which drove the
+     title up into the diagonal tape. */
+  .hero .cue{position:absolute; left:0; right:0; bottom:1.9rem; margin:0;}
+  .cue a{
+    display:inline-flex; flex-direction:column; align-items:center; gap:.5rem;
+    color:inherit; text-decoration:none; padding:.4rem .6rem; border-radius:.4rem;
+  }
+  .cue a:hover, .cue a:focus-visible{color:#fff;}
+  .cue a:focus-visible{outline:2px solid #fff; outline-offset:3px;}
+  .cue svg{width:1.15rem; height:1.15rem; opacity:.75;}
+  @media (prefers-reduced-motion:no-preference){
+    .cue svg{animation:cue-bob 2.4s ease-in-out infinite;}
+    @keyframes cue-bob{
+      0%,100%{transform:translateY(0); opacity:.55;}
+      50%    {transform:translateY(5px); opacity:1;}
+    }
+  }
+  .cue a:hover svg{animation-play-state:paused; opacity:1;}
+
+  @media (max-width:640px){
+    section{padding:3rem var(--edge);}
+    .head{margin:0 auto 1.75rem;}
+    .hero{min-height:82svh; padding:5rem var(--edge) 4rem;}
+    .hero .cue{bottom:1.25rem;}
+  }

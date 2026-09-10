@@ -148,7 +148,8 @@ def body_of(path):
 def build_css():
     css = open('template3.html', encoding='utf-8').read().partition('</style>')[0].split('<style>', 1)[1]
     for extra in ['i18n.css', 'lightbox.css', 'nav.css', 'spa_extra.css',
-                  'spa_home.css', 'spa_hang.css', 'spa_dark.css']:
+                  'spa_home.css', 'spa_hang.css', 'spa_dark.css',
+                  'spa_rhythm.css']:
         css += open(extra, encoding='utf-8').read()
     css = css.replace('    background-image:url("data:image/jpeg;base64,__COTTAGE__");\n', '')
     # fonts become cacheable files instead of a megabyte of base64 per page
@@ -169,6 +170,10 @@ def build_css():
     bal = css.count('{') - css.count('}')
     if bal:
         sys.exit(f'unbalanced CSS: {bal:+d}')
+    # a stray */ leaves garbage the parser silently swallows along with the
+    # rules that follow it, and the brace count stays balanced through it
+    if css.count('/*') != css.count('*/'):
+        sys.exit(f"unbalanced CSS comments: {css.count('/*')} open, {css.count('*/')} close")
     return css
 
 
