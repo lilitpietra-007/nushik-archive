@@ -407,15 +407,23 @@
   }
   .lb[open]{display:flex;}
   .lb-stage{
+    position:relative;          /* the containing block the image measures against */
     flex:1; min-height:0;
-    display:grid; place-items:center;
     overflow:hidden;
     touch-action:none;
     cursor:grab;
   }
   .lb-stage.is-zoomed{cursor:grab;}
   .lb-stage.is-panning{cursor:grabbing;}
+  /* Absolute + inset + auto margins rather than a centred grid item: as a grid
+     item the percentage max-height had no definite height to resolve against,
+     so it was dropped and the image drew at its natural size and overflowed -
+     two thirds of the pieces were cut off on a desktop screen. Against an
+     inset-0 containing block the percentages always resolve, and the box still
+     hugs the image so the zoom's pan clamping stays honest. */
   .lb-img{
+    position:absolute; inset:0; margin:auto;
+    width:auto; height:auto;
     max-width:94%; max-height:94%;
     transform-origin:center center;
     will-change:transform;
