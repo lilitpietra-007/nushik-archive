@@ -22,7 +22,8 @@ SITE_URL = ''
 # under her name. Flip to True once the text is final and rebuild.
 INDEXABLE = False
 
-IMG, OUT = 'img', 'dist'
+# build/ and dist/ are siblings, so the output goes up one level
+IMG, OUT = 'img', '../dist'
 
 PAGES = [
     # file            body source            backdrop   title EN / HY, description
@@ -149,7 +150,7 @@ def build_css():
     css = open('template3.html', encoding='utf-8').read().partition('</style>')[0].split('<style>', 1)[1]
     for extra in ['i18n.css', 'lightbox.css', 'nav.css', 'spa_extra.css',
                   'spa_home.css', 'spa_hang.css', 'spa_dark.css',
-                  'spa_rhythm.css']:
+                  'spa_rhythm.css', 'seal.css']:
         css += open(extra, encoding='utf-8').read()
     css = css.replace('    background-image:url("data:image/jpeg;base64,__COTTAGE__");\n', '')
     # fonts become cacheable files instead of a megabyte of base64 per page
@@ -224,6 +225,7 @@ def main():
                  '  <span class="i18n en">Archive</span>'
                  '<span class="i18n hy" lang="hy">Արխիվ</span>\n</a>\n')
     lightbox = open('spa_lightbox.html', encoding='utf-8').read()
+    seal = open('seal.html', encoding='utf-8').read()
 
     css, js = build_css(), open('site.js', encoding='utf-8').read()
     def stamped(name, text):
@@ -243,7 +245,10 @@ def main():
         html += nav_lang
         html += f'<div class="view is-active" id="view-{view}">\n'
         html += '<div class="backdrop" aria-hidden="true"></div>\n'
-        html += body_of(src) + '\n</div>\n'
+        # every page closes on the seal, injected rather than pasted so the
+        # pages cannot drift apart again
+        page_body = body_of(src).replace('<footer>', '<footer>\n' + seal, 1)
+        html += page_body + '\n</div>\n'
         html += lightbox + f'\n<script src="assets/{js_name}"></script>\n</body>\n</html>\n'
         open(os.path.join(OUT, fname), 'w', encoding='utf-8').write(html)
 
@@ -287,7 +292,8 @@ def main():
            '<p class="cue is-visible"><a href="index.html" style="color:inherit">'
            '<span class="i18n en">Back to the archive</span>'
            '<span class="i18n hy" lang="hy">Վերադառնալ արխիվ</span></a></p>\n'
-           '</section></div>\n</div>\n')
+           '</section>\n')
+    nf += '<footer>\n' + seal + '</footer>\n</div>\n'
     nf += f'<script src="assets/{js_name}"></script>\n</body>\n</html>\n'
     open(os.path.join(OUT, '404.html'), 'w', encoding='utf-8').write(nf)
 

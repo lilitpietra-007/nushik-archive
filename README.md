@@ -27,6 +27,10 @@ Needs Python with Pillow. `build_static.py` reads the page bodies
 `_small_body.html`), inlines the stylesheets, points every image at a real file,
 and writes the five pages, a 404 page, `robots.txt`, the icons and the share card.
 
+The seal in the footer is drawn by `make_seal.py` into `seal.svg`, wrapped as
+`seal.html`, and injected into every page's footer by the build. It was once
+pasted into the doilies page by hand, which is why it appeared on one page only.
+
 **When you have a domain**, put it in `SITE_URL` at the top of `build_static.py`
 and rebuild. That adds the canonical link, the sitemap, and absolute share-image
 URLs. It ships empty on purpose: the site works fully without it, and a canonical

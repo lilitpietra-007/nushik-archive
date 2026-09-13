@@ -1,0 +1,15 @@
+
+  /* ---------- the seal ----------
+     One rosette, drawn once in build/make_seal.py and injected into every
+     footer by the build - it used to be pasted into the doilies page alone,
+     which is why it appeared on one page only. The strokes take currentColor,
+     so its weight is one value here. */
+  .seal{
+    width:9.5rem; height:9.5rem; margin:0 auto 2.25rem;
+    background:none;
+    /* every page sits on the darkened painting, so the mark is cream like the
+       lace and the type - the light theme's ink disappeared into the ground */
+    color:rgba(255,255,255,.52);
+  }
+  .seal svg{width:100%; height:100%; display:block; overflow:visible;}
+  @media (max-width:640px){ .seal{width:7.5rem; height:7.5rem; margin-bottom:1.75rem;} }
