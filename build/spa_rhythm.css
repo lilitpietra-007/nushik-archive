@@ -67,3 +67,19 @@
   /* the hero already names what follows, so the cards start sooner */
   .collections{padding-top:1.5rem;}
   @media (max-width:640px){ .collections{padding-top:1rem;} }
+
+  /* ---------- a collection page that opens straight on its pieces ----------
+     With the hero and the essay gone from "Lace to Wear", the gallery heading
+     is the page's h1. Both the base rule and the dark theme name .head h2 by
+     tag, so the h1 has to be given the same treatment by hand. */
+  .head h1{
+    margin:0; font-family:var(--font-display); font-weight:600;
+    font-size:clamp(1.7rem,3.6vw,2.4rem); line-height:1.15;
+    color:#fff; text-shadow:none; text-wrap:balance;
+  }
+  .head h1[lang="hy"]{font-family:var(--font-am);}
+  /* being first, the gallery now has to open the page itself - it needs the
+     air a hero used to put above it, and it clears the language switch.
+     :first-of-type keeps this to the page where the gallery leads. */
+  .gallery:first-of-type{padding-top:5.5rem;}
+  @media (max-width:640px){ .gallery:first-of-type{padding-top:4.5rem;} }
