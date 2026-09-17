@@ -934,6 +934,30 @@
     .hero .cue{bottom:1.25rem;}
   }
 
+  /* ---------- home page, second pass on the copy ----------
+     The big name and the eyebrow used to be plain lang="hy" elements, so they
+     stayed Armenian on the English page; they are language-paired now, which
+     means the English heading needs the Latin display face rather than the
+     Armenian one the base rule hands every h1. Only the face changes here -
+     the display size stays with the per-page rule in spa_extra.css, which
+     carries an id and would win over this one anyway. */
+  .hero h1.en{font-family:var(--font-display); font-weight:600; letter-spacing:.01em;}
+  /* the Latin reading of her name now shows only under the Armenian title,
+     where it is a gloss rather than a repetition */
+  .hero .latin{margin-top:.25rem;}
+
+  .hero-lede{
+    max-width:33rem; margin:1.1rem auto 0;
+    font-size:clamp(.86rem,1.6vw,.98rem); line-height:1.62;
+    color:rgba(255,255,255,.82);
+  }
+  /* the cue is a chevron alone now: the heading it points at says the words */
+  .hero .cue a{gap:0;}
+
+  /* the hero already names what follows, so the cards start sooner */
+  .collections{padding-top:1.5rem;}
+  @media (max-width:640px){ .collections{padding-top:1rem;} }
+
   /* ---------- the seal ----------
      One rosette, drawn once in build/make_seal.py and injected into every
      footer by the build - it used to be pasted into the doilies page alone,
