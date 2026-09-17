@@ -1,0 +1,980 @@
+
+  @font-face{font-family:'Fraunces';font-style:normal;font-weight:500 700;font-display:swap;
+    src:url('../fonts/fraunces-600.woff2') format('woff2');}
+  @font-face{font-family:'Fraunces';font-style:italic;font-weight:500;font-display:swap;
+    src:url('../fonts/fraunces-500i.woff2') format('woff2');}
+  @font-face{font-family:'EB Garamond';font-style:normal;font-weight:400 500;font-display:swap;
+    src:url('../fonts/ebgaramond-400.woff2') format('woff2');}
+  @font-face{font-family:'Beau Rivage';font-style:normal;font-weight:400;font-display:swap;
+    src:url('../fonts/beaurivage.woff2') format('woff2');}
+  @font-face{font-family:'Noto Serif Armenian';font-style:normal;font-weight:400 700;font-display:swap;
+    src:url('../fonts/noto-arm-400.woff2') format('woff2');
+    unicode-range:U+0530-058F,U+FB13-FB17;}
+
+  /* Palette drawn from the watercolour itself: lavender sky, limewashed wall,
+     terracotta roof, deep hedgerow green, meadow gold. Single committed world. */
+  :root{
+    --ink:#1f1809;
+    --ink-soft:#463d2a;
+    --vellum:#f6f1e4;
+    --vellum-warm:#efe7d4;
+    --thread:#fdfaf2;
+    --hedge:#3d4a2f;
+    --moss:#6f7a4a;
+    --roof:#8d4a29;
+    --gold:#7d5f28;
+    --bloom:#b8697d;
+
+    --font-display:'Fraunces',Georgia,serif;
+    --font-body:'EB Garamond',Georgia,serif;
+    --font-script:'Beau Rivage',cursive;
+    --font-am:'Noto Serif Armenian',Georgia,serif;
+
+    --edge:clamp(1.25rem,5vw,5rem);
+  }
+
+  *,*::before,*::after{box-sizing:border-box;}
+  html{scroll-behavior:smooth; overflow-x:hidden;}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
+
+  body{
+    margin:0;
+    background:var(--vellum);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:1.0625rem;
+    line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--hedge);color:var(--thread);}
+
+  [lang="hy"]{font-family:var(--font-am);}
+
+  /* ---------- the painting, held still beneath everything ---------- */
+  .backdrop{
+    position:fixed; inset:0; z-index:0;
+    background-size:cover;
+    background-position:50% 42%;
+  }
+  .backdrop::after{
+    content:""; position:absolute; inset:0;
+    background:
+      linear-gradient(180deg, rgba(246,241,228,.52) 0%, rgba(246,241,228,.42) 38%, rgba(246,241,228,.58) 100%);
+  }
+  .page{position:relative; z-index:1;}
+
+  /* Soft vellum haze: lets prose sit on the painting without a hard card edge.
+     Feathers to nothing, so the watercolour still reads as the page's ground. */
+  .wash{
+    background:radial-gradient(ellipse 50% 50% at 50% 50%,
+      rgba(250,247,239,.97) 0%,
+      rgba(250,247,239,.955) 45%,
+      rgba(250,247,239,.82) 63%,
+      rgba(250,247,239,.46) 79%,
+      rgba(250,247,239,.15) 92%,
+      rgba(250,247,239,0) 100%);
+    padding:clamp(2.4rem,5vw,3.8rem) clamp(2.75rem,6.5vw,5rem);
+  }
+
+  /* ---------- washi tape ---------- */
+  .tape{
+    position:absolute;
+    left:-14%; width:128%;
+    padding:.55rem 0;
+    background:rgba(244,238,224,.80);
+    box-shadow:0 6px 18px rgba(42,36,24,.16);
+    display:flex; gap:3.2rem;
+    justify-content:center; align-items:center;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:4;
+  }
+  .tape span{
+    font-size:.6rem; letter-spacing:.24em; text-transform:uppercase;
+    color:rgba(42,36,24,.62); white-space:nowrap;
+  }
+  .tape span[lang="hy"]{letter-spacing:.08em;}
+  .tape-a{top:3.4rem; transform:rotate(-15deg);}
+  .tape-b{top:7.6rem; transform:rotate(-6deg); background:rgba(240,233,217,.72);}
+
+  /* ---------- the lace medallion: vellum ground + her real lace on top ---------- */
+  .lace{position:relative; display:grid; place-items:center;}
+  .lace-ground{
+    position:absolute;
+    width:96%; height:94%;
+    background:radial-gradient(ellipse 50% 50% at 50% 50%,
+      rgba(250,247,239,.97) 0%,
+      rgba(250,247,239,.95) 24%,
+      rgba(250,247,239,.87) 40%,
+      rgba(250,247,239,.62) 56%,
+      rgba(250,247,239,.34) 71%,
+      rgba(250,247,239,.13) 85%,
+      rgba(250,247,239,0) 100%);
+  }
+  .lace-img{
+    position:relative;
+    width:100%; height:auto; display:block;
+    filter:drop-shadow(0 16px 30px rgba(42,34,20,.30));
+  }
+  .lace-inner{
+    position:absolute;
+    width:56%;
+    text-align:center;
+    display:flex; flex-direction:column; align-items:center;
+  }
+
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .bob{animation:bob 9s ease-in-out infinite;}
+  .spin{animation:spin 52s linear infinite;}
+  @media (prefers-reduced-motion:reduce){.bob,.spin{animation:none;}}
+
+  .reveal{opacity:0; transform:translateY(24px); transition:opacity 1s ease, transform 1s ease;}
+  .reveal.is-visible{opacity:1; transform:translateY(0);}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none;}}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    min-height:100svh;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    padding:7rem var(--edge) 3rem;
+    text-align:center;
+    overflow:hidden;            /* keeps the angled tape from widening the page */
+  }
+  .hero .lace{width:min(70vw,462px);}
+  .hero .lace-inner{width:52%;}
+
+  .estd{
+    display:flex; align-items:baseline; gap:.5rem;
+    font-size:.62rem; letter-spacing:.24em; text-transform:uppercase;
+    color:#6a4f1c; margin-bottom:.55rem;
+  }
+  .hero h1{
+    margin:0;
+    font-family:var(--font-am); font-weight:700;
+    font-size:clamp(1rem,3.1vw,1.65rem); line-height:1.18;
+    color:var(--ink); text-wrap:balance;
+  }
+  .hero .latin{
+    font-family:var(--font-display); font-style:italic; font-weight:500;
+    font-size:clamp(.7rem,1.75vw,.95rem);
+    color:var(--ink-soft); margin:.3rem 0 0;
+    letter-spacing:.04em;
+  }
+  .hero .rule{
+    width:38%; height:1px; margin:.6rem 0;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  }
+  .hero .craft{
+    font-family:var(--font-script);
+    font-size:clamp(.85rem,2.2vw,1.15rem);
+    color:var(--hedge); line-height:1;
+  }
+
+  .hero-caption{
+    max-width:38rem; margin:.25rem auto 0;
+    font-size:.98rem; color:var(--ink);
+    text-shadow:0 1px 10px rgba(246,241,228,.85), 0 0 22px rgba(246,241,228,.7);
+  }
+  .hero-caption .fact{font-family:var(--font-display); font-style:italic; color:var(--roof);}
+
+  .cue{
+    margin-top:1.5rem;
+    font-size:.6rem; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--ink-soft);
+    text-shadow:0 1px 8px rgba(246,241,228,.9);
+  }
+
+  /* ---------- generic section ---------- */
+  section{position:relative; padding:7rem var(--edge);}
+  .head{text-align:center; max-width:36rem; margin:0 auto 3.5rem;}
+  .kicker{
+    font-size:.62rem; letter-spacing:.24em; text-transform:uppercase;
+    color:var(--ink-soft);
+    display:flex; align-items:center; justify-content:center; gap:.8em;
+    text-shadow:0 1px 8px rgba(246,241,228,.9);
+  }
+  .kicker::before,.kicker::after{
+    content:""; height:1px; width:2rem;
+    background:rgba(42,36,24,.28);
+  }
+  .kicker [lang="hy"]{letter-spacing:.06em;}
+  .head h2{
+    margin:.9rem 0 0;
+    font-family:var(--font-display); font-weight:600;
+    font-size:clamp(1.7rem,3.6vw,2.4rem);
+    color:var(--ink); text-wrap:balance;
+    text-shadow:0 1px 12px rgba(246,241,228,.9), 0 0 26px rgba(246,241,228,.75);
+  }
+
+  /* ---------- story, set into the lace ---------- */
+  .story .lace{width:min(94vw,780px); margin:0 auto;}
+  .story .lace-ground{
+    width:100%; height:98%;
+    background:radial-gradient(ellipse 50% 50% at 50% 50%,
+      rgba(250,247,239,.97) 0%,
+      rgba(250,247,239,.96) 30%,
+      rgba(250,247,239,.90) 46%,
+      rgba(250,247,239,.66) 60%,
+      rgba(250,247,239,.36) 74%,
+      rgba(250,247,239,.13) 87%,
+      rgba(250,247,239,0) 100%);
+  }
+  .story .lace-inner{width:62%; max-width:46ch;}
+  .story p{margin:0 0 1.05em; font-size:clamp(.78rem,1.4vw,1.06rem); line-height:1.62;}
+  .story p:last-child{margin-bottom:0;}
+  .story .fact{font-family:var(--font-display); font-style:italic; color:var(--roof);}
+
+  .story-note{
+    max-width:40rem; margin:3.5rem auto 0; text-align:center;
+  }
+  .story-note p{
+    font-family:var(--font-display); font-style:italic; font-weight:500;
+    font-size:clamp(1.15rem,2.3vw,1.5rem); margin:0 0 .6rem;
+    color:var(--ink);
+    text-shadow:0 1px 12px rgba(246,241,228,.92), 0 0 26px rgba(246,241,228,.8);
+  }
+  .story-note span{
+    display:block; margin-top:.2rem;
+    font-family:var(--font-body); font-style:italic;
+    color:var(--ink-soft); font-size:.9rem;
+    text-shadow:0 1px 10px rgba(246,241,228,.9);
+  }
+
+  /* ---------- gallery: lace floats on the meadow, no frames ---------- */
+  .plates{
+    display:grid; grid-template-columns:1fr;
+    gap:clamp(5rem,10vw,9rem);
+    max-width:76rem; margin:0 auto;
+  }
+  @media (min-width:860px){
+    .plates{grid-template-columns:repeat(2,1fr); align-items:start;}
+    .plate:nth-child(odd){transform:translateY(-2.5rem);}
+    .plate:last-child:nth-child(odd){grid-column:1 / -1; justify-self:center; max-width:32rem; transform:none;}
+  }
+  .plate{text-align:center; min-width:0;}
+  .plate figcaption{overflow-wrap:anywhere;}
+  .plate .lace{width:100%;}
+  .plate .lace-img{transition:transform .8s cubic-bezier(.19,1,.22,1);}
+  .plate:hover .lace-img,.plate:focus-within .lace-img{transform:scale(1.05) rotate(-1deg);}
+
+  .plate figcaption{margin-top:1.1rem;}
+  .plate .num{
+    font-family:var(--font-display); font-style:italic;
+    font-size:.8rem; color:var(--gold); letter-spacing:.12em;
+    text-shadow:0 1px 8px rgba(246,241,228,.9);
+  }
+  .plate h3{
+    margin:.25rem 0 0;
+    font-family:var(--font-display); font-weight:600;
+    font-size:clamp(1.15rem,2.2vw,1.45rem); color:var(--ink);
+    text-shadow:0 1px 12px rgba(246,241,228,.92), 0 0 24px rgba(246,241,228,.8);
+  }
+  .plate p{
+    margin:.5rem auto 0; max-width:34ch;
+    font-size:1rem; color:var(--ink);
+    text-shadow:0 1px 10px rgba(250,247,239,.95);
+  }
+  .plate .meta{
+    display:block; margin-top:.55rem;
+    font-family:var(--font-display); font-style:italic;
+    font-size:.8rem; color:var(--roof);
+    text-shadow:0 1px 10px rgba(246,241,228,.92);
+  }
+
+  /* ---------- seal ---------- */
+  .seal{
+    position:relative; width:10rem; height:10rem; margin:0 auto;
+    background:radial-gradient(circle,
+      rgba(249,245,235,.92) 0%, rgba(249,245,235,.82) 52%, rgba(249,245,235,0) 73%);
+  }
+  .seal svg{width:100%; height:100%; display:block;}
+  .seal-ring{fill:none; stroke:rgba(42,36,24,.34); stroke-width:.8;}
+  text.seal-text{
+    font-family:'EB Garamond',Georgia,serif; font-size:6.4px; letter-spacing:2.3px;
+    fill:var(--ink); text-transform:uppercase;
+  }
+  .seal-core{
+    position:absolute; inset:0; display:grid; place-items:center;
+    color:var(--hedge);
+  }
+  .seal-core svg{width:2.6rem; height:2.6rem;}
+
+  /* ---------- footer ---------- */
+  footer{
+    position:relative; text-align:center;
+    padding:6rem var(--edge) 5rem;
+  }
+  .footer-text{max-width:38rem; margin:2.25rem auto 0;
+    padding-top:clamp(3.25rem,6.5vw,5rem); padding-bottom:clamp(3.25rem,6.5vw,5rem);}
+  footer .lede{
+    max-width:33rem; margin:0 auto;
+    color:var(--ink); font-size:1rem;
+    text-shadow:0 1px 12px rgba(246,241,228,.92), 0 0 24px rgba(246,241,228,.8);
+  }
+  footer .place{
+    margin-top:1.5rem; font-family:var(--font-am); font-weight:700;
+    font-size:1.05rem; color:var(--ink);
+    text-shadow:0 1px 12px rgba(246,241,228,.92);
+  }
+  footer .place small{
+    display:block; margin-top:.25rem;
+    font-family:var(--font-display); font-style:italic; font-weight:500;
+    font-size:.8rem; color:var(--ink-soft);
+  }
+  footer .sign{
+    font-family:var(--font-script); font-size:1.7rem;
+    color:var(--hedge); margin-top:1.5rem;
+    text-shadow:0 1px 12px rgba(246,241,228,.92);
+  }
+  footer .disclaimer{
+    max-width:31rem; margin:2.5rem auto 0;
+    font-size:.8rem; font-style:italic; line-height:1.6;
+    color:var(--ink-soft);
+    text-shadow:0 1px 10px rgba(246,241,228,.9);
+  }
+
+  @media (max-width:640px){
+    section{padding:5rem var(--edge);}
+    .hero{padding-top:7.5rem;}
+    .story .lace-inner{width:66%;}
+    .plate:nth-child(odd){transform:none;}
+  }
+  /* ---------- language switching ---------- */
+  /* :not(html) matters: the root carries lang="hy" for assistive tech, but the
+     Armenian face must not become the inherited family for Latin passages. */
+  [lang="hy"]:not(html){font-family:var(--font-am);}
+  html[data-lang="en"] .i18n.hy{display:none;}
+  html[data-lang="hy"] .i18n.en{display:none;}
+
+  .lang{
+    position:fixed; top:1rem; right:1rem; z-index:20;
+    display:flex; align-items:center; gap:.15rem;
+    padding:.3rem .4rem .3rem .35rem;
+    background:rgba(247,242,230,.94);
+    border:1px solid rgba(42,36,24,.26);
+    border-radius:999px;
+    box-shadow:0 8px 22px rgba(42,34,20,.26);
+  }
+  .lang-btn{
+    font-family:var(--font-body);
+    font-size:.66rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ink-soft);
+    background:transparent; border:0; border-radius:999px;
+    padding:.34rem .6rem; cursor:pointer; line-height:1;
+    transition:background .3s ease, color .3s ease;
+  }
+  .lang-btn[lang="hy"]{letter-spacing:.06em;}
+  .lang-btn:hover{color:var(--ink);}
+  .lang-btn[aria-pressed="true"]{
+    background:var(--hedge); color:#f7f2e6;
+  }
+  .lang-btn:focus-visible{outline:2px solid var(--hedge); outline-offset:2px;}
+
+  @media (max-width:640px){
+    .lang{top:.6rem; right:.6rem; padding:.25rem .3rem;}
+    .lang-btn{font-size:.6rem; padding:.3rem .5rem;}
+  }
+
+  /* her initials, wherever they are quoted from the lace */
+  .mono{
+    font-family:var(--font-am);
+    letter-spacing:.1em;
+    color:var(--roof);
+  }
+  /* Armenian sets wider, so the circular seal text needs its own size */
+  text.seal-hy{font-size:5.1px; letter-spacing:1.35px;}
+
+  /* ---------- zoomable plate ---------- */
+  .plate-open{
+    display:block; width:100%;
+    padding:0; border:0; background:transparent;
+    cursor:zoom-in; position:relative;
+    border-radius:.4rem;
+  }
+  .plate-open:focus-visible{outline:2px solid var(--hedge); outline-offset:8px;}
+
+  /* ---------- lightbox ---------- */
+  .lb{
+    position:fixed; inset:0; z-index:60;
+    display:none;
+    background:rgba(20,17,11,.975);
+    -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
+    flex-direction:column;
+  }
+  .lb[open]{display:flex;}
+  .lb-stage{
+    position:relative;          /* the containing block the image measures against */
+    flex:1; min-height:0;
+    overflow:hidden;
+    touch-action:none;
+    cursor:grab;
+  }
+  .lb-stage.is-zoomed{cursor:grab;}
+  .lb-stage.is-panning{cursor:grabbing;}
+  /* Absolute + inset + auto margins rather than a centred grid item: as a grid
+     item the percentage max-height had no definite height to resolve against,
+     so it was dropped and the image drew at its natural size and overflowed -
+     two thirds of the pieces were cut off on a desktop screen. Against an
+     inset-0 containing block the percentages always resolve, and the box still
+     hugs the image so the zoom's pan clamping stays honest. */
+  .lb-img{
+    position:absolute; inset:0; margin:auto;
+    width:auto; height:auto;
+    max-width:94%; max-height:94%;
+    transform-origin:center center;
+    will-change:transform;
+    user-select:none; -webkit-user-drag:none;
+    box-shadow:0 20px 60px rgba(0,0,0,.6);
+  }
+  .lb-bar{
+    display:flex; align-items:center; justify-content:center;
+    gap:.4rem; flex-wrap:wrap;
+    padding:.7rem 1rem 1.1rem;
+    color:#f3ecdb;
+  }
+  .lb-cap{
+    flex:1 1 100%;
+    text-align:center;
+    font-family:var(--font-display);
+    font-size:1.02rem;
+    margin:0 0 .3rem;
+  }
+  .lb-cap span{
+    display:block;
+    font-family:var(--font-body); font-style:italic;
+    font-size:.78rem; color:#bfb49a; letter-spacing:.06em;
+  }
+  .lb-cap[lang="hy"]{font-family:var(--font-am);}
+  .lb-btn{
+    font-family:var(--font-body); font-size:.9rem;
+    min-width:2.3rem; height:2.3rem;
+    display:grid; place-items:center;
+    color:#f3ecdb;
+    background:rgba(247,242,230,.10);
+    border:1px solid rgba(247,242,230,.28);
+    border-radius:999px; cursor:pointer; padding:0 .6rem;
+    transition:background .25s ease;
+  }
+  .lb-btn:hover{background:rgba(247,242,230,.22);}
+  .lb-btn:focus-visible{outline:2px solid #d8c9a4; outline-offset:2px;}
+  .lb-btn[disabled]{opacity:.35; cursor:default;}
+  .lb-btn svg{width:1.05rem; height:1.05rem;}
+  .lb-close{
+    position:absolute; top:.9rem; right:.9rem;
+    z-index:2;
+  }
+  .lb-pct{
+    font-variant-numeric:tabular-nums;
+    min-width:3.4rem; text-align:center;
+    font-size:.78rem; color:#bfb49a;
+  }
+  @media (max-width:640px){
+    .lb-cap{font-size:.92rem;}
+    .lb-btn{min-width:2.1rem; height:2.1rem;}
+  }
+
+  /* ---------- site navigation ---------- */
+  .home-link{
+    position:fixed; top:1rem; left:1rem; z-index:20;
+    display:inline-flex; align-items:center; gap:.45rem;
+    padding:.42rem .85rem .42rem .68rem;
+    background:rgba(247,242,230,.94);
+    border:1px solid rgba(42,36,24,.26);
+    border-radius:999px;
+    box-shadow:0 8px 22px rgba(42,34,20,.26);
+    text-decoration:none; color:var(--ink-soft);
+    font-size:.64rem; letter-spacing:.18em; text-transform:uppercase;
+    transition:color .3s ease, background .3s ease;
+  }
+  .home-link:hover{color:var(--ink); background:rgba(252,249,242,.98);}
+  .home-link:focus-visible{outline:2px solid var(--hedge); outline-offset:2px;}
+  .home-link svg{width:.8rem; height:.8rem; flex:none;}
+  .home-link [lang="hy"]{letter-spacing:.06em;}
+  @media (max-width:640px){
+    .home-link{top:.6rem; left:.6rem; padding:.34rem .68rem .34rem .55rem; font-size:.57rem;}
+  }
+
+  .siblings{
+    max-width:44rem; margin:2.75rem auto 0;
+    display:grid; grid-template-columns:1fr; gap:.9rem;
+  }
+  @media (min-width:640px){ .siblings{grid-template-columns:1fr 1fr;} }
+  /* each collection points at the other three, so they sit in one row once
+     there is width for it */
+  @media (min-width:860px){ .siblings{grid-template-columns:repeat(3,1fr); max-width:58rem;} }
+  .sib{
+    display:block; text-decoration:none; color:inherit; text-align:left;
+    padding:1.05rem 1.25rem;
+    background:rgba(247,242,230,.88);
+    border:1px solid rgba(42,36,24,.18);
+    border-radius:.25rem;
+    transition:transform .4s ease, background .4s ease, box-shadow .4s ease;
+  }
+  .sib:hover{transform:translateY(-3px); background:rgba(252,249,242,.96); box-shadow:0 14px 30px rgba(42,34,20,.18);}
+  .sib:focus-visible{outline:2px solid var(--hedge); outline-offset:4px;}
+  .sib-kicker{
+    display:block; font-size:.57rem; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--gold); margin-bottom:.3rem;
+  }
+  .sib-title{
+    display:block; font-family:var(--font-display); font-weight:600;
+    font-size:1.02rem; color:var(--ink); line-height:1.3;
+  }
+  .sib-title[lang="hy"]{font-family:var(--font-am);}
+
+  /* ---------- views (client-side pages) ---------- */
+  .view{display:none;}
+  .home-link[hidden]{display:none;}
+  .view.is-active{display:block;}
+  .view > .backdrop{position:fixed; inset:0; z-index:0; background-size:cover;}
+  #view-home    > .backdrop{background-position:50% 45%;}
+  #view-doilies > .backdrop{background-position:50% 42%;}
+  #view-alphabet> .backdrop{background-position:50% 55%;}
+  #view-wear    > .backdrop{background-position:50% 58%;}
+  #view-small   > .backdrop{background-position:50% 40%;}
+  #view-home    > .backdrop::after{background:linear-gradient(180deg, rgba(246,241,228,.56) 0%, rgba(246,241,228,.48) 40%, rgba(246,241,228,.62) 100%);}
+  #view-doilies > .backdrop::after{background:linear-gradient(180deg, rgba(246,241,228,.52) 0%, rgba(246,241,228,.42) 38%, rgba(246,241,228,.58) 100%);}
+  #view-alphabet> .backdrop::after{background:linear-gradient(180deg, rgba(244,239,225,.50) 0%, rgba(244,239,225,.40) 40%, rgba(244,239,225,.58) 100%);}
+  #view-wear    > .backdrop::after{background:linear-gradient(180deg, rgba(244,239,225,.46) 0%, rgba(244,239,225,.34) 40%, rgba(244,239,225,.52) 100%);}
+  #view-alphabet .tape, #view-wear .tape, #view-home .tape, #view-small .tape{top:3.6rem; transform:rotate(-13deg);}
+
+  /* ---------- paired works (alphabet + wearables) ---------- */
+  .works{display:grid; grid-template-columns:1fr; gap:clamp(4.5rem,9vw,7rem); max-width:72rem; margin:0 auto;}
+  @media (min-width:900px){
+    .works{grid-template-columns:1fr 1fr; align-items:start;}
+    .work:nth-child(odd){transform:translateY(-1.75rem);}
+    .work:last-child:nth-child(odd){grid-column:1 / -1; justify-self:center; max-width:30rem; transform:none;}
+  }
+  .work{text-align:center; min-width:0;}
+  .work-open{display:block; width:100%; padding:0; border:0; background:transparent; cursor:zoom-in; border-radius:.4rem;}
+  .work-open:focus-visible{outline:2px solid var(--hedge); outline-offset:8px;}
+  .work-frame{filter:drop-shadow(0 20px 36px rgba(42,34,20,.38)); transition:transform .6s cubic-bezier(.19,1,.22,1);}
+  .work-open:hover .work-frame, .work-open:focus-visible .work-frame{transform:translateY(-6px) scale(1.02);}
+  .work-frame img{display:block; width:100%; height:auto;}
+  .work figcaption{margin-top:1.25rem; overflow-wrap:anywhere;}
+  .work .num{margin:0; font-family:var(--font-display); font-style:italic; font-size:.8rem;
+    color:var(--gold); letter-spacing:.12em; text-shadow:0 1px 9px rgba(246,241,228,.85);}
+  .work h3{margin:.25rem 0 0; font-family:var(--font-display); font-weight:600;
+    font-size:clamp(1.15rem,2.2vw,1.45rem); color:var(--ink); text-shadow:0 1px 12px rgba(246,241,228,.9);}
+  .work h3[lang="hy"]{font-family:var(--font-am);}
+  .work p{margin:.55rem auto 0; max-width:34ch; font-size:1rem;}
+  .work .meta{display:block; margin-top:.6rem; font-family:var(--font-display);
+    font-style:italic; font-size:.82rem; color:var(--roof);}
+  .prose{max-width:38rem; margin:0 auto;}
+  .prose p{margin:0 0 1.25em;}
+  .prose p:last-child{margin-bottom:0;}
+  .prose .fact{font-family:var(--font-display); font-style:italic; color:var(--roof);}
+  .year{font-family:var(--font-display); font-weight:600; color:#2c4a86;
+    letter-spacing:.03em; font-variant-numeric:tabular-nums;}
+  .eyebrow{font-size:.62rem; letter-spacing:.24em; text-transform:uppercase;
+    color:var(--ink-soft); margin:0 0 1.1rem; text-shadow:0 1px 8px rgba(246,241,228,.9);}
+  .hero .latin{margin:.5rem 0 0; font-family:var(--font-display); font-style:italic; font-weight:500;
+    font-size:clamp(1rem,2.4vw,1.4rem); color:var(--ink-soft); text-shadow:0 1px 12px rgba(246,241,228,.9);}
+  #view-alphabet .hero h1, #view-wear .hero h1, #view-home .hero h1, #view-small .hero h1{
+    font-size:clamp(2rem,6vw,3.6rem); line-height:1.1;
+    text-shadow:0 1px 14px rgba(246,241,228,.95), 0 0 30px rgba(246,241,228,.8);}
+  #view-alphabet .hero .rule, #view-wear .hero .rule, #view-home .hero .rule, #view-small .hero .rule{
+    display:block; width:5rem; height:1px; margin:1.4rem auto;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+  #view-alphabet .hero-sub, #view-wear .hero-sub, #view-home .hero-sub, #view-small .hero-sub{
+    max-width:34rem; margin:0 auto; font-size:1rem;}
+  .head h2[lang="hy"]{font-family:var(--font-am);}
+  /* ---------- the archive's mark ---------- */
+  .mark{position:relative; display:grid; place-items:center; width:min(52vw,300px); margin:0 auto 1.6rem;}
+  .mark-ground{
+    position:absolute; width:96%; height:94%;
+    background:radial-gradient(ellipse 50% 50% at 50% 50%,
+      rgba(250,247,239,.86) 0%, rgba(250,247,239,.72) 40%,
+      rgba(250,247,239,.40) 64%, rgba(250,247,239,.12) 85%, rgba(250,247,239,0) 100%);
+  }
+  .mark img{position:relative; width:100%; height:auto; display:block;
+    filter:drop-shadow(0 16px 30px rgba(42,34,20,.30));}
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+  .bob{animation:bob 9s ease-in-out infinite;}
+  @media (prefers-reduced-motion:reduce){.bob{animation:none;}}
+
+  /* ---------- collection cards ---------- */
+  .cards{
+    display:grid; grid-template-columns:1fr; gap:clamp(1.5rem,3vw,2.25rem);
+    max-width:76rem; margin:0 auto;
+  }
+  @media (min-width:700px){ .cards{grid-template-columns:repeat(2,1fr);} }
+  @media (min-width:1040px){ .cards{grid-template-columns:repeat(4,1fr);} }
+  .card{
+    display:flex; flex-direction:column; align-items:center; text-align:center;
+    text-decoration:none; color:inherit; min-width:0;
+    padding:clamp(1.6rem,3vw,2.2rem) clamp(1.2rem,2.5vw,1.8rem) clamp(1.4rem,2.5vw,1.9rem);
+    background:rgba(233,225,207,.90);
+    border:1px solid rgba(42,36,24,.20);
+    border-radius:.3rem;
+    box-shadow:0 12px 30px rgba(42,34,20,.16);
+    transition:transform .5s cubic-bezier(.19,1,.22,1), box-shadow .5s ease, background .5s ease;
+  }
+  .card:hover, .card:focus-visible{
+    transform:translateY(-6px);
+    background:rgba(240,233,217,.96);
+    box-shadow:0 22px 46px rgba(42,34,20,.26);
+  }
+  .card:focus-visible{outline:2px solid var(--hedge); outline-offset:5px;}
+  .card-art{display:block; width:min(70%,190px); margin-bottom:1.1rem;}
+  .card-art img{width:100%; height:auto; display:block;
+    filter:drop-shadow(0 10px 20px rgba(42,34,20,.28));}
+  .card:hover .card-art img{filter:drop-shadow(0 14px 26px rgba(42,34,20,.34));}
+  .card-text{display:block;}
+  .card-count{
+    display:block; font-size:.62rem; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--gold); margin-bottom:.5rem;
+  }
+  .card-title{
+    display:block; font-family:var(--font-display); font-weight:600;
+    font-size:clamp(1.1rem,2vw,1.3rem); color:var(--ink); margin-bottom:.5rem;
+  }
+  .card-title[lang="hy"]{font-family:var(--font-am);}
+  .card-desc{display:block; font-size:.92rem; color:var(--ink-soft); line-height:1.55;}
+  .card-go{
+    display:block; margin-top:1rem;
+    font-size:.66rem; letter-spacing:.2em; text-transform:uppercase; color:var(--hedge);
+  }
+  .card:hover .card-go{color:var(--ink);}
+
+
+  /* ---------- pieces on threads ----------
+     Lace is worked in the air off a hook, never flat, so these hang. Each
+     figure pivots at the point the thread meets the ceiling; the periods are
+     deliberately unequal so the group never swings in unison. */
+  .mobile{
+    position:relative;
+    display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:center;
+    gap:clamp(1.5rem,4vw,3.5rem) clamp(1rem,3vw,2.5rem);
+    --rail:clamp(.55rem,1.6vw,1.35rem);   /* half the column gap, so segments meet */
+    max-width:74rem; margin:0 auto;
+    padding-top:1px; margin-top:1.5rem;    /* the ceiling the threads hang from */
+  }
+  .mobile + .mobile{margin-top:clamp(3rem,7vw,6rem);}
+
+  /* Each piece carries its own segment of the rail, half a gap proud on either
+     side, so neighbouring segments meet and every wrapped row gets a beam --
+     however many pieces the width happens to fit. The segment is a child of the
+     swaying figure, so it runs the sway backwards about the same pivot to
+     cancel it out and stay level. */
+  .hang::before{
+    content:""; position:absolute; top:0; height:1px;
+    left:calc(-1 * var(--rail,1.3rem)); right:calc(-1 * var(--rail,1.3rem));
+    background:rgba(255,255,255,.2);
+    transform-origin:top center;
+    animation:unsway var(--dur,9s) ease-in-out infinite;
+    animation-delay:var(--delay,0s);
+  }
+  @keyframes unsway{
+    0%,100%{transform:rotate(calc(var(--tilt,2deg) * -1));}
+    50%    {transform:rotate(var(--tilt,2deg));}
+  }
+  .hang{
+    position:relative;
+    margin:0; width:var(--w); min-width:0;
+    display:flex; flex-direction:column; align-items:center;
+    transform-origin:top center;
+    animation:sway var(--dur,9s) ease-in-out infinite;
+    animation-delay:var(--delay,0s);
+  }
+  @keyframes sway{
+    0%,100%{transform:rotate(var(--tilt,2deg));}
+    50%    {transform:rotate(calc(var(--tilt,2deg) * -1));}
+  }
+  @media (prefers-reduced-motion:reduce){ .hang, .hang::before{animation:none;} }
+  /* a hanging thing steadies when you reach for it - and a moving target is
+     hard to tap, so the sway pauses on hover, focus and touch. The rail runs on
+     its own animation, so it has to be pinned in the same breath or it drifts
+     out of level while the piece stands still. */
+  .hang:hover, .hang:focus-within, .hang:active,
+  .hang:hover::before, .hang:focus-within::before, .hang:active::before{
+    animation-play-state:paused;
+  }
+
+  .thread{
+    display:block; width:1px; height:var(--drop,4rem);
+    background:linear-gradient(180deg, rgba(255,255,255,.5), rgba(255,255,255,.30));
+    flex:none;
+  }
+  .hang-open{
+    display:block; width:100%; padding:0; border:0; background:transparent;
+    cursor:zoom-in; border-radius:.4rem;
+    transition:transform .5s cubic-bezier(.19,1,.22,1);
+  }
+  .hang-open:hover{transform:scale(1.05);}
+  .hang-open:focus-visible{outline:2px solid #fff; outline-offset:6px;}
+  .hang-open img{
+    display:block; width:100%; height:auto;
+    filter:drop-shadow(0 14px 26px rgba(0,0,0,.5));
+  }
+  .hang figcaption{margin-top:.85rem; text-align:center;}
+  .hang-title{
+    display:block; font-family:var(--font-body); font-weight:500;
+    font-size:.78rem; letter-spacing:.03em; color:rgba(255,255,255,.8);
+  }
+  .hang-title[lang="hy"]{font-family:var(--font-am-sans);}
+
+  @media (max-width:640px){
+    .mobile{gap:1.25rem .75rem; --rail:.42rem;}
+    .hang{width:calc(50% - 1rem) !important;}
+    .thread{height:calc(var(--drop,4rem) * .5);}
+  }
+
+  /* ================= dark ground, no panels =================
+     Every surface behind text is gone. The ground carries enough depth on its
+     own, so type sits straight on the image the way a poster does. */
+  @font-face{
+    font-family:'Manrope';
+    font-style:normal;font-weight:200 800;font-display:swap;
+    src:url('../fonts/manrope.woff2') format('woff2');
+  }
+  @font-face{
+    font-family:'Noto Sans Armenian';
+    font-style:normal;font-weight:100 900;font-display:swap;
+    src:url('../fonts/noto-sans-arm.woff2') format('woff2');
+    unicode-range:U+0530-058F,U+FB13-FB17;
+  }
+
+  :root{
+    --ink:#ffffff;
+    --ink-soft:rgba(255,255,255,.74);
+    --gold:rgba(255,255,255,.62);
+    --roof:#f0c9a4;
+    --vellum:#0f0d09;
+    --font-body:'Manrope', ui-sans-serif, system-ui, sans-serif;
+    --font-am-sans:'Noto Sans Armenian', ui-sans-serif, system-ui, sans-serif;
+  }
+  body{
+    background:#0f0d09; color:#fff;
+    font-family:var(--font-body);
+    font-size:1.02rem; line-height:1.68;
+    font-weight:400; letter-spacing:.005em;
+  }
+  ::selection{background:rgba(255,255,255,.85); color:#0f0d09;}
+
+  /* Armenian: sans for reading, the serif kept for display lines only */
+  [lang="hy"]:not(html){font-family:var(--font-am-sans);}
+  h1[lang="hy"], h2[lang="hy"], h3[lang="hy"],
+  .card-title[lang="hy"], .sib-title[lang="hy"], .place[lang="hy"]{
+    font-family:'Noto Serif Armenian', Georgia, serif;
+  }
+
+  #view-home    > .backdrop::after,
+  #view-doilies > .backdrop::after,
+  #view-alphabet> .backdrop::after,
+  #view-wear    > .backdrop::after,
+  #view-small   > .backdrop::after{
+    /* the veil that lets cream lace and white text sit on the painting; the
+       middle band is thinnest because that is where the painting is darkest */
+    background:linear-gradient(180deg,
+      rgba(10,9,6,var(--veil-top,.60)) 0%,
+      rgba(10,9,6,var(--veil-mid,.53)) 40%,
+      rgba(10,9,6,var(--veil-bot,.66)) 100%);
+  }
+
+  /* no highlights, anywhere */
+  .wash, .lace-ground, .mark-ground, .seal{background:none;}
+  .hero h1, .hero .latin, .hero .craft, .eyebrow, .cue, .estd,
+  .kicker, .head h2, .plate .num, .plate h3, .plate p, .plate .meta,
+  .work .num, .work h3, .work p, .work .meta, .prose p,
+  .story-note p, .story-note span, .story-body p, .hero-sub,
+  .card-title, .card-desc, .card-count, .card-go, .sib-kicker, .sib-title,
+  footer .lede, footer .place, footer .sign, footer .disclaimer, .year, .mono,
+  h1, h2, h3, .hero-caption, .fact, .latin, .place small, .lace-inner,
+  .hero-titles h1, .hero-titles .latin, .hero-titles .craft{
+    text-shadow:none;
+  }
+  .hero-caption{color:rgba(255,255,255,.78);}
+  .hero-caption .fact{color:#f0c9a4;}
+
+  /* everything reads light */
+  .hero h1, .head h2, .plate h3, .work h3, .card-title, .sib-title,
+  .story-body p, .prose p, footer .lede, footer .place{color:#fff;}
+  .hero .latin, .eyebrow, .cue, .kicker, .plate p, .work p,
+  .card-desc, footer .disclaimer{color:rgba(255,255,255,.76);}
+  .plate .num, .work .num, .card-count, .sib-kicker, .estd{color:rgba(255,255,255,.58);}
+  .plate .meta, .work .meta, .fact, .mono{color:#f0c9a4;}
+  .year{color:#bcd6ff;}
+  .hero .craft, .card-go, footer .sign{color:rgba(255,255,255,.82);}
+  .kicker::before, .kicker::after{background:rgba(255,255,255,.34);}
+  .hero .rule, .lace-inner .rule{background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);}
+  .seal-ring{stroke:rgba(255,255,255,.34);}
+  .seal-core{color:rgba(255,255,255,.7);}
+  text.seal-text{fill:rgba(255,255,255,.8);}
+
+  /* body copy in the modern sans; display lines stay in the serif */
+  .plate p, .work p, .prose p, .story-body p, .hero-sub, .card-desc,
+  footer .lede, footer .disclaimer{font-family:var(--font-body); font-weight:400;}
+  .plate .num, .work .num, .card-count, .sib-kicker, .eyebrow, .cue, .kicker, .estd{
+    font-family:var(--font-body); font-weight:500; letter-spacing:.2em;
+  }
+  .plate .meta, .work .meta{font-family:var(--font-body); font-style:normal; font-weight:500; letter-spacing:.02em;}
+  .fact{font-family:var(--font-body); font-style:normal; font-weight:500;}
+  .year{font-family:var(--font-body); font-weight:600;}
+
+  /* hero: the name now sits below the lace rather than on it */
+  .hero-titles{text-align:center; margin-top:2rem;}
+  .hero-titles h1{
+    font-family:'Noto Serif Armenian', Georgia, serif; font-weight:700;
+    font-size:clamp(1.9rem,5.4vw,3.3rem); line-height:1.12; margin:0; color:#fff;
+  }
+  .hero-titles .latin{
+    margin:.55rem 0 0; font-family:var(--font-display); font-style:italic; font-weight:500;
+    font-size:clamp(1rem,2.2vw,1.35rem); color:rgba(255,255,255,.76);
+  }
+  .hero-titles .estd{justify-content:center; margin-bottom:.9rem; font-size:.64rem;}
+  .hero-titles .rule{display:block; width:5rem; height:1px; margin:1.2rem auto;}
+  .hero-titles .craft{font-family:var(--font-script); font-size:clamp(1rem,2.4vw,1.3rem);}
+
+  /* story: prose below the doily, in a clean column */
+  .story-lace{width:min(72vw,430px); margin:0 auto; opacity:.92;}
+  .story-body{max-width:38rem; margin:2.75rem auto 0; text-align:center;}
+  .story-body p{margin:0 0 1.3em; font-size:1.02rem; line-height:1.7;}
+  .story-body p:last-child{margin-bottom:0;}
+
+  /* home: outlined buttons, transparent, as in the reference */
+  .card{
+    background:none; border:1px solid rgba(255,255,255,.55);
+    border-radius:1.75rem; box-shadow:none;
+    padding:clamp(1.8rem,3vw,2.4rem) clamp(1.3rem,2.5vw,1.9rem) clamp(1.6rem,2.5vw,2rem);
+    transition:transform .45s cubic-bezier(.19,1,.22,1), border-color .45s ease, background .45s ease;
+  }
+  .card:hover, .card:focus-visible{
+    background:rgba(255,255,255,.07);
+    border-color:#fff; transform:translateY(-5px); box-shadow:none;
+  }
+  .card-title{font-family:var(--font-display); font-weight:600;}
+  .card-go{font-weight:600;}
+  .sib{
+    background:none; border:1px solid rgba(255,255,255,.45);
+    border-radius:1.25rem;
+  }
+  .sib:hover{background:rgba(255,255,255,.07); border-color:#fff; box-shadow:none;}
+  .sib-title{font-family:var(--font-display); font-weight:600;}
+
+  /* the two controls become outlined too, so nothing is a pale slab */
+  .lang, .home-link{
+    background:rgba(15,13,9,.55); border:1px solid rgba(255,255,255,.5);
+    box-shadow:none;
+    -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  }
+  .lang-btn, .home-link{color:rgba(255,255,255,.78); font-family:var(--font-body); font-weight:500;}
+  .lang-btn:hover, .home-link:hover{color:#fff;}
+  .lang-btn[aria-pressed="true"]{background:rgba(255,255,255,.92); color:#14110c;}
+  .home-link:focus-visible, .lang-btn:focus-visible,
+  .card:focus-visible, .sib:focus-visible,
+  .plate-open:focus-visible, .work-open:focus-visible{outline-color:#fff;}
+
+  /* the paper tape stays paper, but quieter against the dark */
+  .tape{background:rgba(246,241,228,.16); box-shadow:none;
+    -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px);}
+  .tape span{color:rgba(255,255,255,.62); font-family:var(--font-body); font-weight:500;}
+
+  /* id-scoped hero rules outrank the class-level reset, so clear them by name */
+  #view-alphabet .hero h1, #view-wear .hero h1, #view-home .hero h1, #view-small .hero h1,
+  #view-alphabet .hero-sub, #view-wear .hero-sub, #view-home .hero-sub, #view-small .hero-sub{
+    text-shadow:none;
+  }
+
+  /* inline emphasis keeps its italic, but in the sans */
+  .story-body .fact, .prose .fact, .plate .fact, .work .fact,
+  .hero-caption .fact, .hero-sub .fact, .card-desc .fact,
+  .plate .meta, .work .meta, .story-note span{
+    font-family:var(--font-body); font-style:italic; font-weight:500; color:#f0c9a4;
+  }
+  .plate .meta, .work .meta{font-style:normal; letter-spacing:.02em;}
+  .story-note p{font-family:var(--font-display); font-style:italic; color:#fff;}
+
+  /* ---------- vertical rhythm and first-screen discovery ----------
+     The pages were built at 7rem of section padding top and bottom, which put
+     224px of empty ground at every boundary - on the home page a third of the
+     "About" section was padding. And the hero filled the viewport exactly, so
+     a visitor landed on a title with no sign that twenty-seven pieces of
+     needlework were below it. Both are fixed here rather than in the base
+     stylesheet so the change is legible as one pass. */
+
+  section{padding:4rem var(--edge);}
+  .head{margin:0 auto 2.25rem;}
+
+  /* the hero stops short of the fold, so the next section's first line shows
+     and the page reads as having more to it */
+  .hero{min-height:84svh; padding:6rem var(--edge) 5rem;}
+
+  /* the cue is now a real control: it names what is below and goes there.
+     Sitting it at the foot of the hero puts it on the edge people look at
+     when deciding whether to scroll, and takes the slack out of the middle.
+     Taking it out of the flow rather than pushing it with an auto margin
+     matters: an auto margin eats the free space above it too, which drove the
+     title up into the diagonal tape. */
+  .hero .cue{position:absolute; left:0; right:0; bottom:1.9rem; margin:0;}
+  .cue a{
+    display:inline-flex; flex-direction:column; align-items:center; gap:.5rem;
+    color:inherit; text-decoration:none; padding:.4rem .6rem; border-radius:.4rem;
+  }
+  .cue a:hover, .cue a:focus-visible{color:#fff;}
+  .cue a:focus-visible{outline:2px solid #fff; outline-offset:3px;}
+  .cue svg{width:1.15rem; height:1.15rem; opacity:.75;}
+  @media (prefers-reduced-motion:no-preference){
+    .cue svg{animation:cue-bob 2.4s ease-in-out infinite;}
+    @keyframes cue-bob{
+      0%,100%{transform:translateY(0); opacity:.55;}
+      50%    {transform:translateY(5px); opacity:1;}
+    }
+  }
+  .cue a:hover svg{animation-play-state:paused; opacity:1;}
+
+  @media (max-width:640px){
+    section{padding:3rem var(--edge);}
+    .head{margin:0 auto 1.75rem;}
+    .hero{min-height:82svh; padding:5rem var(--edge) 4rem;}
+    .hero .cue{bottom:1.25rem;}
+  }
+
+  /* ---------- home page, second pass on the copy ----------
+     The big name and the eyebrow used to be plain lang="hy" elements, so they
+     stayed Armenian on the English page; they are language-paired now, which
+     means the English heading needs the Latin display face rather than the
+     Armenian one the base rule hands every h1. Only the face changes here -
+     the display size stays with the per-page rule in spa_extra.css, which
+     carries an id and would win over this one anyway. */
+  .hero h1.en{font-family:var(--font-display); font-weight:600; letter-spacing:.01em;}
+  /* the Latin reading of her name now shows only under the Armenian title,
+     where it is a gloss rather than a repetition */
+  .hero .latin{margin-top:.25rem;}
+
+  .hero-lede{
+    max-width:33rem; margin:1.1rem auto 0;
+    font-size:clamp(.86rem,1.6vw,.98rem); line-height:1.62;
+    color:rgba(255,255,255,.82);
+  }
+  /* the cue is a chevron alone now: the heading it points at says the words */
+  .hero .cue a{gap:0;}
+
+  /* the hero already names what follows, so the cards start sooner */
+  .collections{padding-top:1.5rem;}
+  @media (max-width:640px){ .collections{padding-top:1rem;} }
+
+  /* ---------- the seal ----------
+     One rosette, drawn once in build/make_seal.py and injected into every
+     footer by the build - it used to be pasted into the doilies page alone,
+     which is why it appeared on one page only. The strokes take currentColor,
+     so its weight is one value here. */
+  .seal{
+    width:9.5rem; height:9.5rem; margin:0 auto 2.25rem;
+    background:none;
+    /* every page sits on the darkened painting, so the mark is cream like the
+       lace and the type - the light theme's ink disappeared into the ground */
+    color:rgba(255,255,255,.52);
+  }
+  .seal svg{width:100%; height:100%; display:block; overflow:visible;}
+  @media (max-width:640px){ .seal{width:7.5rem; height:7.5rem; margin-bottom:1.75rem;} }
+
+  /* page grounds */
+  #view-home > .backdrop,#view-doilies > .backdrop,#view-small > .backdrop{background-image:url("../img/cottage.webp");}
+  #view-alphabet > .backdrop{background-image:url("../img/meadow.webp");}
+  #view-wear > .backdrop{background-image:url("../img/portrait.webp");}
+  .view{display:block;}

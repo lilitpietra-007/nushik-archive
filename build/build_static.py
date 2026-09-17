@@ -7,7 +7,7 @@ a real page at its own URL, images are files the browser caches and lazy-loads,
 and the text is real UTF-8 Armenian rather than numeric entities - so it can be
 selected, searched, and indexed.
 """
-import base64, hashlib, os, re, shutil, sys
+import base64, hashlib, json, os, re, shutil, sys
 from PIL import Image
 
 # The domain you launch on, once you have one - e.g. 'https://nushikmalkhasyan.com'.
@@ -207,7 +207,40 @@ def head(fname, title_en, title_hy, desc, canonical, css_name, js_name):
 '''
 
 
+# How many earlier stylesheets and scripts to keep beside the current pair.
+# The names carry a content hash, so a new build always writes a new name and
+# used to delete the old one - which broke the site for anyone holding a
+# cached page: GitHub Pages serves HTML with max-age=600, so for ten minutes
+# after a deploy a returning visitor asked for a stylesheet that had just been
+# removed, got a 404, and saw the page with no styling at all. Keeping the
+# last few means stale HTML still finds the CSS it was built against. They are
+# about 50 KB a pair.
+KEEP_ASSETS = 5
+
+
+def previous_assets():
+    """The asset files from the last build, as {name: text}, newest first.
+
+    The order is remembered in a manifest rather than read off the
+    filesystem, because a fresh clone gives every file the same mtime.
+    """
+    adir = os.path.join(OUT, 'assets')
+    if not os.path.isdir(adir):
+        return {}
+    try:
+        order = json.load(open(os.path.join(adir, 'manifest.json')))
+    except (OSError, ValueError):
+        order = sorted(os.listdir(adir))
+    keep = {}
+    for name in order:
+        path = os.path.join(adir, name)
+        if name != 'manifest.json' and os.path.isfile(path):
+            keep[name] = open(path, encoding='utf-8').read()
+    return keep
+
+
 def main():
+    old_assets = previous_assets()
     if os.path.isdir(OUT):
         shutil.rmtree(OUT)
     os.makedirs(os.path.join(OUT, 'assets'))
@@ -235,6 +268,17 @@ def main():
         open(os.path.join(OUT, 'assets', fn), 'w', encoding='utf-8').write(text)
         return fn
     css_name, js_name = stamped('site.css', css), stamped('site.js', js)
+
+    # put the previous builds' assets back beside the new pair, newest first,
+    # so pages still in someone's cache keep working
+    order = [css_name, js_name]
+    for name, text in old_assets.items():
+        kind = name.rsplit('.', 1)[-1]
+        if name in order or sum(n.endswith(kind) for n in order) >= KEEP_ASSETS:
+            continue
+        open(os.path.join(OUT, 'assets', name), 'w', encoding='utf-8').write(text)
+        order.append(name)
+    json.dump(order, open(os.path.join(OUT, 'assets', 'manifest.json'), 'w'), indent=1)
 
     for fname, src, bg, t_en, t_hy, desc in PAGES:
         view = os.path.splitext(fname)[0].replace('index', 'home')
@@ -297,8 +341,11 @@ def main():
     nf += f'<script src="assets/{js_name}"></script>\n</body>\n</html>\n'
     open(os.path.join(OUT, '404.html'), 'w', encoding='utf-8').write(nf)
 
-    # Cloudflare Pages and Netlify both read this. The stylesheet and script carry
-    # a content hash, so they can be cached forever; the pages must not be.
+    # Cloudflare Pages and Netlify both read this; GitHub Pages, where the site
+    # lives today, ignores it and serves everything with max-age=600. The
+    # stylesheet and script carry a content hash, so they can be cached
+    # forever; the pages must not be. Because Pages will not honour that, the
+    # last few hashed assets are kept on disk - see KEEP_ASSETS.
     open(os.path.join(OUT, '_headers'), 'w').write(
         '/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n\n'
         '/fonts/*\n  Cache-Control: public, max-age=31536000, immutable\n\n'
