@@ -84,27 +84,78 @@
   .gallery:first-of-type{padding-top:5.5rem;}
   @media (max-width:640px){ .gallery:first-of-type{padding-top:4.5rem;} }
 
-  /* ---------- her life, a chapter to a collection ----------
-     Each collection page carries one part of the story between its title and
-     its pieces, in the order the home page lists the collections, so reading
-     the archive front to back reads her life forward. Two or three sentences
-     is the whole budget: the pieces are still what the page is for. */
-  .chapter{
+  /* ---------- the prologue ----------
+     Each collection opens on a few lines about that collection - what these
+     pieces are and why they exist. Her biography is a page of its own; a page
+     about doilies should be about doilies. Three or four sentences is the
+     budget, and the first piece still has to land inside the first screen. */
+  .prologue{
     max-width:34rem; margin:0 auto 3rem; text-align:center;
     color:rgba(255,255,255,.80);
     font-size:clamp(.86rem,1.6vw,.97rem); line-height:1.62;
   }
-  .chapter p{margin:0;}
-  .chapter p + p{margin-top:.7rem;}
-  .chapter-no{
-    font-size:.6rem; letter-spacing:.22em; text-transform:uppercase;
-    color:rgba(255,255,255,.52);
+  .prologue.after{margin:3rem auto 0;}
+  @media (max-width:640px){ .prologue{margin-bottom:2.25rem;} }
+
+  /* ---------- the top bar ----------
+     Two links, not one: back to the archive, and through to her life. The
+     page you are on drops its own, so the pair never points at itself. */
+  .topbar{
+    position:fixed; top:1rem; left:1rem; z-index:20;
+    display:flex; align-items:center; gap:.4rem; flex-wrap:wrap;
   }
-  .chapter-when{
-    font-family:var(--font-display); font-style:italic;
-    font-size:clamp(.9rem,1.9vw,1.05rem); color:#f0c9a4;
+  .topbar .home-link{position:static; top:auto; left:auto;}
+  .life-link{padding-left:.85rem;}
+  @media (max-width:640px){ .topbar{top:.6rem; left:.6rem; gap:.3rem;} }
+
+  /* ---------- the way in to her life ----------
+     One band on the home page under the four collections, sized like a card
+     so it reads as a fifth way in rather than a footnote. */
+  .life-band{
+    display:block; max-width:44rem; margin:0 auto; text-align:center;
+    text-decoration:none; color:inherit;
+    padding:2rem clamp(1.25rem,4vw,2.5rem);
+    border:1px solid rgba(255,255,255,.22); border-radius:.3rem;
+    background:rgba(28,24,18,.28);
+    transition:transform .4s ease, background .4s ease, border-color .4s ease;
   }
-  /* the dates read as one run, so the Armenian place names keep the same
-     face as the numerals rather than switching mid-line */
-  .chapter-when [lang="hy"]{font-family:var(--font-display); font-style:italic;}
-  @media (max-width:640px){ .chapter{margin-bottom:2.25rem;} }
+  .life-band:hover{transform:translateY(-3px); background:rgba(28,24,18,.42); border-color:rgba(255,255,255,.34);}
+  .life-band:focus-visible{outline:2px solid #fff; outline-offset:4px;}
+  .life-band .kicker{justify-content:center;}
+  .life-band-title{
+    display:block; margin:.85rem 0 .6rem;
+    font-family:var(--font-display); font-weight:600;
+    font-size:clamp(1.3rem,3vw,1.9rem); color:#fff;
+  }
+  .life-band-title[lang="hy"]{font-family:var(--font-am);}
+  .life-band-text{
+    display:block; max-width:32rem; margin:0 auto 1rem;
+    font-size:clamp(.86rem,1.6vw,.97rem); line-height:1.62;
+    color:rgba(255,255,255,.78);
+  }
+
+  /* ---------- the years ----------
+     A dated list rather than paragraphs: the same facts, a quarter of the
+     reading. The two turning points are marked rather than described. */
+  .years{
+    list-style:none; padding:0; margin:0 auto; max-width:38rem;
+    border-left:1px solid rgba(255,255,255,.20);
+  }
+  .years li{position:relative; padding:0 0 2rem 2rem;}
+  .years li:last-child{padding-bottom:0;}
+  .years li::before{
+    content:""; position:absolute; left:-4px; top:.55rem;
+    width:7px; height:7px; border-radius:50%;
+    background:rgba(255,255,255,.42);
+  }
+  .years li.turn::before{background:#f0c9a4; box-shadow:0 0 0 4px rgba(240,201,164,.20);}
+  .year-no{
+    margin:0 0 .3rem; font-family:var(--font-display); font-weight:600;
+    font-size:clamp(1rem,2.2vw,1.2rem); color:#f0c9a4;
+    font-variant-numeric:tabular-nums; letter-spacing:.02em;
+  }
+  .years p:not(.year-no){
+    margin:0; color:rgba(255,255,255,.82);
+    font-size:clamp(.86rem,1.6vw,.97rem); line-height:1.62;
+  }
+  @media (max-width:640px){ .years li{padding-left:1.4rem; padding-bottom:1.6rem;} }

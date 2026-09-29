@@ -9,10 +9,11 @@
   #view-alphabet> .backdrop{background-position:50% 55%;}
   #view-wear    > .backdrop{background-position:50% 58%;}
   #view-small   > .backdrop{background-position:50% 40%;}
-  #view-home    > .backdrop::after{background:linear-gradient(180deg, rgba(246,241,228,.56) 0%, rgba(246,241,228,.48) 40%, rgba(246,241,228,.62) 100%);}
-  #view-doilies > .backdrop::after{background:linear-gradient(180deg, rgba(246,241,228,.52) 0%, rgba(246,241,228,.42) 38%, rgba(246,241,228,.58) 100%);}
-  #view-alphabet> .backdrop::after{background:linear-gradient(180deg, rgba(244,239,225,.50) 0%, rgba(244,239,225,.40) 40%, rgba(244,239,225,.58) 100%);}
-  #view-wear    > .backdrop::after{background:linear-gradient(180deg, rgba(244,239,225,.46) 0%, rgba(244,239,225,.34) 40%, rgba(244,239,225,.52) 100%);}
+  #view-life    > .backdrop{background-position:50% 55%;}
+  /* the light theme's pale veils used to live here, one per view. The dark
+     theme has overridden them on every page since it shipped, and because
+     they carried an id they outranked its new id-less rule and washed the
+     whole site out for one build. Deleted rather than left to do it again. */
   #view-alphabet .tape, #view-wear .tape, #view-home .tape, #view-small .tape{top:3.6rem; transform:rotate(-13deg);}
 
   /* ---------- paired works (alphabet + wearables) ---------- */

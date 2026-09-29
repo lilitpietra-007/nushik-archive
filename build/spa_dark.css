@@ -38,11 +38,10 @@
     font-family:'Noto Serif Armenian', Georgia, serif;
   }
 
-  #view-home    > .backdrop::after,
-  #view-doilies > .backdrop::after,
-  #view-alphabet> .backdrop::after,
-  #view-wear    > .backdrop::after,
-  #view-small   > .backdrop::after{
+  /* every view, rather than a list of them: naming the five pages by id meant
+     the sixth shipped with the light theme's gradient over a pale watercolour,
+     and its cream text was almost invisible */
+  .view > .backdrop::after{
     /* the veil that lets cream lace and white text sit on the painting; the
        middle band is thinnest because that is where the painting is darkest */
     background:linear-gradient(180deg,

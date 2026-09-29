@@ -48,6 +48,11 @@ PAGES = [
      'Crosses & Small Pieces — Nushik Malkhasyan', 'Խաչեր և փոքր գործեր',
      'Four lace crosses, three of them edged in gold thread, and five small '
      'rounds — shown hanging on threads, the way lace is worked.'),
+    ('life.html',     '_life_body.html',     'meadow',
+     'Her Life — Nushik Malkhasyan', 'Նրա կյանքը',
+     'Nushik Malkhasyan, 1930–2009: born in Musaler, a teacher of mathematics '
+     'and geography, and for twenty years a teacher of needlework in Dilijan '
+     'and Ijevan.'),
 ]
 
 BACKDROP = {'cottage': 'cottage.webp', 'meadow': 'meadow.webp', 'portrait': 'portrait.webp'}
@@ -72,7 +77,8 @@ TOK = {
  '__CARD_ALPHABET__':'alpha_lace_cut','__CARD_WEAR__':'wear_collar_crown','__CARD_SMALL__':'cross_d',
 }
 URLS = {'__URL_DOILIES__':'doilies.html', '__URL_ALPHABET__':'alphabet.html',
-        '__URL_WEAR__':'wear.html', '__URL_SMALL__':'small.html', '__URL_HOME__':'index.html'}
+        '__URL_WEAR__':'wear.html', '__URL_SMALL__':'small.html',
+        '__URL_HOME__':'index.html', '__URL_LIFE__':'life.html'}
 OLD_ARTIFACTS = {'199465ee-19c1-4262-b5b8-03e0cf23ef81':'index.html',
                  '287dbf6f-3eec-4f5c-89d6-60f93c21d2bb':'doilies.html',
                  '475d63c2-c019-4632-b99b-6d9d717d22d6':'alphabet.html',
@@ -251,12 +257,24 @@ def main():
                 '  <button type="button" class="lang-btn" data-set="hy" lang="hy" aria-pressed="false">ՀԱՅ</button>\n'
                 '  <button type="button" class="lang-btn" data-set="en" aria-pressed="true">ENG</button>\n'
                 '</div>\n')
-    home_link = ('<a class="home-link" href="index.html">\n'
-                 '  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" '
+    # the top-left bar: back to the archive, and through to her life. Injected
+    # rather than pasted into each body so every page carries the same pair,
+    # and so the page you are on drops its own link.
+    back_link = ('  <a class="home-link" href="index.html">\n'
+                 '    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" '
                  'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
                  '<path d="M15 5l-7 7 7 7"/></svg>\n'
-                 '  <span class="i18n en">Archive</span>'
-                 '<span class="i18n hy" lang="hy">Արխիվ</span>\n</a>\n')
+                 '    <span class="i18n en">Archive</span>'
+                 '<span class="i18n hy" lang="hy">Արխիվ</span>\n  </a>\n')
+    life_link = ('  <a class="home-link life-link" href="life.html">\n'
+                 '    <span class="i18n en">Her Life</span>'
+                 '<span class="i18n hy" lang="hy">Նրա կյանքը</span>\n  </a>\n')
+
+    def top_nav(fname):
+        if fname == 'index.html':
+            return ''
+        links = back_link + ('' if fname == 'life.html' else life_link)
+        return '<nav class="topbar" aria-label="Site">\n' + links + '</nav>\n'
     lightbox = open('spa_lightbox.html', encoding='utf-8').read()
     seal = open('seal.html', encoding='utf-8').read()
 
@@ -284,8 +302,7 @@ def main():
         view = os.path.splitext(fname)[0].replace('index', 'home')
         canonical = SITE_URL + '/' + ('' if fname == 'index.html' else fname)
         html = head(fname, t_en, t_hy, desc, canonical, css_name, js_name)
-        if fname != 'index.html':
-            html += home_link
+        html += top_nav(fname)
         html += nav_lang
         html += f'<div class="view is-active" id="view-{view}">\n'
         html += '<div class="backdrop" aria-hidden="true"></div>\n'
@@ -322,7 +339,7 @@ def main():
     nf = head('404.html', 'Not found — Nushik Malkhasyan', 'Չգտնվեց',
               'That page is not part of the archive.', SITE_URL + '/404.html',
               css_name, js_name)
-    nf += home_link + nav_lang
+    nf += top_nav('404.html') + nav_lang
     nf += ('<div class="view is-active" id="view-home">\n'
            '<div class="backdrop" aria-hidden="true"></div>\n'
            '<div class="page"><section class="hero">\n'
