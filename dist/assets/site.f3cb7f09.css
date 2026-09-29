@@ -536,10 +536,11 @@
   #view-alphabet> .backdrop{background-position:50% 55%;}
   #view-wear    > .backdrop{background-position:50% 58%;}
   #view-small   > .backdrop{background-position:50% 40%;}
-  #view-home    > .backdrop::after{background:linear-gradient(180deg, rgba(246,241,228,.56) 0%, rgba(246,241,228,.48) 40%, rgba(246,241,228,.62) 100%);}
-  #view-doilies > .backdrop::after{background:linear-gradient(180deg, rgba(246,241,228,.52) 0%, rgba(246,241,228,.42) 38%, rgba(246,241,228,.58) 100%);}
-  #view-alphabet> .backdrop::after{background:linear-gradient(180deg, rgba(244,239,225,.50) 0%, rgba(244,239,225,.40) 40%, rgba(244,239,225,.58) 100%);}
-  #view-wear    > .backdrop::after{background:linear-gradient(180deg, rgba(244,239,225,.46) 0%, rgba(244,239,225,.34) 40%, rgba(244,239,225,.52) 100%);}
+  #view-life    > .backdrop{background-position:50% 55%;}
+  /* the light theme's pale veils used to live here, one per view. The dark
+     theme has overridden them on every page since it shipped, and because
+     they carried an id they outranked its new id-less rule and washed the
+     whole site out for one build. Deleted rather than left to do it again. */
   #view-alphabet .tape, #view-wear .tape, #view-home .tape, #view-small .tape{top:3.6rem; transform:rotate(-13deg);}
 
   /* ---------- paired works (alphabet + wearables) ---------- */
@@ -763,11 +764,10 @@
     font-family:'Noto Serif Armenian', Georgia, serif;
   }
 
-  #view-home    > .backdrop::after,
-  #view-doilies > .backdrop::after,
-  #view-alphabet> .backdrop::after,
-  #view-wear    > .backdrop::after,
-  #view-small   > .backdrop::after{
+  /* every view, rather than a list of them: naming the five pages by id meant
+     the sixth shipped with the light theme's gradient over a pale watercolour,
+     and its cream text was almost invisible */
+  .view > .backdrop::after{
     /* the veil that lets cream lace and white text sit on the painting; the
        middle band is thinnest because that is where the painting is darkest */
     background:linear-gradient(180deg,
@@ -974,6 +974,80 @@
   .gallery:first-of-type{padding-top:5.5rem;}
   @media (max-width:640px){ .gallery:first-of-type{padding-top:4.5rem;} }
 
+  /* ---------- the prologue ----------
+     Each collection opens on a few lines about that collection - what these
+     pieces are and why they exist. Her biography is a page of its own; a page
+     about doilies should be about doilies. Three or four sentences is the
+     budget, and the first piece still has to land inside the first screen. */
+  .prologue{
+    max-width:34rem; margin:0 auto 3rem; text-align:center;
+    color:rgba(255,255,255,.80);
+    font-size:clamp(.86rem,1.6vw,.97rem); line-height:1.62;
+  }
+  .prologue.after{margin:3rem auto 0;}
+  @media (max-width:640px){ .prologue{margin-bottom:2.25rem;} }
+
+  /* ---------- the top bar ----------
+     Two links, not one: back to the archive, and through to her life. The
+     page you are on drops its own, so the pair never points at itself. */
+  .topbar{
+    position:fixed; top:1rem; left:1rem; z-index:20;
+    display:flex; align-items:center; gap:.4rem; flex-wrap:wrap;
+  }
+  .topbar .home-link{position:static; top:auto; left:auto;}
+  .life-link{padding-left:.85rem;}
+  @media (max-width:640px){ .topbar{top:.6rem; left:.6rem; gap:.3rem;} }
+
+  /* ---------- the way in to her life ----------
+     A small block under the four collections, not a fifth card. One line and
+     a link: the page it points at is where the story actually is. */
+  .more{max-width:30rem; margin:0 auto; text-align:center;}
+  .more h2{
+    margin:0 0 .5rem; font-family:var(--font-display); font-weight:600;
+    font-size:clamp(1.05rem,2.2vw,1.35rem); color:#fff;
+  }
+  .more h2[lang="hy"]{font-family:var(--font-am);}
+  .more p{
+    margin:0 0 .9rem; font-size:clamp(.84rem,1.5vw,.93rem);
+    line-height:1.6; color:rgba(255,255,255,.72);
+  }
+  .more-link{
+    display:inline-block; text-decoration:none;
+    font-size:.62rem; letter-spacing:.2em; text-transform:uppercase;
+    color:rgba(255,255,255,.82); padding:.3rem 0;
+    border-bottom:1px solid rgba(255,255,255,.3);
+    transition:color .3s ease, border-color .3s ease;
+  }
+  .more-link:hover{color:#fff; border-color:#fff;}
+  .more-link:focus-visible{outline:2px solid #fff; outline-offset:4px;}
+  .more-link [lang="hy"]{letter-spacing:.08em;}
+
+  /* ---------- the years ----------
+     A dated list rather than paragraphs: the same facts, a quarter of the
+     reading. The two turning points are marked rather than described. */
+  .years{
+    list-style:none; padding:0; margin:0 auto; max-width:38rem;
+    border-left:1px solid rgba(255,255,255,.20);
+  }
+  .years li{position:relative; padding:0 0 2rem 2rem;}
+  .years li:last-child{padding-bottom:0;}
+  .years li::before{
+    content:""; position:absolute; left:-4px; top:.55rem;
+    width:7px; height:7px; border-radius:50%;
+    background:rgba(255,255,255,.42);
+  }
+  .years li.turn::before{background:#f0c9a4; box-shadow:0 0 0 4px rgba(240,201,164,.20);}
+  .year-no{
+    margin:0 0 .3rem; font-family:var(--font-display); font-weight:600;
+    font-size:clamp(1rem,2.2vw,1.2rem); color:#f0c9a4;
+    font-variant-numeric:tabular-nums; letter-spacing:.02em;
+  }
+  .years p:not(.year-no){
+    margin:0; color:rgba(255,255,255,.82);
+    font-size:clamp(.86rem,1.6vw,.97rem); line-height:1.62;
+  }
+  @media (max-width:640px){ .years li{padding-left:1.4rem; padding-bottom:1.6rem;} }
+
   /* ---------- the seal ----------
      One rosette, drawn once in build/make_seal.py and injected into every
      footer by the build - it used to be pasted into the doilies page alone,
@@ -991,6 +1065,6 @@
 
   /* page grounds */
   #view-home > .backdrop,#view-doilies > .backdrop,#view-small > .backdrop{background-image:url("../img/cottage.webp");}
-  #view-alphabet > .backdrop{background-image:url("../img/meadow.webp");}
+  #view-alphabet > .backdrop,#view-life > .backdrop{background-image:url("../img/meadow.webp");}
   #view-wear > .backdrop{background-image:url("../img/portrait.webp");}
   .view{display:block;}

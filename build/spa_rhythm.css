@@ -109,30 +109,28 @@
   @media (max-width:640px){ .topbar{top:.6rem; left:.6rem; gap:.3rem;} }
 
   /* ---------- the way in to her life ----------
-     One band on the home page under the four collections, sized like a card
-     so it reads as a fifth way in rather than a footnote. */
-  .life-band{
-    display:block; max-width:44rem; margin:0 auto; text-align:center;
-    text-decoration:none; color:inherit;
-    padding:2rem clamp(1.25rem,4vw,2.5rem);
-    border:1px solid rgba(255,255,255,.22); border-radius:.3rem;
-    background:rgba(28,24,18,.28);
-    transition:transform .4s ease, background .4s ease, border-color .4s ease;
+     A small block under the four collections, not a fifth card. One line and
+     a link: the page it points at is where the story actually is. */
+  .more{max-width:30rem; margin:0 auto; text-align:center;}
+  .more h2{
+    margin:0 0 .5rem; font-family:var(--font-display); font-weight:600;
+    font-size:clamp(1.05rem,2.2vw,1.35rem); color:#fff;
   }
-  .life-band:hover{transform:translateY(-3px); background:rgba(28,24,18,.42); border-color:rgba(255,255,255,.34);}
-  .life-band:focus-visible{outline:2px solid #fff; outline-offset:4px;}
-  .life-band .kicker{justify-content:center;}
-  .life-band-title{
-    display:block; margin:.85rem 0 .6rem;
-    font-family:var(--font-display); font-weight:600;
-    font-size:clamp(1.3rem,3vw,1.9rem); color:#fff;
+  .more h2[lang="hy"]{font-family:var(--font-am);}
+  .more p{
+    margin:0 0 .9rem; font-size:clamp(.84rem,1.5vw,.93rem);
+    line-height:1.6; color:rgba(255,255,255,.72);
   }
-  .life-band-title[lang="hy"]{font-family:var(--font-am);}
-  .life-band-text{
-    display:block; max-width:32rem; margin:0 auto 1rem;
-    font-size:clamp(.86rem,1.6vw,.97rem); line-height:1.62;
-    color:rgba(255,255,255,.78);
+  .more-link{
+    display:inline-block; text-decoration:none;
+    font-size:.62rem; letter-spacing:.2em; text-transform:uppercase;
+    color:rgba(255,255,255,.82); padding:.3rem 0;
+    border-bottom:1px solid rgba(255,255,255,.3);
+    transition:color .3s ease, border-color .3s ease;
   }
+  .more-link:hover{color:#fff; border-color:#fff;}
+  .more-link:focus-visible{outline:2px solid #fff; outline-offset:4px;}
+  .more-link [lang="hy"]{letter-spacing:.08em;}
 
   /* ---------- the years ----------
      A dated list rather than paragraphs: the same facts, a quarter of the
