@@ -83,3 +83,28 @@
      :first-of-type keeps this to the page where the gallery leads. */
   .gallery:first-of-type{padding-top:5.5rem;}
   @media (max-width:640px){ .gallery:first-of-type{padding-top:4.5rem;} }
+
+  /* ---------- her life, a chapter to a collection ----------
+     Each collection page carries one part of the story between its title and
+     its pieces, in the order the home page lists the collections, so reading
+     the archive front to back reads her life forward. Two or three sentences
+     is the whole budget: the pieces are still what the page is for. */
+  .chapter{
+    max-width:34rem; margin:0 auto 3rem; text-align:center;
+    color:rgba(255,255,255,.80);
+    font-size:clamp(.86rem,1.6vw,.97rem); line-height:1.62;
+  }
+  .chapter p{margin:0;}
+  .chapter p + p{margin-top:.7rem;}
+  .chapter-no{
+    font-size:.6rem; letter-spacing:.22em; text-transform:uppercase;
+    color:rgba(255,255,255,.52);
+  }
+  .chapter-when{
+    font-family:var(--font-display); font-style:italic;
+    font-size:clamp(.9rem,1.9vw,1.05rem); color:#f0c9a4;
+  }
+  /* the dates read as one run, so the Armenian place names keep the same
+     face as the numerals rather than switching mid-line */
+  .chapter-when [lang="hy"]{font-family:var(--font-display); font-style:italic;}
+  @media (max-width:640px){ .chapter{margin-bottom:2.25rem;} }
