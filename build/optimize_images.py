@@ -23,8 +23,8 @@ IMG = 'img'
 MIN_GAIN = 0.10          # keep the AVIF only if it is this much smaller
 Q_PIECE = 55             # the lace, the crosses, the collars, the zooms
 Q_GROUND = 50            # the painted backdrops, which sit under the veil
-GROUNDS = {'cottage', 'meadow', 'portrait'}
-GROUND_SM = 900          # phone-width copy of each backdrop
+GROUNDS = {'cottage', 'meadow', 'portrait', 'garden'}
+GROUND_SM = 900          # phone copy: 900px on the SHORTER side
 SPEED = 4                # slower than the default; this runs rarely
 
 
@@ -41,7 +41,12 @@ def small_grounds():
 
     They are drawn with background-size:cover behind a dark veil, so a phone
     was downloading a 1209x1610 painting to fill a 390px column. The small
-    copy is served by a media query and is a third of the bytes.
+    copy is served by a media query.
+
+    It is sized on the shorter side, not the width. cover on a tall phone
+    scales a landscape painting until its height fills the screen, so sizing
+    by width left the garden at 900x604 and the browser stretched it to
+    1260x844 - soft, even under the veil.
     """
     for name in sorted(GROUNDS):
         src = os.path.join(IMG, name + '.webp')
@@ -49,17 +54,18 @@ def small_grounds():
             continue
         im = Image.open(src)
         im.load()
-        if im.width <= GROUND_SM:
+        short = min(im.width, im.height)
+        if short <= GROUND_SM:
             continue
-        h = round(im.height * GROUND_SM / im.width)
-        sm = im.resize((GROUND_SM, h), Image.LANCZOS)
+        k = GROUND_SM / short
+        sm = im.resize((round(im.width * k), round(im.height * k)), Image.LANCZOS)
         sm.save(os.path.join(IMG, name + '_sm.webp'), 'WEBP', quality=72, method=6)
         buf = io.BytesIO()
         sm.save(buf, 'AVIF', quality=Q_GROUND, speed=SPEED)
         w = os.path.getsize(os.path.join(IMG, name + '_sm.webp'))
         if len(buf.getvalue()) <= w * (1 - MIN_GAIN):
             open(os.path.join(IMG, name + '_sm.avif'), 'wb').write(buf.getvalue())
-        print(f'  {name}_sm  {GROUND_SM}px  webp {w / 1024:.0f} KB  '
+        print(f'  {name}_sm  {sm.width}x{sm.height}  webp {w / 1024:.0f} KB  '
               f'avif {len(buf.getvalue()) / 1024:.0f} KB')
 
 

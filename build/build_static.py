@@ -48,14 +48,15 @@ PAGES = [
      'Crosses & Small Pieces — Nushik Malkhasyan', 'Խաչեր և փոքր գործեր',
      'Four lace crosses, three of them edged in gold thread, and five small '
      'rounds — shown hanging on threads, the way lace is worked.'),
-    ('life.html',     '_life_body.html',     'meadow',
+    ('life.html',     '_life_body.html',     'garden',
      'Her Life — Nushik Malkhasyan', 'Նրա կյանքը',
      'Nushik Malkhasyan, 1930–2009: born in Musaler, a teacher of mathematics '
      'and geography, and for twenty years a teacher of needlework in Dilijan '
      'and Ijevan.'),
 ]
 
-BACKDROP = {'cottage': 'cottage.webp', 'meadow': 'meadow.webp', 'portrait': 'portrait.webp'}
+BACKDROP = {'cottage': 'cottage.webp', 'meadow': 'meadow.webp',
+            'portrait': 'portrait.webp', 'garden': 'garden.webp'}
 
 TOK = {
  '__LACE_ROSETTE__':'lace_rosette','__LACE_ROSETTE2__':'lace_rosette2','__LACE_MEDALLION__':'lace_medallion',

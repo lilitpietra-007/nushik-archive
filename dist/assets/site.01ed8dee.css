@@ -3,8 +3,6 @@
     src:url('../fonts/fraunces-600.woff2') format('woff2');}
   @font-face{font-family:'Fraunces';font-style:italic;font-weight:500;font-display:swap;
     src:url('../fonts/fraunces-500i.woff2') format('woff2');}
-  @font-face{font-family:'EB Garamond';font-style:normal;font-weight:400 500;font-display:swap;
-    src:url('../fonts/ebgaramond-400.woff2') format('woff2');}
   @font-face{font-family:'Beau Rivage';font-style:normal;font-weight:400;font-display:swap;
     src:url('../fonts/beaurivage.woff2') format('woff2');}
   @font-face{font-family:'Noto Serif Armenian';font-style:normal;font-weight:400 700;font-display:swap;
@@ -267,7 +265,7 @@
     font-size:.8rem; color:var(--gold); letter-spacing:.12em;
     text-shadow:0 1px 8px rgba(246,241,228,.9);
   }
-  .plate h3{
+  .plate h2{
     margin:.25rem 0 0;
     font-family:var(--font-display); font-weight:600;
     font-size:clamp(1.15rem,2.2vw,1.45rem); color:var(--ink);
@@ -536,7 +534,8 @@
   #view-alphabet> .backdrop{background-position:50% 55%;}
   #view-wear    > .backdrop{background-position:50% 58%;}
   #view-small   > .backdrop{background-position:50% 40%;}
-  #view-life    > .backdrop{background-position:50% 55%;}
+  /* the children are low and centre in this one, so the crop holds them */
+  #view-life    > .backdrop{background-position:50% 62%;}
   /* the light theme's pale veils used to live here, one per view. The dark
      theme has overridden them on every page since it shipped, and because
      they carried an id they outranked its new id-less rule and washed the
@@ -559,9 +558,9 @@
   .work figcaption{margin-top:1.25rem; overflow-wrap:anywhere;}
   .work .num{margin:0; font-family:var(--font-display); font-style:italic; font-size:.8rem;
     color:var(--gold); letter-spacing:.12em; text-shadow:0 1px 9px rgba(246,241,228,.85);}
-  .work h3{margin:.25rem 0 0; font-family:var(--font-display); font-weight:600;
+  .work h2{margin:.25rem 0 0; font-family:var(--font-display); font-weight:600;
     font-size:clamp(1.15rem,2.2vw,1.45rem); color:var(--ink); text-shadow:0 1px 12px rgba(246,241,228,.9);}
-  .work h3[lang="hy"]{font-family:var(--font-am);}
+  .work h2[lang="hy"]{font-family:var(--font-am);}
   .work p{margin:.55rem auto 0; max-width:34ch; font-size:1rem;}
   .work .meta{display:block; margin-top:.6rem; font-family:var(--font-display);
     font-style:italic; font-size:.82rem; color:var(--roof);}
@@ -779,8 +778,8 @@
   /* no highlights, anywhere */
   .wash, .lace-ground, .mark-ground, .seal{background:none;}
   .hero h1, .hero .latin, .hero .craft, .eyebrow, .cue, .estd,
-  .kicker, .head h2, .plate .num, .plate h3, .plate p, .plate .meta,
-  .work .num, .work h3, .work p, .work .meta, .prose p,
+  .kicker, .head h2, .plate .num, .plate h2, .plate p, .plate .meta,
+  .work .num, .work h2, .work p, .work .meta, .prose p,
   .story-note p, .story-note span, .story-body p, .hero-sub,
   .card-title, .card-desc, .card-count, .card-go, .sib-kicker, .sib-title,
   footer .lede, footer .place, footer .sign, footer .disclaimer, .year, .mono,
@@ -792,7 +791,7 @@
   .hero-caption .fact{color:#f0c9a4;}
 
   /* everything reads light */
-  .hero h1, .head h2, .plate h3, .work h3, .card-title, .sib-title,
+  .hero h1, .head h2, .plate h2, .work h2, .card-title, .sib-title,
   .story-body p, .prose p, footer .lede, footer .place{color:#fff;}
   .hero .latin, .eyebrow, .cue, .kicker, .plate p, .work p,
   .card-desc, footer .disclaimer{color:rgba(255,255,255,.76);}
@@ -974,6 +973,12 @@
   .gallery:first-of-type{padding-top:5.5rem;}
   @media (max-width:640px){ .gallery:first-of-type{padding-top:4.5rem;} }
 
+  /* Images that ship in two formats are wrapped in <picture>. display:contents
+     takes the wrapper out of layout entirely, so every rule written against
+     the img - inside a flex card, a grid cell or a button - behaves exactly as
+     it did when the img was the direct child. */
+  picture{display:contents;}
+
   /* ---------- the prologue ----------
      Each collection opens on a few lines about that collection - what these
      pieces are and why they exist. Her biography is a page of its own; a page
@@ -997,6 +1002,14 @@
   .topbar .home-link{position:static; top:auto; left:auto;}
   .life-link{padding-left:.85rem;}
   @media (max-width:640px){ .topbar{top:.6rem; left:.6rem; gap:.3rem;} }
+
+  /* The language buttons came out 37x19 on a phone, under the 24px minimum a
+     thumb needs. The type stays the size it was; only the box grows. */
+  @media (max-width:640px){
+    .lang{padding:.2rem .25rem;}
+    .lang-btn{padding:.5rem .62rem; min-height:26px;}
+    .home-link{padding-top:.5rem; padding-bottom:.5rem; min-height:26px;}
+  }
 
   /* ---------- the way in to her life ----------
      A small block under the four collections, not a fifth card. One line and
@@ -1065,6 +1078,27 @@
 
   /* page grounds */
   #view-home > .backdrop,#view-doilies > .backdrop,#view-small > .backdrop{background-image:url("../img/cottage.webp");}
-  #view-alphabet > .backdrop,#view-life > .backdrop{background-image:url("../img/meadow.webp");}
+  #view-home > .backdrop,#view-doilies > .backdrop,#view-small > .backdrop{background-image:image-set(url("../img/cottage.avif") type("image/avif"),url("../img/cottage.webp") type("image/webp"));}
+  @media (max-width:700px){
+  #view-home > .backdrop,#view-doilies > .backdrop,#view-small > .backdrop{background-image:url("../img/cottage_sm.webp");}
+  #view-home > .backdrop,#view-doilies > .backdrop,#view-small > .backdrop{background-image:image-set(url("../img/cottage_sm.avif") type("image/avif"),url("../img/cottage_sm.webp") type("image/webp"));}
+  }
+  #view-alphabet > .backdrop{background-image:url("../img/meadow.webp");}
+  #view-alphabet > .backdrop{background-image:image-set(url("../img/meadow.avif") type("image/avif"),url("../img/meadow.webp") type("image/webp"));}
+  @media (max-width:700px){
+  #view-alphabet > .backdrop{background-image:url("../img/meadow_sm.webp");}
+  #view-alphabet > .backdrop{background-image:image-set(url("../img/meadow_sm.avif") type("image/avif"),url("../img/meadow_sm.webp") type("image/webp"));}
+  }
   #view-wear > .backdrop{background-image:url("../img/portrait.webp");}
+  #view-wear > .backdrop{background-image:image-set(url("../img/portrait.avif") type("image/avif"),url("../img/portrait.webp") type("image/webp"));}
+  @media (max-width:700px){
+  #view-wear > .backdrop{background-image:url("../img/portrait_sm.webp");}
+  #view-wear > .backdrop{background-image:image-set(url("../img/portrait_sm.avif") type("image/avif"),url("../img/portrait_sm.webp") type("image/webp"));}
+  }
+  #view-life > .backdrop{background-image:url("../img/garden.webp");}
+  #view-life > .backdrop{background-image:image-set(url("../img/garden.avif") type("image/avif"),url("../img/garden.webp") type("image/webp"));}
+  @media (max-width:700px){
+  #view-life > .backdrop{background-image:url("../img/garden_sm.webp");}
+  #view-life > .backdrop{background-image:image-set(url("../img/garden_sm.avif") type("image/avif"),url("../img/garden_sm.webp") type("image/webp"));}
+  }
   .view{display:block;}
