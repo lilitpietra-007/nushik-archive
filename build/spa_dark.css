@@ -53,8 +53,8 @@
   /* no highlights, anywhere */
   .wash, .lace-ground, .mark-ground, .seal{background:none;}
   .hero h1, .hero .latin, .hero .craft, .eyebrow, .cue, .estd,
-  .kicker, .head h2, .plate .num, .plate h3, .plate p, .plate .meta,
-  .work .num, .work h3, .work p, .work .meta, .prose p,
+  .kicker, .head h2, .plate .num, .plate h2, .plate p, .plate .meta,
+  .work .num, .work h2, .work p, .work .meta, .prose p,
   .story-note p, .story-note span, .story-body p, .hero-sub,
   .card-title, .card-desc, .card-count, .card-go, .sib-kicker, .sib-title,
   footer .lede, footer .place, footer .sign, footer .disclaimer, .year, .mono,
@@ -66,7 +66,7 @@
   .hero-caption .fact{color:#f0c9a4;}
 
   /* everything reads light */
-  .hero h1, .head h2, .plate h3, .work h3, .card-title, .sib-title,
+  .hero h1, .head h2, .plate h2, .work h2, .card-title, .sib-title,
   .story-body p, .prose p, footer .lede, footer .place{color:#fff;}
   .hero .latin, .eyebrow, .cue, .kicker, .plate p, .work p,
   .card-desc, footer .disclaimer{color:rgba(255,255,255,.76);}

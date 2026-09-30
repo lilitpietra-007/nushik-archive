@@ -84,6 +84,12 @@
   .gallery:first-of-type{padding-top:5.5rem;}
   @media (max-width:640px){ .gallery:first-of-type{padding-top:4.5rem;} }
 
+  /* Images that ship in two formats are wrapped in <picture>. display:contents
+     takes the wrapper out of layout entirely, so every rule written against
+     the img - inside a flex card, a grid cell or a button - behaves exactly as
+     it did when the img was the direct child. */
+  picture{display:contents;}
+
   /* ---------- the prologue ----------
      Each collection opens on a few lines about that collection - what these
      pieces are and why they exist. Her biography is a page of its own; a page
@@ -107,6 +113,14 @@
   .topbar .home-link{position:static; top:auto; left:auto;}
   .life-link{padding-left:.85rem;}
   @media (max-width:640px){ .topbar{top:.6rem; left:.6rem; gap:.3rem;} }
+
+  /* The language buttons came out 37x19 on a phone, under the 24px minimum a
+     thumb needs. The type stays the size it was; only the box grows. */
+  @media (max-width:640px){
+    .lang{padding:.2rem .25rem;}
+    .lang-btn{padding:.5rem .62rem; min-height:26px;}
+    .home-link{padding-top:.5rem; padding-bottom:.5rem; min-height:26px;}
+  }
 
   /* ---------- the way in to her life ----------
      A small block under the four collections, not a fifth card. One line and

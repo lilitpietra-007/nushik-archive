@@ -85,8 +85,15 @@ OLD_ARTIFACTS = {'199465ee-19c1-4262-b5b8-03e0cf23ef81':'index.html',
                  '7b0a5f55-556a-4595-a6e4-e0336d9eb207':'wear.html'}
 
 used = set()
+# backdrops that also have a phone-sized copy, filled in by build_css()
+GROUNDS_SM = set()
 _dims = {}
 _first = [True]
+
+
+def has_avif(key):
+    """True when optimize_images.py decided the AVIF was worth shipping."""
+    return os.path.exists(os.path.join(IMG, key + '.avif'))
 
 
 def dims(key):
@@ -102,44 +109,51 @@ def deref(html, first_img=None):
     html = re.sub(r'\s*<a class="home-link".*?</a>\n?', '', html, flags=re.S)
     html = html.replace(' loading="lazy"', '')
 
-    def as_img(m):
-        key = TOK[m.group(1)]
+    def img_attrs(key):
+        """src plus the AVIF alternative, when optimize_images.py kept one."""
         used.add(key)
         w, h = dims(key)
         # the first image on a page is what the visitor is waiting for; the rest
         # can wait until they scroll
         lazy = '' if first_img[0] else ' loading="lazy" decoding="async"'
         first_img[0] = False
-        return f'src="img/{key}.webp" width="{w}" height="{h}"{lazy}'
+        alt = f' data-avif="img/{key}.avif"' if has_avif(key) else ''
+        return f'src="img/{key}.webp"{alt} width="{w}" height="{h}"{lazy}'
 
-    html = re.sub(r'src="data:image/[a-z]+;base64,(__[A-Z0-9_]+__)"', as_img, html)
+    html = re.sub(r'src="data:image/[a-z]+;base64,(__[A-Z0-9_]+__)"',
+                  lambda m: img_attrs(TOK[m.group(1)]), html)
 
-    def as_zoom(m):
-        key = TOK[m.group(1)]
+    def zoom_attrs(key):
         used.add(key)
-        return f'data-zoom="img/{key}.webp"'
+        alt = f' data-zoom-avif="img/{key}.avif"' if has_avif(key) else ''
+        return f'data-zoom="img/{key}.webp"{alt}'
 
-    html = re.sub(r'data-zoom="data:image/[a-z]+;base64,(__[A-Z0-9_]+__)"', as_zoom, html)
+    html = re.sub(r'data-zoom="data:image/[a-z]+;base64,(__[A-Z0-9_]+__)"',
+                  lambda m: zoom_attrs(TOK[m.group(1)]), html)
 
     # the hanging page names its assets directly instead of through a token
-    def as_named(m):
-        key = m.group(1)
-        used.add(key)
-        w, h = dims(key)
-        lazy = '' if first_img[0] else ' loading="lazy" decoding="async"'
-        first_img[0] = False
-        return f'src="img/{key}.webp" width="{w}" height="{h}"{lazy}'
-
-    html = re.sub(r'data-img="([a-z0-9_]+)"', as_named, html)
-    html = re.sub(r'data-zoom-img="([a-z0-9_]+)"',
-                  lambda m: (used.add(m.group(1)) or f'data-zoom="img/{m.group(1)}.webp"'), html)
+    html = re.sub(r'data-img="([a-z0-9_]+)"', lambda m: img_attrs(m.group(1)), html)
+    html = re.sub(r'data-zoom-img="([a-z0-9_]+)"', lambda m: zoom_attrs(m.group(1)), html)
     for tok, href in URLS.items():
         html = html.replace(tok, href)
     for aid, href in OLD_ARTIFACTS.items():
         html = html.replace('https://claude.ai/code/artifact/' + aid, href)
+    # anything that got an AVIF becomes a <picture>, so the browser picks the
+    # smaller file itself and one without AVIF still gets the WebP. The wrapper
+    # is display:contents in the stylesheet, so it changes no layout.
+    def wrap(m):
+        tag = m.group(0)
+        src = re.search(r'data-avif="([^"]+)"', tag).group(1)
+        tag = re.sub(r'\s*data-avif="[^"]+"', '', tag)
+        return (f'<picture><source srcset="{src}" type="image/avif">{tag}</picture>')
+
+    html = re.sub(r'<img\b[^>]*\bdata-avif="[^"]+"[^>]*/?>', wrap, html)
+
     left = re.findall(r'__[A-Z0-9_]+__', html)
     if left:
         sys.exit('unmapped tokens: ' + str(sorted(set(left))))
+    if 'data-avif=' in html:
+        sys.exit('an img carried data-avif but was not wrapped in a picture')
     return html
 
 
@@ -161,7 +175,7 @@ def build_css():
     css = css.replace('    background-image:url("data:image/jpeg;base64,__COTTAGE__");\n', '')
     # fonts become cacheable files instead of a megabyte of base64 per page
     for tok, fn in [('__FONT_FRAUNCES__','fraunces-600'), ('__FONT_FRAUNCES_ITALIC__','fraunces-500i'),
-                    ('__FONT_EBGARAMOND__','ebgaramond-400'), ('__FONT_BEAURIVAGE__','beaurivage'),
+                    ('__FONT_BEAURIVAGE__','beaurivage'),
                     ('__FONT_NOTOARM__','noto-arm-400'), ('__FONT_MANROPE__','manrope'),
                     ('__FONT_NOTOSANSARM__','noto-sans-arm')]:
         css = css.replace('url(data:font/woff2;base64,%s)' % tok, "url('../fonts/%s.woff2')" % fn)
@@ -171,7 +185,24 @@ def build_css():
     for name, fn in BACKDROP.items():
         ids = ','.join('#view-%s > .backdrop' % os.path.splitext(p[0])[0].replace('index', 'home')
                        for p in PAGES if p[2] == name)
-        css += '  %s{background-image:url("../img/%s");}\n' % (ids, fn)
+        base = os.path.splitext(fn)[0]
+
+        def ground(stem):
+            # the plain declaration first for browsers without image-set(),
+            # then the pair so the browser takes the AVIF when it can read one
+            out = '  %s{background-image:url("../img/%s.webp");}\n' % (ids, stem)
+            if has_avif(stem):
+                out += ('  %s{background-image:image-set('
+                        'url("../img/%s.avif") type("image/avif"),'
+                        'url("../img/%s.webp") type("image/webp"));}\n'
+                        % (ids, stem, stem))
+            return out
+
+        css += ground(base)
+        # a phone was pulling a 1209x1610 painting to fill a 390px column
+        if os.path.exists(os.path.join(IMG, base + '_sm.webp')):
+            css += '  @media (max-width:700px){\n  ' + ground(base + '_sm').strip() + '\n  }\n'
+            GROUNDS_SM.add(base + '_sm')
     # every page carries exactly one view, always shown
     css += '  .view{display:block;}\n'
     bal = css.count('{') - css.count('}')
@@ -314,9 +345,14 @@ def main():
         open(os.path.join(OUT, fname), 'w', encoding='utf-8').write(html)
 
 
-    for key in sorted(used) + [os.path.splitext(v)[0] for v in BACKDROP.values()]:
+    for key in sorted(used) + [os.path.splitext(v)[0] for v in BACKDROP.values()] \
+            + sorted(GROUNDS_SM):
         shutil.copy(os.path.join(IMG, key + '.webp'), os.path.join(OUT, 'img', key + '.webp'))
-    for fn in ['fraunces-600', 'fraunces-500i', 'ebgaramond-400', 'beaurivage',
+        if has_avif(key):
+            shutil.copy(os.path.join(IMG, key + '.avif'), os.path.join(OUT, 'img', key + '.avif'))
+    # EB Garamond was the body face before the dark theme replaced it with
+    # Manrope; nothing has resolved to it since, so it is not shipped
+    for fn in ['fraunces-600', 'fraunces-500i', 'beaurivage',
                'noto-arm-400', 'manrope', 'noto-sans-arm']:
         src = os.path.join('fonts', fn + '.woff2')
         if not os.path.exists(src):
@@ -379,10 +415,17 @@ def main():
     per = {}
     for fname, *_ in PAGES:
         page = open(os.path.join(OUT, fname), encoding='utf-8').read()
-        imgs = set(re.findall(r'(?:src|data-zoom)="img/([^"]+)"', page))
-        per[fname] = (os.path.getsize(os.path.join(OUT, fname))
-                      + sum(os.path.getsize(os.path.join(OUT, 'img', i)) for i in imgs))
-    print(f'dist/ total {total/1024/1024:.1f} MB, {len(used)} images')
+        # what a browser actually pulls: the AVIF where there is one, the WebP
+        # otherwise. dist holds both, so its size on disk is not the number
+        # that matters - counting both would overstate every page by a third.
+        served = 0
+        for i in set(re.findall(r'(?:src|data-zoom)="img/([^"]+)"', page)):
+            stem = os.path.splitext(i)[0]
+            best = stem + '.avif' if has_avif(stem) else i
+            served += os.path.getsize(os.path.join(OUT, 'img', best))
+        per[fname] = os.path.getsize(os.path.join(OUT, fname)) + served
+    print(f'dist/ {total/1024/1024:.1f} MB on disk in two formats, '
+          f'{len(used)} images; per page below is what one browser downloads')
     for f, b in per.items():
         print(f'  {f:14s} {b/1024/1024:5.1f} MB of images + html')
 

@@ -32,9 +32,9 @@
   .work figcaption{margin-top:1.25rem; overflow-wrap:anywhere;}
   .work .num{margin:0; font-family:var(--font-display); font-style:italic; font-size:.8rem;
     color:var(--gold); letter-spacing:.12em; text-shadow:0 1px 9px rgba(246,241,228,.85);}
-  .work h3{margin:.25rem 0 0; font-family:var(--font-display); font-weight:600;
+  .work h2{margin:.25rem 0 0; font-family:var(--font-display); font-weight:600;
     font-size:clamp(1.15rem,2.2vw,1.45rem); color:var(--ink); text-shadow:0 1px 12px rgba(246,241,228,.9);}
-  .work h3[lang="hy"]{font-family:var(--font-am);}
+  .work h2[lang="hy"]{font-family:var(--font-am);}
   .work p{margin:.55rem auto 0; max-width:34ch; font-size:1rem;}
   .work .meta{display:block; margin-top:.6rem; font-family:var(--font-display);
     font-style:italic; font-size:.82rem; color:var(--roof);}
