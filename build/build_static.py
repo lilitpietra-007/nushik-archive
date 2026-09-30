@@ -27,7 +27,7 @@ IMG, OUT = 'img', '../dist'
 
 PAGES = [
     # file            body source            backdrop   title EN / HY, description
-    ('index.html',    '_home_body.html',     'cottage',
+    ('index.html',    '_home_body.html',     'valley',
      'Nushik Malkhasyan — Needlework from Dilijan', 'Նուշիկ Մալխասյան',
      'A bilingual archive of twenty-seven pieces of hand needlework by Nushik '
      'Malkhasyan of Dilijan, Armenia — lace, doilies, the Armenian alphabet, '
@@ -56,7 +56,8 @@ PAGES = [
 ]
 
 BACKDROP = {'cottage': 'cottage.webp', 'meadow': 'meadow.webp',
-            'portrait': 'portrait.webp', 'garden': 'garden.webp'}
+            'portrait': 'portrait.webp', 'garden': 'garden.webp',
+            'valley': 'valley.webp'}
 
 TOK = {
  '__LACE_ROSETTE__':'lace_rosette','__LACE_ROSETTE2__':'lace_rosette2','__LACE_MEDALLION__':'lace_medallion',

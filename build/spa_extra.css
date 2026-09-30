@@ -4,7 +4,9 @@
   .home-link[hidden]{display:none;}
   .view.is-active{display:block;}
   .view > .backdrop{position:fixed; inset:0; z-index:0; background-size:cover;}
-  #view-home    > .backdrop{background-position:50% 45%;}
+  /* the valley: keeps the cottage and the bridge in frame and the
+     bright sky above the title rather than behind it */
+  #view-home    > .backdrop{background-position:50% 58%;}
   #view-doilies > .backdrop{background-position:50% 42%;}
   #view-alphabet> .backdrop{background-position:50% 55%;}
   #view-wear    > .backdrop{background-position:50% 58%;}
