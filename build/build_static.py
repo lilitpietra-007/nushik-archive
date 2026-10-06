@@ -49,7 +49,7 @@ PAGES = [
      'Four lace crosses, three of them edged in gold thread, and five small '
      'rounds — shown hanging on threads, the way lace is worked.'),
     ('life.html',     '_life_body.html',     'nushik',
-     'Her Life — Nushik Malkhasyan', 'Նրա կյանքը',
+     'About Nushik Malkhasyan', 'Նուշիկի մասին',
      'Nushik Malkhasyan, 1930–2009: born in Musaler, a teacher of mathematics '
      'and geography, and for twenty years a teacher of needlework in Dilijan '
      'and Ijevan.'),
@@ -300,8 +300,8 @@ def main():
                  '    <span class="i18n en">Archive</span>'
                  '<span class="i18n hy" lang="hy">Արխիվ</span>\n  </a>\n')
     life_link = ('  <a class="home-link life-link" href="life.html">\n'
-                 '    <span class="i18n en">Her Life</span>'
-                 '<span class="i18n hy" lang="hy">Նրա կյանքը</span>\n  </a>\n')
+                 '    <span class="i18n en">About Nushik</span>'
+                 '<span class="i18n hy" lang="hy">Նուշիկի մասին</span>\n  </a>\n')
 
     def top_nav(fname):
         if fname == 'index.html':
