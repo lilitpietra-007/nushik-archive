@@ -98,7 +98,7 @@
      across it. */
   @media (max-width:700px){
     #view-life  > .backdrop{background-position:16% 26%;}
-    #view-small > .backdrop{background-position:27% 26%;}
+    #view-wear  > .backdrop{background-position:27% 26%;}
   }
 
   /* Images that ship in two formats are wrapped in <picture>. display:contents

@@ -40,11 +40,11 @@ PAGES = [
      'The Armenian Alphabet — Nushik Malkhasyan', 'Հայոց այբուբենը',
      'All thirty-eight letters of the Armenian alphabet, once in filet lace and '
      'once embroidered, marking the 1600 years from 405 to 2005.'),
-    ('wear.html',     'template_wear.html',  'portrait',
+    ('wear.html',     'template_wear.html',  'field',
      'Lace to Wear — Nushik Malkhasyan', 'Ժանյակ՝ կրելու համար',
      'Collars and gloves in hand-worked lace — the pieces that had to fit a '
      'person rather than a table.'),
-    ('small.html',    '_small_body.html',    'field',
+    ('small.html',    '_small_body.html',    'sky',
      'Crosses & Small Pieces — Nushik Malkhasyan', 'Խաչեր և փոքր գործեր',
      'Four lace crosses, three of them edged in gold thread, and five small '
      'rounds — shown hanging on threads, the way lace is worked.'),
@@ -56,7 +56,7 @@ PAGES = [
 ]
 
 BACKDROP = {'cottage': 'cottage.webp', 'meadow': 'meadow.webp',
-            'portrait': 'portrait.webp',             'valley': 'valley.webp', 'field': 'field.webp',
+            'valley': 'valley.webp', 'field': 'field.webp', 'sky': 'sky.webp',
             'nushik': 'nushik.webp'}
 
 TOK = {
