@@ -25,7 +25,7 @@ Q_PIECE = 55             # the lace, the crosses, the collars, the zooms
 Q_GROUND = 50            # the painted backdrops, which sit under the veil
 # garden.webp is kept in img/ but no page uses it since her portrait
 # took the life page's ground
-GROUNDS = {'cottage', 'meadow', 'portrait', 'valley', 'sky', 'nushik'}
+GROUNDS = {'cottage', 'meadow', 'portrait', 'valley', 'field', 'nushik'}
 GROUND_SM = 900          # phone copy: 900px on the SHORTER side
 SPEED = 4                # slower than the default; this runs rarely
 

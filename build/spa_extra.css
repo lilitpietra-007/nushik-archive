@@ -10,7 +10,8 @@
   #view-doilies > .backdrop{background-position:50% 42%;}
   #view-alphabet> .backdrop{background-position:50% 55%;}
   #view-wear    > .backdrop{background-position:50% 58%;}
-  #view-small   > .backdrop{background-position:50% 50%;}
+  /* her face is left of centre and high in this one */
+  #view-small   > .backdrop{background-position:50% 38%;}
   /* her face sits left of centre and high; this keeps it clear of the
      text column on a wide screen and still in frame on a phone */
   #view-life    > .backdrop{background-position:28% 32%;}

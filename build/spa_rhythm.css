@@ -91,13 +91,14 @@
      check_site.py, which reads them off the pixels the browser drew. */
   #view-life{--veil-top:.64; --veil-mid:.60; --veil-bot:.78;}
 
-  /* Her portrait is the ground on that page. On a wide screen she sits to the
-     left of the text column and reads as watching her own timeline. A phone
-     crops to a single column, which put the text across her eyes - so a phone
-     gets the other side of the same painting instead, the lace at her window,
-     which is still her work and a far quieter thing to set type on. */
+  /* A phone crops a backdrop to one column, which throws away most of a
+     landscape painting - and on these two pages what it threw away was the
+     face. Both are pulled left so the face stays in frame, and both are
+     pushed down the page a little so the text starts below it rather than
+     across it. */
   @media (max-width:700px){
-    #view-life > .backdrop{background-position:70% 32%;}
+    #view-life  > .backdrop{background-position:16% 26%;}
+    #view-small > .backdrop{background-position:27% 26%;}
   }
 
   /* Images that ship in two formats are wrapped in <picture>. display:contents
