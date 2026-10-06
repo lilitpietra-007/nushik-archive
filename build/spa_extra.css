@@ -11,8 +11,9 @@
   #view-alphabet> .backdrop{background-position:50% 55%;}
   #view-wear    > .backdrop{background-position:50% 58%;}
   #view-small   > .backdrop{background-position:50% 50%;}
-  /* the children are low and centre in this one, so the crop holds them */
-  #view-life    > .backdrop{background-position:50% 62%;}
+  /* her face sits left of centre and high; this keeps it clear of the
+     text column on a wide screen and still in frame on a phone */
+  #view-life    > .backdrop{background-position:28% 32%;}
   /* the light theme's pale veils used to live here, one per view. The dark
      theme has overridden them on every page since it shipped, and because
      they carried an id they outranked its new id-less rule and washed the

@@ -535,9 +535,10 @@
   #view-doilies > .backdrop{background-position:50% 42%;}
   #view-alphabet> .backdrop{background-position:50% 55%;}
   #view-wear    > .backdrop{background-position:50% 58%;}
-  #view-small   > .backdrop{background-position:50% 40%;}
-  /* the children are low and centre in this one, so the crop holds them */
-  #view-life    > .backdrop{background-position:50% 62%;}
+  #view-small   > .backdrop{background-position:50% 50%;}
+  /* her face sits left of centre and high; this keeps it clear of the
+     text column on a wide screen and still in frame on a phone */
+  #view-life    > .backdrop{background-position:28% 32%;}
   /* the light theme's pale veils used to live here, one per view. The dark
      theme has overridden them on every page since it shipped, and because
      they carried an id they outranked its new id-less rule and washed the
@@ -975,6 +976,13 @@
   .gallery:first-of-type{padding-top:5.5rem;}
   @media (max-width:640px){ .gallery:first-of-type{padding-top:4.5rem;} }
 
+  /* The garden behind her life is the brightest of the grounds, and brightest
+     of all along the bottom, where the flower meadow sits under the end of
+     the timeline. At the shared veil the 2009 entry measured 4.2:1, under the
+     4.5 small text needs, so this page gets a deeper one. Numbers from
+     check_site.py, which reads them off the pixels the browser drew. */
+  #view-life{--veil-top:.64; --veil-mid:.60; --veil-bot:.78;}
+
   /* Images that ship in two formats are wrapped in <picture>. display:contents
      takes the wrapper out of layout entirely, so every rule written against
      the img - inside a flex card, a grid cell or a button - behaves exactly as
@@ -1037,6 +1045,22 @@
   .more-link:focus-visible{outline:2px solid #fff; outline-offset:4px;}
   .more-link [lang="hy"]{letter-spacing:.08em;}
 
+  /* ---------- her portrait ----------
+     It opens the page above the summary, sized to the reading column rather
+     than the full width: a face, not a banner. */
+  .portrait{
+    max-width:30rem; margin:0 auto 2.25rem; text-align:center;
+  }
+  .portrait img{
+    display:block; width:100%; height:auto; border-radius:.3rem;
+    box-shadow:0 18px 44px rgba(0,0,0,.45);
+  }
+  .portrait figcaption{
+    margin-top:.8rem; font-size:.74rem; letter-spacing:.02em;
+    color:rgba(255,255,255,.62);
+  }
+  @media (max-width:640px){ .portrait{margin-bottom:1.75rem;} }
+
   /* ---------- the years ----------
      A dated list rather than paragraphs: the same facts, a quarter of the
      reading. The two turning points are marked rather than described. */
@@ -1079,11 +1103,11 @@
   @media (max-width:640px){ .seal{width:7.5rem; height:7.5rem; margin-bottom:1.75rem;} }
 
   /* page grounds */
-  #view-doilies > .backdrop,#view-small > .backdrop{background-image:url("../img/cottage.webp");}
-  #view-doilies > .backdrop,#view-small > .backdrop{background-image:image-set(url("../img/cottage.avif") type("image/avif"),url("../img/cottage.webp") type("image/webp"));}
+  #view-doilies > .backdrop{background-image:url("../img/cottage.webp");}
+  #view-doilies > .backdrop{background-image:image-set(url("../img/cottage.avif") type("image/avif"),url("../img/cottage.webp") type("image/webp"));}
   @media (max-width:700px){
-  #view-doilies > .backdrop,#view-small > .backdrop{background-image:url("../img/cottage_sm.webp");}
-  #view-doilies > .backdrop,#view-small > .backdrop{background-image:image-set(url("../img/cottage_sm.avif") type("image/avif"),url("../img/cottage_sm.webp") type("image/webp"));}
+  #view-doilies > .backdrop{background-image:url("../img/cottage_sm.webp");}
+  #view-doilies > .backdrop{background-image:image-set(url("../img/cottage_sm.avif") type("image/avif"),url("../img/cottage_sm.webp") type("image/webp"));}
   }
   #view-alphabet > .backdrop{background-image:url("../img/meadow.webp");}
   #view-alphabet > .backdrop{background-image:image-set(url("../img/meadow.avif") type("image/avif"),url("../img/meadow.webp") type("image/webp"));}
@@ -1097,16 +1121,22 @@
   #view-wear > .backdrop{background-image:url("../img/portrait_sm.webp");}
   #view-wear > .backdrop{background-image:image-set(url("../img/portrait_sm.avif") type("image/avif"),url("../img/portrait_sm.webp") type("image/webp"));}
   }
-  #view-life > .backdrop{background-image:url("../img/garden.webp");}
-  #view-life > .backdrop{background-image:image-set(url("../img/garden.avif") type("image/avif"),url("../img/garden.webp") type("image/webp"));}
-  @media (max-width:700px){
-  #view-life > .backdrop{background-image:url("../img/garden_sm.webp");}
-  #view-life > .backdrop{background-image:image-set(url("../img/garden_sm.avif") type("image/avif"),url("../img/garden_sm.webp") type("image/webp"));}
-  }
   #view-home > .backdrop{background-image:url("../img/valley.webp");}
   #view-home > .backdrop{background-image:image-set(url("../img/valley.avif") type("image/avif"),url("../img/valley.webp") type("image/webp"));}
   @media (max-width:700px){
   #view-home > .backdrop{background-image:url("../img/valley_sm.webp");}
   #view-home > .backdrop{background-image:image-set(url("../img/valley_sm.avif") type("image/avif"),url("../img/valley_sm.webp") type("image/webp"));}
+  }
+  #view-small > .backdrop{background-image:url("../img/sky.webp");}
+  #view-small > .backdrop{background-image:image-set(url("../img/sky.avif") type("image/avif"),url("../img/sky.webp") type("image/webp"));}
+  @media (max-width:700px){
+  #view-small > .backdrop{background-image:url("../img/sky_sm.webp");}
+  #view-small > .backdrop{background-image:image-set(url("../img/sky_sm.avif") type("image/avif"),url("../img/sky_sm.webp") type("image/webp"));}
+  }
+  #view-life > .backdrop{background-image:url("../img/nushik.webp");}
+  #view-life > .backdrop{background-image:image-set(url("../img/nushik.avif") type("image/avif"),url("../img/nushik.webp") type("image/webp"));}
+  @media (max-width:700px){
+  #view-life > .backdrop{background-image:url("../img/nushik_sm.webp");}
+  #view-life > .backdrop{background-image:image-set(url("../img/nushik_sm.avif") type("image/avif"),url("../img/nushik_sm.webp") type("image/webp"));}
   }
   .view{display:block;}
