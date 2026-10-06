@@ -84,6 +84,13 @@
   .gallery:first-of-type{padding-top:5.5rem;}
   @media (max-width:640px){ .gallery:first-of-type{padding-top:4.5rem;} }
 
+  /* The garden behind her life is the brightest of the grounds, and brightest
+     of all along the bottom, where the flower meadow sits under the end of
+     the timeline. At the shared veil the 2009 entry measured 4.2:1, under the
+     4.5 small text needs, so this page gets a deeper one. Numbers from
+     check_site.py, which reads them off the pixels the browser drew. */
+  #view-life{--veil-top:.64; --veil-mid:.60; --veil-bot:.78;}
+
   /* Images that ship in two formats are wrapped in <picture>. display:contents
      takes the wrapper out of layout entirely, so every rule written against
      the img - inside a flex card, a grid cell or a button - behaves exactly as

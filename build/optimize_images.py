@@ -23,7 +23,7 @@ IMG = 'img'
 MIN_GAIN = 0.10          # keep the AVIF only if it is this much smaller
 Q_PIECE = 55             # the lace, the crosses, the collars, the zooms
 Q_GROUND = 50            # the painted backdrops, which sit under the veil
-GROUNDS = {'cottage', 'meadow', 'portrait', 'garden', 'valley'}
+GROUNDS = {'cottage', 'meadow', 'portrait', 'garden', 'valley', 'sky'}
 GROUND_SM = 900          # phone copy: 900px on the SHORTER side
 SPEED = 4                # slower than the default; this runs rarely
 

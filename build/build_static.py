@@ -44,7 +44,7 @@ PAGES = [
      'Lace to Wear — Nushik Malkhasyan', 'Ժանյակ՝ կրելու համար',
      'Collars and gloves in hand-worked lace — the pieces that had to fit a '
      'person rather than a table.'),
-    ('small.html',    '_small_body.html',    'cottage',
+    ('small.html',    '_small_body.html',    'sky',
      'Crosses & Small Pieces — Nushik Malkhasyan', 'Խաչեր և փոքր գործեր',
      'Four lace crosses, three of them edged in gold thread, and five small '
      'rounds — shown hanging on threads, the way lace is worked.'),
@@ -57,7 +57,7 @@ PAGES = [
 
 BACKDROP = {'cottage': 'cottage.webp', 'meadow': 'meadow.webp',
             'portrait': 'portrait.webp', 'garden': 'garden.webp',
-            'valley': 'valley.webp'}
+            'valley': 'valley.webp', 'sky': 'sky.webp'}
 
 TOK = {
  '__LACE_ROSETTE__':'lace_rosette','__LACE_ROSETTE2__':'lace_rosette2','__LACE_MEDALLION__':'lace_medallion',

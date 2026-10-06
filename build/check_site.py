@@ -9,6 +9,7 @@ unreachable controls.
 Run it before every deploy:  python3 check_site.py
 """
 import collections
+import io
 import json
 import os
 import re
@@ -142,6 +143,63 @@ def static_checks():
     print(f'  read {len(pages)} pages, {len(on_disk)} files')
 
 
+
+def _lum(c):
+    def f(v):
+        v /= 255
+        return v / 12.92 if v <= .03928 else ((v + .055) / 1.055) ** 2.4
+    r, g, b = [f(x) for x in c]
+    return .2126 * r + .7152 * g + .0722 * b
+
+
+def contrast(a, b):
+    la, lb = _lum(a), _lum(b)
+    hi, lo = max(la, lb), min(la, lb)
+    return (hi + .05) / (lo + .05)
+
+
+def check_contrast(pg, where):
+    """Text over a painted backdrop, measured on the pixels the browser drew.
+
+    Every page lays cream type over a photograph, so legibility depends on the
+    particular painting behind it. Computing it from the stylesheet would miss
+    that entirely - this samples the screenshot.
+    """
+    from PIL import Image
+    boxes = pg.evaluate("""() => [...document.querySelectorAll(
+        '.hang-title,.num,.prologue,.card-desc,.years p,.meta,.sign,figcaption p')]
+      .filter(e => e.offsetParent && e.innerText.trim())
+      .map(e => { const r = e.getBoundingClientRect(); const s = getComputedStyle(e);
+        return {cls: e.className.split(' ')[0], t: e.innerText.trim().slice(0, 20),
+                x: r.x, y: r.y, w: r.width, h: r.height,
+                col: s.color, fs: parseFloat(s.fontSize),
+                bold: parseInt(s.fontWeight) >= 700}; })
+      .filter(b => b.y > 0 && b.y < window.innerHeight - 40 && b.w > 10)""")
+    if not boxes:
+        return
+    shot = Image.open(io.BytesIO(pg.screenshot())).convert('RGB')
+    for b in boxes:
+        x, y, w, h = (int(b[k]) for k in 'xywh')
+        crop = shot.crop((max(0, x), max(0, y),
+                          min(shot.width, x + w), min(shot.height, y + h)))
+        px = sorted(crop.getdata(), key=sum)
+        if not px:
+            continue
+        bg = px[len(px) // 4]          # the glyphs are the light minority
+        m = b['col'].replace('rgba(', '').replace('rgb(', '').replace(')', '').split(',')
+        a = float(m[3]) if len(m) > 3 else 1.0
+        fg = tuple(round(a * float(m[i]) + (1 - a) * bg[i]) for i in range(3))
+        large = b['fs'] >= 24 or (b['fs'] >= 18.66 and b['bold'])
+        need = 3.0 if large else 4.5
+        got = contrast(fg, bg)
+        if got < need:
+            fail(where, f'contrast {got:.1f}:1 needs {need} - '
+                        f'{b["cls"]} {b["fs"]:.0f}px "{b["t"]}"')
+        elif got < need + 0.4:
+            warn(where, f'contrast {got:.1f}:1 only just clears {need} - '
+                        f'{b["cls"]} "{b["t"]}"')
+
+
 # ------------------------------------------------------------------ live ----
 
 PROBE = r"""() => {
@@ -216,6 +274,8 @@ def live_checks():
                         fail(where, f'{len(r["h1"])} visible h1: {r["h1"]}')
                     if r['bothLangs']:
                         fail(where, f'{r["bothLangs"]} elements showing the wrong language')
+                    if label == 'desktop' and lang == 'en':
+                        check_contrast(pg, where)
                     if r['small'] and label.endswith('phone'):
                         warn(where, f'tap targets under 24px: {r["small"]}')
                     pg.close()
