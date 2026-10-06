@@ -153,6 +153,22 @@
   .more-link:focus-visible{outline:2px solid #fff; outline-offset:4px;}
   .more-link [lang="hy"]{letter-spacing:.08em;}
 
+  /* ---------- her portrait ----------
+     It opens the page above the summary, sized to the reading column rather
+     than the full width: a face, not a banner. */
+  .portrait{
+    max-width:30rem; margin:0 auto 2.25rem; text-align:center;
+  }
+  .portrait img{
+    display:block; width:100%; height:auto; border-radius:.3rem;
+    box-shadow:0 18px 44px rgba(0,0,0,.45);
+  }
+  .portrait figcaption{
+    margin-top:.8rem; font-size:.74rem; letter-spacing:.02em;
+    color:rgba(255,255,255,.62);
+  }
+  @media (max-width:640px){ .portrait{margin-bottom:1.75rem;} }
+
   /* ---------- the years ----------
      A dated list rather than paragraphs: the same facts, a quarter of the
      reading. The two turning points are marked rather than described. */
