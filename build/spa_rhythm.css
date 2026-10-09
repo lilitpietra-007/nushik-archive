@@ -142,6 +142,10 @@
      4.5 small text needs, so this page gets a deeper one. Numbers from
      check_site.py, which reads them off the pixels the browser drew. */
   #view-life{--veil-top:.64; --veil-mid:.60; --veil-bot:.78;}
+  /* The meadow is pale where the two works' meta lines fall, and with the
+     page shorter those lines now sit in the first screen: measured 4.3:1,
+     under the 4.5 small text needs. */
+  #view-alphabet{--veil-top:.64; --veil-mid:.60; --veil-bot:.70;}
 
   /* A phone crops a backdrop to one column, which throws away most of a
      landscape painting - and on these two pages what it threw away was the

@@ -978,6 +978,40 @@
     .hero{min-height:74svh; padding:4rem var(--edge) 3rem;}
     .collections{padding-top:.5rem;}
   }
+  /* What governs this is the height of the window, not its width: a 1366x768
+     laptop has the same problem as a short phone, and the Armenian is worse
+     than the English on both because it wraps to more lines. So the hero is
+     compressed against the height it actually has. */
+  @media (max-height:940px){
+    .mark{width:min(34vw,172px); margin-bottom:.8rem;}
+    .hero{min-height:70svh; padding:3rem var(--edge) 2.5rem;}
+    .hero-lede{margin-top:.8rem;}
+    .collections > .head{margin-bottom:1.1rem;}
+  }
+  @media (max-height:940px){
+    /* the gold rule under the name, and the gap it sits in */
+    .hero .rule{margin:.8rem auto;}
+  }
+  /* 1366x768 is still a very common laptop, and the Armenian only just
+     cleared there */
+  @media (max-height:820px){
+    .hero-sub, .hero-lede{font-size:.9rem; line-height:1.55;}
+  }
+  @media (max-height:700px){
+    .mark{width:min(26vw,118px); margin-bottom:.5rem;}
+    .hero{min-height:62svh; padding:2rem var(--edge) 1.75rem;}
+    .hero .rule{margin:.55rem auto;}
+    .hero-sub, .hero-lede{font-size:.86rem; line-height:1.5;}
+    .hero-lede{margin-top:.6rem;}
+    .hero .eyebrow{margin-bottom:.5rem;}
+    .collections > .head{margin-bottom:.8rem;}
+  }
+  /* On a window this short the doily is the first thing that can go: the name
+     and the two lines under it are what the page is for. */
+  @media (max-height:600px){
+    .mark{display:none;}
+    .hero{min-height:58svh;}
+  }
 
   /* ---------- a collection page that opens straight on its pieces ----------
      With the hero and the essay gone from "Lace to Wear", the gallery heading
@@ -1001,6 +1035,10 @@
      4.5 small text needs, so this page gets a deeper one. Numbers from
      check_site.py, which reads them off the pixels the browser drew. */
   #view-life{--veil-top:.64; --veil-mid:.60; --veil-bot:.78;}
+  /* The meadow is pale where the two works' meta lines fall, and with the
+     page shorter those lines now sit in the first screen: measured 4.3:1,
+     under the 4.5 small text needs. */
+  #view-alphabet{--veil-top:.64; --veil-mid:.60; --veil-bot:.70;}
 
   /* A phone crops a backdrop to one column, which throws away most of a
      landscape painting - and on these two pages what it threw away was the
