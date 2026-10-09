@@ -534,9 +534,9 @@
   #view-home    > .backdrop{background-position:50% 58%;}
   #view-doilies > .backdrop{background-position:50% 42%;}
   #view-alphabet> .backdrop{background-position:50% 55%;}
-  #view-wear    > .backdrop{background-position:50% 58%;}
   /* her face is left of centre and high in this one */
-  #view-small   > .backdrop{background-position:50% 38%;}
+  #view-wear    > .backdrop{background-position:50% 38%;}
+  #view-small   > .backdrop{background-position:50% 50%;}
   /* her face sits left of centre and high; this keeps it clear of the
      text column on a wide screen and still in frame on a phone */
   #view-life    > .backdrop{background-position:28% 32%;}
@@ -957,9 +957,61 @@
   /* the cue is a chevron alone now: the heading it points at says the words */
   .hero .cue a{gap:0;}
 
-  /* the hero already names what follows, so the cards start sooner */
-  .collections{padding-top:1.5rem;}
-  @media (max-width:640px){ .collections{padding-top:1rem;} }
+  /* ---------- making the fold say there is more ----------
+     The hero was sized to 84svh, but its content - the doily, the name, two
+     paragraphs - came to more than that on a laptop, so the section heading
+     and the chevron both fell below the fold and the first screen looked like
+     the whole page. Nothing short of scrolling told you otherwise.
+
+     The hero gives up about 170px: a smaller doily, less padding top and
+     bottom, and the collections tighter to it. The target is the top edge of
+     the first card showing on every common screen, because a cut-off card is
+     the one thing a visitor cannot mistake for the end of a page. Checked at
+     768, 800, 900 and 1050 tall. */
+  .mark{width:min(42vw,228px); margin-bottom:1.1rem;}
+  .hero{min-height:78svh; padding:4.5rem var(--edge) 3.5rem;}
+  .hero .cue{bottom:1.1rem;}
+  .collections{padding-top:.75rem;}
+  .collections > .head{margin-bottom:1.5rem;}
+  @media (max-width:640px){
+    .mark{width:min(46vw,190px);}
+    .hero{min-height:74svh; padding:4rem var(--edge) 3rem;}
+    .collections{padding-top:.5rem;}
+  }
+  /* What governs this is the height of the window, not its width: a 1366x768
+     laptop has the same problem as a short phone, and the Armenian is worse
+     than the English on both because it wraps to more lines. So the hero is
+     compressed against the height it actually has. */
+  @media (max-height:940px){
+    .mark{width:min(34vw,172px); margin-bottom:.8rem;}
+    .hero{min-height:70svh; padding:3rem var(--edge) 2.5rem;}
+    .hero-lede{margin-top:.8rem;}
+    .collections > .head{margin-bottom:1.1rem;}
+  }
+  @media (max-height:940px){
+    /* the gold rule under the name, and the gap it sits in */
+    .hero .rule{margin:.8rem auto;}
+  }
+  /* 1366x768 is still a very common laptop, and the Armenian only just
+     cleared there */
+  @media (max-height:820px){
+    .hero-sub, .hero-lede{font-size:.9rem; line-height:1.55;}
+  }
+  @media (max-height:700px){
+    .mark{width:min(26vw,118px); margin-bottom:.5rem;}
+    .hero{min-height:62svh; padding:2rem var(--edge) 1.75rem;}
+    .hero .rule{margin:.55rem auto;}
+    .hero-sub, .hero-lede{font-size:.86rem; line-height:1.5;}
+    .hero-lede{margin-top:.6rem;}
+    .hero .eyebrow{margin-bottom:.5rem;}
+    .collections > .head{margin-bottom:.8rem;}
+  }
+  /* On a window this short the doily is the first thing that can go: the name
+     and the two lines under it are what the page is for. */
+  @media (max-height:600px){
+    .mark{display:none;}
+    .hero{min-height:58svh;}
+  }
 
   /* ---------- a collection page that opens straight on its pieces ----------
      With the hero and the essay gone from "Lace to Wear", the gallery heading
@@ -991,7 +1043,7 @@
      across it. */
   @media (max-width:700px){
     #view-life  > .backdrop{background-position:16% 26%;}
-    #view-small > .backdrop{background-position:27% 26%;}
+    #view-wear  > .backdrop{background-position:27% 26%;}
   }
 
   /* Images that ship in two formats are wrapped in <picture>. display:contents
@@ -1031,6 +1083,25 @@
     .lang-btn{padding:.5rem .62rem; min-height:26px;}
     .home-link{padding-top:.5rem; padding-bottom:.5rem; min-height:26px;}
   }
+
+  /* With the card descriptions gone, the only thing holding the four titles on
+     one line was the text below them, and the pieces are different shapes - a
+     tall alphabet panel next to a wide collar left the titles on four
+     different lines. The art now gets a fixed block to sit in, centred, so
+     every card's type starts at the same height whatever the piece's
+     proportions. The titles themselves are bottom-aligned for the same
+     reason: "Crosses & Small Pieces" wraps to two lines and the rest do not. */
+  .card-art{
+    width:100%; height:clamp(9rem,15vw,12rem);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .card-art img{width:auto; height:auto; max-width:min(80%,180px); max-height:100%;}
+  .card-text{
+    display:flex; flex-direction:column; flex:1;
+    justify-content:flex-start; width:100%;
+  }
+  .card-title{min-height:2.6em; display:flex; align-items:center; justify-content:center;}
+  .card-go{margin-top:auto; padding-top:.9rem;}
 
   /* ---------- the way in to her life ----------
      A small block under the four collections, not a fifth card. One line and
@@ -1126,23 +1197,23 @@
   #view-alphabet > .backdrop{background-image:url("../img/meadow_sm.webp");}
   #view-alphabet > .backdrop{background-image:image-set(url("../img/meadow_sm.avif") type("image/avif"),url("../img/meadow_sm.webp") type("image/webp"));}
   }
-  #view-wear > .backdrop{background-image:url("../img/portrait.webp");}
-  #view-wear > .backdrop{background-image:image-set(url("../img/portrait.avif") type("image/avif"),url("../img/portrait.webp") type("image/webp"));}
-  @media (max-width:700px){
-  #view-wear > .backdrop{background-image:url("../img/portrait_sm.webp");}
-  #view-wear > .backdrop{background-image:image-set(url("../img/portrait_sm.avif") type("image/avif"),url("../img/portrait_sm.webp") type("image/webp"));}
-  }
   #view-home > .backdrop{background-image:url("../img/valley.webp");}
   #view-home > .backdrop{background-image:image-set(url("../img/valley.avif") type("image/avif"),url("../img/valley.webp") type("image/webp"));}
   @media (max-width:700px){
   #view-home > .backdrop{background-image:url("../img/valley_sm.webp");}
   #view-home > .backdrop{background-image:image-set(url("../img/valley_sm.avif") type("image/avif"),url("../img/valley_sm.webp") type("image/webp"));}
   }
-  #view-small > .backdrop{background-image:url("../img/field.webp");}
-  #view-small > .backdrop{background-image:image-set(url("../img/field.avif") type("image/avif"),url("../img/field.webp") type("image/webp"));}
+  #view-wear > .backdrop{background-image:url("../img/field.webp");}
+  #view-wear > .backdrop{background-image:image-set(url("../img/field.avif") type("image/avif"),url("../img/field.webp") type("image/webp"));}
   @media (max-width:700px){
-  #view-small > .backdrop{background-image:url("../img/field_sm.webp");}
-  #view-small > .backdrop{background-image:image-set(url("../img/field_sm.avif") type("image/avif"),url("../img/field_sm.webp") type("image/webp"));}
+  #view-wear > .backdrop{background-image:url("../img/field_sm.webp");}
+  #view-wear > .backdrop{background-image:image-set(url("../img/field_sm.avif") type("image/avif"),url("../img/field_sm.webp") type("image/webp"));}
+  }
+  #view-small > .backdrop{background-image:url("../img/sky.webp");}
+  #view-small > .backdrop{background-image:image-set(url("../img/sky.avif") type("image/avif"),url("../img/sky.webp") type("image/webp"));}
+  @media (max-width:700px){
+  #view-small > .backdrop{background-image:url("../img/sky_sm.webp");}
+  #view-small > .backdrop{background-image:image-set(url("../img/sky_sm.avif") type("image/avif"),url("../img/sky_sm.webp") type("image/webp"));}
   }
   #view-life > .backdrop{background-image:url("../img/nushik.webp");}
   #view-life > .backdrop{background-image:image-set(url("../img/nushik.avif") type("image/avif"),url("../img/nushik.webp") type("image/webp"));}

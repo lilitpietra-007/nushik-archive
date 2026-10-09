@@ -64,9 +64,61 @@
   /* the cue is a chevron alone now: the heading it points at says the words */
   .hero .cue a{gap:0;}
 
-  /* the hero already names what follows, so the cards start sooner */
-  .collections{padding-top:1.5rem;}
-  @media (max-width:640px){ .collections{padding-top:1rem;} }
+  /* ---------- making the fold say there is more ----------
+     The hero was sized to 84svh, but its content - the doily, the name, two
+     paragraphs - came to more than that on a laptop, so the section heading
+     and the chevron both fell below the fold and the first screen looked like
+     the whole page. Nothing short of scrolling told you otherwise.
+
+     The hero gives up about 170px: a smaller doily, less padding top and
+     bottom, and the collections tighter to it. The target is the top edge of
+     the first card showing on every common screen, because a cut-off card is
+     the one thing a visitor cannot mistake for the end of a page. Checked at
+     768, 800, 900 and 1050 tall. */
+  .mark{width:min(42vw,228px); margin-bottom:1.1rem;}
+  .hero{min-height:78svh; padding:4.5rem var(--edge) 3.5rem;}
+  .hero .cue{bottom:1.1rem;}
+  .collections{padding-top:.75rem;}
+  .collections > .head{margin-bottom:1.5rem;}
+  @media (max-width:640px){
+    .mark{width:min(46vw,190px);}
+    .hero{min-height:74svh; padding:4rem var(--edge) 3rem;}
+    .collections{padding-top:.5rem;}
+  }
+  /* What governs this is the height of the window, not its width: a 1366x768
+     laptop has the same problem as a short phone, and the Armenian is worse
+     than the English on both because it wraps to more lines. So the hero is
+     compressed against the height it actually has. */
+  @media (max-height:940px){
+    .mark{width:min(34vw,172px); margin-bottom:.8rem;}
+    .hero{min-height:70svh; padding:3rem var(--edge) 2.5rem;}
+    .hero-lede{margin-top:.8rem;}
+    .collections > .head{margin-bottom:1.1rem;}
+  }
+  @media (max-height:940px){
+    /* the gold rule under the name, and the gap it sits in */
+    .hero .rule{margin:.8rem auto;}
+  }
+  /* 1366x768 is still a very common laptop, and the Armenian only just
+     cleared there */
+  @media (max-height:820px){
+    .hero-sub, .hero-lede{font-size:.9rem; line-height:1.55;}
+  }
+  @media (max-height:700px){
+    .mark{width:min(26vw,118px); margin-bottom:.5rem;}
+    .hero{min-height:62svh; padding:2rem var(--edge) 1.75rem;}
+    .hero .rule{margin:.55rem auto;}
+    .hero-sub, .hero-lede{font-size:.86rem; line-height:1.5;}
+    .hero-lede{margin-top:.6rem;}
+    .hero .eyebrow{margin-bottom:.5rem;}
+    .collections > .head{margin-bottom:.8rem;}
+  }
+  /* On a window this short the doily is the first thing that can go: the name
+     and the two lines under it are what the page is for. */
+  @media (max-height:600px){
+    .mark{display:none;}
+    .hero{min-height:58svh;}
+  }
 
   /* ---------- a collection page that opens straight on its pieces ----------
      With the hero and the essay gone from "Lace to Wear", the gallery heading
