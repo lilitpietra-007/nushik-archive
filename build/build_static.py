@@ -33,7 +33,7 @@ PAGES = [
      'Malkhasyan of Dilijan, Armenia — lace, doilies, the Armenian alphabet, '
      'collars, gloves and crosses.'),
     ('doilies.html',  'body2.html',          'cottage',
-     'Lace & Doilies — Nushik Malkhasyan', 'Ժանյակ և անձեռոցիկ',
+     'Lace & Doilies — Nushik Malkhasyan', 'Ժանյակներ',
      'Eleven table pieces in hand-worked lace: rosettes, medallion wheels, and '
      'the lettered oval Nushik Malkhasyan dated 2005.'),
     ('alphabet.html', 'template_alpha.html', 'meadow',
