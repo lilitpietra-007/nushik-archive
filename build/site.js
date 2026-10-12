@@ -90,7 +90,8 @@
     index = (i + figs.length) % figs.length;
     var f = figs[index], b = f.querySelector('.plate-open,.work-open,.hang-open'), l = lang();
     var num = f.querySelector('.num .i18n.' + l);
-    var ttl = f.querySelector('h3.i18n.' + l) || f.querySelector('.hang-title.i18n.' + l);
+    var ttl = f.querySelector('h2.i18n.' + l) || f.querySelector('h3.i18n.' + l)
+           || f.querySelector('.hang-title.i18n.' + l);
     // the source goes first: setting src before srcset would start the
     // webp download even where the browser can take the smaller avif
     if (avif) { avif.srcset = b.getAttribute('data-zoom-avif') || ''; }
@@ -98,7 +99,10 @@
     var pic = f.querySelector('img'); img.alt = pic ? (pic.getAttribute('alt') || '') : '';
     cap.setAttribute('lang', l);
     cap.innerHTML = '';
-    cap.appendChild(document.createTextNode(ttl ? ttl.textContent.trim() : ''));
+    var pic0 = f.querySelector('img');
+    var text = ttl ? ttl.textContent.trim()
+             : (pic0 ? (pic0.getAttribute('alt') || '').trim() : '');
+    cap.appendChild(document.createTextNode(text));
     if (num){ var sp = document.createElement('span'); sp.textContent = num.textContent.trim(); cap.appendChild(sp); }
     scale = 1; tx = 0; ty = 0;
     if (img.complete) measure(); else img.addEventListener('load', measure, {once:true});
