@@ -19,8 +19,11 @@
   }
   var stored = null;
   try { stored = localStorage.getItem('nm-lang'); } catch (e) {}
-  var nl = (navigator.language || '').toLowerCase();
-  setLang(stored || (nl.indexOf('hy') === 0 ? 'hy' : 'en'));
+  // English is the default for everyone. It used to follow the browser's
+  // language, which sent an Armenian browser straight to the Armenian - but
+  // that is the half of the site the family is still working through, and a
+  // visitor who wants it is one button away. A stored choice still wins.
+  setLang(stored || 'en');
   btns.forEach(function (b) {
     b.addEventListener('click', function () { setLang(b.getAttribute('data-set')); });
   });

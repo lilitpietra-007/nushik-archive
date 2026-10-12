@@ -61,7 +61,14 @@ def static_checks():
                 r'<meta[^>]+(?:property|name)="(?:og:image|twitter:image)"'
                 r'[^>]+content="([^"]+)"', html):
             t = og.split('#')[0]
-            if not t.startswith('http'):
+            # once the site has a domain these are absolute, so the local file
+            # has to be recovered from the tail of the url - otherwise the
+            # check quietly stops checking anything at the moment it matters,
+            # which is when the card is about to be seen by strangers
+            if t.startswith('http'):
+                tail = t.split('/')
+                t = '/'.join(tail[tail.index('img'):]) if 'img' in tail else ''
+            if t:
                 referenced.add(t)
                 if t not in on_disk:
                     fail(name, f'share image is missing: {t}')

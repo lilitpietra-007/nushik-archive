@@ -10,17 +10,15 @@ selected, searched, and indexed.
 import base64, hashlib, json, os, re, shutil, sys
 from PIL import Image
 
-# The domain you launch on, once you have one - e.g. 'https://nushikmalkhasyan.com'.
-# Leave it empty and the site still works everywhere; it just ships without the
-# canonical link and the sitemap, both of which have to name a real domain to
-# mean anything. Never point them at a domain you do not own.
-SITE_URL = ''
+# Where the site actually lives. This is what the canonical link, the sitemap
+# and the og:image point at, so it has to be a real address we own; change it
+# here and nowhere else if the archive ever moves to its own domain.
+SITE_URL = 'https://lilitpietra-007.github.io/nushik-archive'
 
-# The Armenian on the site is still an unreviewed first draft and twenty-one
-# strings carry visible [square-bracket] placeholders. Until that is fixed the
-# pages ask search engines to stay away, so a live preview cannot be indexed
-# under her name. Flip to True once the text is final and rebuild.
-INDEXABLE = False
+# The site is published. Every [square-bracket] placeholder is gone, the
+# English has been through the family, and four of the six pages carry their
+# Armenian. Search engines are welcome.
+INDEXABLE = True
 
 # build/ and dist/ are siblings, so the output goes up one level
 IMG, OUT = 'img', '../dist'
