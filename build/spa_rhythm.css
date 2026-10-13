@@ -246,7 +246,9 @@
          alphabet panel is tall and the collar is wide, and without it the
          four cards came out at four different heights */
       height:8.5rem;
-      margin:-.3rem -1rem -.3rem 0;
+      /* pulled back from the right edge, so the piece sits a little further
+         into the card rather than hard against the border */
+      margin:-.3rem .1rem -.3rem 0;
       align-items:center; justify-content:center;
     }
     .card-art img{

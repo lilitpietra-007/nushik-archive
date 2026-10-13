@@ -1003,6 +1003,8 @@
     .hero .rule{margin:.55rem auto;}
     .hero-sub, .hero-lede{font-size:.86rem; line-height:1.5;}
     .hero-lede{margin-top:.6rem;}
+    .hero .eyebrow{margin-bottom:.5rem;}
+    .collections > .head{margin-bottom:.8rem;}
   }
   /* On a window this short the doily is the first thing that can go: the name
      and the two lines under it are what the page is for. */
@@ -1033,6 +1035,10 @@
      4.5 small text needs, so this page gets a deeper one. Numbers from
      check_site.py, which reads them off the pixels the browser drew. */
   #view-life{--veil-top:.64; --veil-mid:.60; --veil-bot:.78;}
+  /* The meadow is pale where the two works' meta lines fall, and with the
+     page shorter those lines now sit in the first screen: measured 4.3:1,
+     under the 4.5 small text needs. */
+  #view-alphabet{--veil-top:.64; --veil-mid:.60; --veil-bot:.70;}
 
   /* A phone crops a backdrop to one column, which throws away most of a
      landscape painting - and on these two pages what it threw away was the
@@ -1100,6 +1106,49 @@
   }
   .card-title{min-height:2.6em; display:flex; align-items:center; justify-content:center;}
   .card-go{margin-top:auto; padding-top:.9rem;}
+
+  /* ---------- the cards turn sideways on a phone ----------
+     Stacked and centred, each card spent a whole screen-width on a doily
+     with the type underneath it, and four of them made a long scroll of
+     almost nothing. In one column there is room to set the type down the
+     left and give the piece the right-hand half, which fits three cards on
+     a screen instead of one and a half. Same content, same card - only the
+     axis changes, so everything above still governs the wider layouts. */
+  @media (max-width:700px){
+    .card{
+      flex-direction:row; align-items:center; text-align:left;
+      gap:clamp(.9rem,3.5vw,1.4rem);
+      padding:clamp(1.1rem,4vw,1.5rem);
+      overflow:hidden;
+    }
+    .card-text{
+      order:1; flex:1 1 auto; min-width:0;
+      justify-content:center; width:auto;
+    }
+    .card-count{margin-bottom:.45rem;}
+    .card-title{
+      min-height:0; display:block; text-align:left;
+      font-size:clamp(1.05rem,4.8vw,1.35rem); line-height:1.2;
+    }
+    .card-go{margin-top:.75rem; padding-top:0; text-align:left;}
+    /* the piece takes the other half and is allowed past the padding, so it
+       reads as an object laid on the card rather than a thumbnail in a box */
+    .card-art{
+      order:2; flex:0 0 42%; width:42%;
+      /* a fixed box, as on the wide layout and for the same reason: the
+         alphabet panel is tall and the collar is wide, and without it the
+         four cards came out at four different heights */
+      height:8.5rem;
+      /* pulled back from the right edge, so the piece sits a little further
+         into the card rather than hard against the border */
+      margin:-.3rem .1rem -.3rem 0;
+      align-items:center; justify-content:center;
+    }
+    .card-art img{
+      width:auto; max-width:112%; height:100%; max-height:none;
+      object-fit:contain;
+    }
+  }
 
   /* ---------- the way in to her life ----------
      A small block under the four collections, not a fifth card. One line and
