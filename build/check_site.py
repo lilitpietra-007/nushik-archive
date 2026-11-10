@@ -20,7 +20,27 @@ import pathlib
 OUT = '../dist'
 VIEWPORTS = [(1440, 900, 'desktop'), (1024, 768, 'tablet'),
              (390, 844, 'phone'), (360, 640, 'small phone')]
-CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'
+def _chrome():
+    """Find the bundled Chromium.
+
+    The path carries Playwright's build number, so it changes whenever the
+    container image does - which has already broken this script twice after a
+    container was rebuilt. Look it up instead of writing it down.
+    """
+    import glob
+    # the build number moves and so does the folder: it was chrome-linux, then
+    # chrome-linux64. Match both rather than guess the next one.
+    for pat in ('/opt/pw-browsers/chromium-*/chrome-linux*/chrome',
+                '/opt/pw-browsers/chromium/chrome-linux*/chrome',
+                '/opt/pw-browsers/chromium_headless_shell-*/'
+                'chrome-headless-shell-linux*/chrome-headless-shell'):
+        hits = sorted(glob.glob(pat))
+        if hits:
+            return hits[-1]
+    return None                      # let Playwright fall back to its own copy
+
+
+CHROME = _chrome()
 
 fails, warns = [], []
 
