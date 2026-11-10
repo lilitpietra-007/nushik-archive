@@ -73,8 +73,11 @@ TOK = {
  '__ZOOM_COLLAR_MESH__':'wear_collar_mesh_zoom','__ZOOM_COLLAR_CROWN__':'wear_collar_crown_zoom',
  '__ZOOM_COLLAR_NET__':'wear_collar_net_zoom','__ZOOM_GLOVE_CREAM__':'wear_glove_cream_zoom',
  '__ZOOM_GLOVE_BLACK__':'wear_glove_black_zoom',
- '__HOME_MARK__':'home_mark','__CARD_DOILIES__':'lace_rosette',
- '__CARD_ALPHABET__':'alpha_lace_cut','__CARD_WEAR__':'wear_collar_crown','__CARD_SMALL__':'cross_d',
+ '__HOME_MARK__':'home_mark',
+ # the cards point at the small copies optimize_images.py writes, not at the
+ # gallery thumbnails those are cut from: a card box is 171x192 at its widest
+ '__CARD_DOILIES__':'lace_rosette_card','__CARD_ALPHABET__':'alpha_lace_cut_card',
+ '__CARD_WEAR__':'wear_collar_crown_card','__CARD_SMALL__':'cross_d_card',
 }
 URLS = {'__URL_DOILIES__':'doilies.html', '__URL_ALPHABET__':'alphabet.html',
         '__URL_WEAR__':'wear.html', '__URL_SMALL__':'small.html',
@@ -89,6 +92,17 @@ used = set()
 GROUNDS_SM = set()
 _dims = {}
 _first = [True]
+
+
+def resolve(key):
+    """Fall back to the full image when its card-sized copy was not worth making.
+
+    optimize_images.py only writes <name>_card.webp where it beats the image it
+    was cut down from, so a key ending in _card may name no file at all.
+    """
+    if key.endswith('_card') and not os.path.exists(os.path.join(IMG, key + '.webp')):
+        return key[:-len('_card')]
+    return key
 
 
 def has_avif(key):
@@ -111,6 +125,7 @@ def deref(html, first_img=None):
 
     def img_attrs(key):
         """src plus the AVIF alternative, when optimize_images.py kept one."""
+        key = resolve(key)
         used.add(key)
         w, h = dims(key)
         # the first image on a page is what the visitor is waiting for; the rest

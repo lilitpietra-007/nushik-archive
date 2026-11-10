@@ -28,13 +28,31 @@ GROUNDS = {'cottage', 'meadow', 'valley', 'field', 'sky', 'nushik'}
 GROUND_SM = 900          # phone copy: 900px on the SHORTER side
 SPEED = 4                # slower than the default; this runs rarely
 
+# The four images on the home page's collection cards. Each is also a gallery
+# thumbnail on its own collection page, where it is shown several times larger,
+# so they cannot simply be shrunk - the home page gets its own smaller copy.
+# The card box tops out at 171x192 CSS pixels, so 440 on the longer side covers
+# a 2x desktop screen and a 3x phone with room to spare.
+CARDS = {'lace_rosette', 'alpha_lace_cut', 'wear_collar_crown', 'cross_d'}
+CARD_LONG = 440
+# Most of the weight of a cutout is its alpha channel, which barely responds to
+# the quality setting - from 50 to 74 the WebP moves by two per cent. So the
+# setting is chosen low: the card is shown at 171px, and what it costs in
+# artefacts cannot be seen at that size, while a higher setting costs real
+# bytes in the AVIF.
+Q_CARD = 50
+
+
+def encode_im(im, quality):
+    buf = io.BytesIO()
+    im.save(buf, 'AVIF', quality=quality, speed=SPEED)
+    return buf.getvalue()
+
 
 def encode(path, quality):
     im = Image.open(path)
     im.load()
-    buf = io.BytesIO()
-    im.save(buf, 'AVIF', quality=quality, speed=SPEED)
-    return buf.getvalue()
+    return encode_im(im, quality)
 
 
 def small_grounds():
@@ -70,9 +88,66 @@ def small_grounds():
               f'avif {len(buf.getvalue()) / 1024:.0f} KB')
 
 
+def cards():
+    """A card-sized copy of each image the home page shows on a card.
+
+    The home page was serving the full gallery thumbnails into a 171x192 box -
+    five to seven times more pixels than the box can show, and most of the
+    weight of the first page anyone sees. The AVIF for these is written by the
+    main loop below, like any other file in img/.
+    """
+    for name in sorted(CARDS):
+        src = os.path.join(IMG, name + '.webp')
+        if not os.path.exists(src):
+            print(f'  {name}: no such image, skipped')
+            continue
+        im = Image.open(src)
+        im.load()
+        long_side = max(im.width, im.height)
+        if long_side <= CARD_LONG:
+            continue
+        k = CARD_LONG / long_side
+        sm = im.resize((round(im.width * k), round(im.height * k)), Image.LANCZOS)
+        out = os.path.join(IMG, name + '_card.webp')
+        buf = io.BytesIO()
+        sm.save(buf, 'WEBP', quality=Q_CARD, method=6)
+
+        # A card copy is only worth a second file if it is clearly lighter than
+        # the image it was cut down from. On wear_collar_crown it is not: that
+        # thumbnail is already small and nearly all alpha, and re-encoding it
+        # at 440px came out heavier than the original. Where that happens no
+        # copy is written and build_static.py serves the original.
+        best_new = min(len(buf.getvalue()), len(encode_im(sm, Q_CARD)))
+        best_old = min(os.path.getsize(src), len(encode(src, quality_for(name))))
+        if best_new > best_old * (1 - MIN_GAIN):
+            for stale in (out, os.path.join(IMG, name + '_card.avif')):
+                if os.path.exists(stale):
+                    os.remove(stale)
+            print(f'  {name}_card  not worth it '
+                  f'({best_new / 1024:.0f} KB vs {best_old / 1024:.0f} KB), using the original')
+            continue
+        open(out, 'wb').write(buf.getvalue())
+        print(f'  {name}_card  {im.width}x{im.height} -> {sm.width}x{sm.height}  '
+              f'{best_old / 1024:.0f} -> {best_new / 1024:.0f} KB served')
+
+
+def quality_for(name):
+    """The setting a given file is encoded at.
+
+    The derived copies carry their parent's setting: without this a backdrop's
+    phone copy was re-encoded at the piece setting, because "valley_sm" is not
+    the name of a backdrop.
+    """
+    if name.endswith('_card'):
+        return Q_CARD
+    stem = name[:-3] if name.endswith('_sm') else name
+    return Q_GROUND if stem in GROUNDS else Q_PIECE
+
+
 def main():
     force = '--force' in sys.argv
     small_grounds()
+    cards()
     kept = dropped = skipped = 0
     before = after = 0
     for fn in sorted(os.listdir(IMG)):
@@ -90,7 +165,7 @@ def main():
             skipped += 1
             continue
 
-        data = encode(webp, Q_GROUND if name in GROUNDS else Q_PIECE)
+        data = encode(webp, quality_for(name))
         if len(data) <= w_size * (1 - MIN_GAIN):
             open(avif, 'wb').write(data)
             kept += 1
