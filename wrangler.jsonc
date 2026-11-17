@@ -1,0 +1,24 @@
+{
+  // Cloudflare Workers, serving dist/ as static assets.
+  //
+  // There is no Worker script here on purpose: no "main" field, just assets.
+  // Requests for static assets are free and unlimited, and only a Worker
+  // script would be billed, so this site costs nothing to serve.
+  //
+  // Cloudflare used to publish static sites through Pages. The dashboard
+  // dropped "Create application > Pages > Connect to Git" in 2026 and points
+  // new projects here instead. Pages still runs, but this is the current path
+  // and the one the dashboard offers.
+  //
+  // dist/_headers still applies - Workers reads it the same way Pages did,
+  // which is what keeps the year-long immutable caching on the hashed
+  // stylesheet, script and fonts.
+  "name": "nushik-archive",
+  "compatibility_date": "2026-11-17",
+  "assets": {
+    "directory": "./dist",
+    // serve dist/404.html for an address that matches nothing, instead of
+    // Cloudflare's bare 404
+    "not_found_handling": "404-page"
+  }
+}

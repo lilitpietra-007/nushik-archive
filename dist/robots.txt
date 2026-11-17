@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://lilitpietra-007.github.io/nushik-archive/sitemap.xml
+Sitemap: https://nushikmalkhasyan.com/sitemap.xml

@@ -13,7 +13,7 @@ from PIL import Image
 # Where the site actually lives. This is what the canonical link, the sitemap
 # and the og:image point at, so it has to be a real address we own; change it
 # here and nowhere else if the archive ever moves to its own domain.
-SITE_URL = 'https://lilitpietra-007.github.io/nushik-archive'
+SITE_URL = 'https://nushikmalkhasyan.com'
 
 # The site is published. Every [square-bracket] placeholder is gone, the
 # English has been through the family, and four of the six pages carry their

@@ -56,7 +56,7 @@ pasted into the doilies page by hand, which is why it appeared on one page only.
 Two settings at the top of `build_static.py` decide both:
 
 `SITE_URL` is the address the site is served from. It is currently
-`https://lilitpietra-007.github.io/nushik-archive`. It feeds the canonical
+`https://nushikmalkhasyan.com`. It feeds the canonical
 link, `sitemap.xml`, `robots.txt` and the absolute share-image URL, and nothing
 else — every link between pages is relative, so the site runs unchanged at a
 domain root or in a subdirectory. **Change it the day the domain changes and
@@ -75,33 +75,39 @@ The whole site is static, so "deploy" means "copy `dist/` somewhere". It is
 154 files and 19 MB, the largest of them 0.4 MB — comfortably inside every
 free tier's limits.
 
-### Cloudflare Pages (the intended home)
+### Cloudflare Workers (the intended home)
 
-In the Cloudflare dashboard: **Workers & Pages → Create → Pages → Connect to
-Git**, pick this repository, and set
+`wrangler.jsonc` at the repository root is the whole configuration: it names
+`dist/` as the assets directory and sets `dist/404.html` as the page for an
+address that matches nothing. There is no `main` field and no Worker script,
+deliberately — this is a static site, and requests for static assets are free
+and unlimited, where a Worker script would be billed.
 
-| | |
-|---|---|
-| Production branch | `main` |
-| Framework preset | None |
-| Build command | *leave empty* |
-| Build output directory | `dist` |
-| Root directory | *leave empty* |
+In the Cloudflare dashboard: **Workers & Pages → Create → Connect to GitHub**,
+pick this repository, and take the defaults — build command empty, deploy
+command `npx wrangler deploy`. Wrangler reads the rest from `wrangler.jsonc`.
 
-Nothing is compiled on the host — the site is committed already built, so
-Cloudflare only has to publish the folder. There are no environment variables
-and no build image to pin.
+This used to be a Pages project, and most guides still describe
+**Create application → Pages → Connect to Git**. Cloudflare removed that path
+from the dashboard in 2026 and points new static sites at Workers instead.
+Pages itself still runs, and the small legacy link to it still works, but
+there is no reason to prefer it here: Workers reads the same `_headers` file
+and costs the same, which is nothing.
 
-Then **Custom domains → Set up a domain**. If the domain is registered at
-Cloudflare the DNS is written for you; if it is elsewhere, Cloudflare gives you
-the CNAME to add. The certificate is issued automatically either way. Once the
-domain answers, change `SITE_URL` (above) and rebuild.
+Then **Custom domains → Set up a domain** and enter `nushikmalkhasyan.com`.
+The domain is registered at Cloudflare, so the DNS record is written for you
+and the certificate issued automatically. Add `www.nushikmalkhasyan.com` the
+same way if you want it to answer too.
 
-Cloudflare reads `dist/_headers` as configuration, which is the reason to
-prefer it: the fonts, stylesheet and script are cached for a year as
-`immutable`, the images for a month, and the pages not at all. Every one of
-those filenames carries a content hash, so a rebuild invalidates them by
-itself and a visitor never has to be told to refresh.
+`SITE_URL` already names that domain, so nothing has to be rebuilt once it
+goes live.
+
+Cloudflare reads `dist/_headers` as configuration rather than serving it,
+which is the reason to prefer it to GitHub Pages: the fonts, stylesheet and
+script are cached for a year as `immutable`, the images for a month, and the
+pages not at all. Every one of those filenames carries a content hash, so a
+rebuild invalidates them by itself and a visitor never has to be told to
+refresh.
 
 ### GitHub Pages (where it is now)
 
