@@ -180,6 +180,31 @@ every page sets its text over a photograph under a veil.
 It has caught, among others: a blank lightbox caption on three pages, two
 contrast failures at 4.2:1 and 4.3:1, and language buttons 37×19px on a phone.
 
+## Checking the published site
+
+`check_site.py` reads `dist/` on disk; it cannot see anything the host does.
+`check_live.py` checks that half, over HTTPS, against the real address:
+
+```sh
+cd build
+python3 check_live.py https://nushikmalkhasyan.com
+```
+
+It checks that the site answers on HTTPS and that plain `http` redirects to
+it; that all six pages return 200, carry a canonical link pointing at this
+domain, and no longer carry `noindex`; that `_headers` is actually being
+applied, which is the whole reason for being on Cloudflare — the hashed
+stylesheet immutable for a year, the pages not cached at all; that
+`robots.txt` and `sitemap.xml` name this domain rather than an address the
+site used to live at; that the share card resolves at the absolute URL the
+pages advertise, so link previews are not blank; and that a missing address
+returns the site's own 404. Then it opens every page at two sizes in a real
+browser, checking for console errors, failed fetches, images that did not
+decode and sideways scrolling, and opens the zoom viewer.
+
+It is read-only. Run it after any change of address, and after the first
+deploy to a new host.
+
 ## Still open
 
 - The Armenian on the home page, the alphabet page, the About Nushik page and
